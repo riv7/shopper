@@ -1,5 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
+import {Button} from '@material-ui/core';
+import LoginIcon from '@material-ui/icons/AccountCircle';
 import './App.css';
 
 function App() {
@@ -10,6 +12,9 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
+        <Button startIcon={<LoginIcon />} color="primary" variant="contained">
+          Click Me
+        </Button>
         <a
           className="App-link"
           href="https://reactjs.org"

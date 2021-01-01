@@ -102,3 +102,37 @@ dist
 
 # TernJS port file
 .tern-port
+.vscode/settings.json
+build/asset-manifest.json
+build/favicon.ico
+build/index.html
+build/logo192.png
+build/logo512.png
+build/manifest.json
+build/robots.txt
+build/static/css/main.ab7136cd.chunk.css
+build/static/css/main.ab7136cd.chunk.css.map
+build/static/js/2.021aab5e.chunk.js
+build/static/js/2.021aab5e.chunk.js.LICENSE.txt
+build/static/js/2.021aab5e.chunk.js.map
+build/static/js/3.1ebfc3fd.chunk.js
+build/static/js/3.1ebfc3fd.chunk.js.map
+build/static/js/main.ac2efa96.chunk.js
+build/static/js/main.ac2efa96.chunk.js.map
+build/static/js/runtime-main.7e1884a9.js
+build/static/js/runtime-main.7e1884a9.js.map
+build/static/media/logo.6ce24c58.svg
+shopper.code-workspace
+build/static/css/2.cc7ee8c8.chunk.css
+build/static/css/2.cc7ee8c8.chunk.css.map
+build/static/css/main.bf8286da.chunk.css
+build/static/css/main.bf8286da.chunk.css.map
+build/static/js/2.3cd24f4f.chunk.js
+build/static/js/2.3cd24f4f.chunk.js.LICENSE.txt
+build/static/js/2.3cd24f4f.chunk.js.map
+build/static/js/3.eeee9fbd.chunk.js
+build/static/js/3.eeee9fbd.chunk.js.map
+build/static/js/main.c6239334.chunk.js
+build/static/js/main.c6239334.chunk.js.map
+build/static/js/runtime-main.5ca1f1bc.js
+build/static/js/runtime-main.5ca1f1bc.js.map
