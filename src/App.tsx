@@ -1,29 +1,27 @@
+import { Container, CssBaseline } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
 import React from 'react';
-import logo from './logo.svg';
-import {Button} from '@material-ui/core';
-import LoginIcon from '@material-ui/icons/AccountCircle';
-import './App.css';
+import NavBar from './features/ui/NavBar';
+import Routes from './routes';
 
-function App() {
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark'
+  }
+});
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <Button startIcon={<LoginIcon />} color="primary" variant="contained">
-          Click Me
-        </Button>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <NavBar />
+        <Container>
+          <Routes/>
+        </Container>
+      </ThemeProvider>
     </div>
   );
 }
