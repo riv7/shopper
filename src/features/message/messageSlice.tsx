@@ -1,4 +1,4 @@
-import {Action, createSlice} from "@reduxjs/toolkit";
+import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
 // types
@@ -8,6 +8,11 @@ type MessageState = {
     status: MessageEnum,
     message: string,
     display: boolean
+}
+
+type MessagePayload = {
+    status: MessageEnum,
+    message: string
 }
 
 const endsWithPending = (action: Action<any>): boolean => action.type.endsWith('/pending');
@@ -24,8 +29,13 @@ export const messageSlice = createSlice({
     name: 'message',
     initialState,
     reducers: {
-        hide: state => {
+        hideMessage: state => {
             state.display = false;
+        },
+        showMessage: (state, action: PayloadAction<MessagePayload>) => {
+            state.display = true;
+            state.message = action.payload.message;
+            state.status = action.payload.status;
         }
     },
     extraReducers: builder => {
@@ -48,7 +58,9 @@ export const messageSlice = createSlice({
     }
 });
 
-export const messageState = (state:RootState) => state.message.status;
+export const {hideMessage, showMessage} = messageSlice.actions;
+
+export const severity = (state:RootState) => state.message.status;
 export const message = (state:RootState) => state.message.message;
 export const display = (state: RootState) => state.message.display;
 

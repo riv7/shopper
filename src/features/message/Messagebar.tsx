@@ -2,6 +2,8 @@ import React, { FC, ReactElement } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { useDispatch, useSelector } from 'react-redux';
+import { display, hideMessage, severity } from './messageSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,31 +15,33 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Shops: FC = (): ReactElement => {
- 
+const Messagebar: FC = (): ReactElement => {
+  
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const showMessage = useSelector(display);
+  const messageSeverity = useSelector(severity)
+  const dispatch = useDispatch();
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpen(false);
+    dispatch(hideMessage);
   };
 
   return (
     <Snackbar
-      open={open}
+      open={showMessage}
       autoHideDuration={6000}
       onClose={handleClose}
       className={classes.snackbar}>
 
-      <Alert onClose={handleClose} severity="success">
-        This is a success message!
+      <Alert onClose={handleClose} severity={messageSeverity}>
+        This is a message with severity {messageSeverity}
       </Alert>
 
     </Snackbar>
   );
 }
 
-export default Shops;
+export default Messagebar;
