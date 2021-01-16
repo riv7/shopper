@@ -1,53 +1,38 @@
 import React, { FC, ReactElement } from 'react';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadingState, resetToIdle } from './loadingSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: '25px'
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
     },
   }),
 );
 
-const Shops: FC = (): ReactElement => {
- 
+const LoadingIndicator: FC = (): ReactElement => {
+
   const classes = useStyles();
+  const loadingStatus = useSelector(loadingState);
+  const dispatch = useDispatch();
+
+  const showLoadingIndicator = loadingStatus === 'pending' ? true : false;
+
+  const handleClose = () => {
+    dispatch(resetToIdle());
+  };
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>xs=12</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-      </Grid>
+    <div>
+      <Backdrop className={classes.backdrop} open={showLoadingIndicator} onClick={handleClose}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }
 
-export default Shops;
+export default LoadingIndicator;

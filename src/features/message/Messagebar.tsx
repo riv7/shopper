@@ -26,7 +26,7 @@ const Messagebar: FC = (): ReactElement => {
     if (reason === 'clickaway') {
       return;
     }
-    dispatch(hideMessage);
+    dispatch(hideMessage());
   };
 
   return (

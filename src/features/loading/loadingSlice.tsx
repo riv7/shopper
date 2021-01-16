@@ -8,7 +8,7 @@ const endsWithPending = (action: Action<any>): boolean => action.type.endsWith('
 const endsWithRejected = (action: Action<any>): boolean => action.type.endsWith('/rejected');
 const endsWithfulfilled = (action: Action<any>): boolean => action.type.endsWith('/fulfilled');
 
-const initialState = {status: 'pending'} as LoadingState
+const initialState = {status: 'idle'} as LoadingState
 
 export const loadingSlice = createSlice({
     name: 'loading',
@@ -16,6 +16,9 @@ export const loadingSlice = createSlice({
     reducers: {
         resetToIdle: state => {
             state.status = 'idle';
+        },
+        setPending: state => {
+            state.status = 'pending';
         }
     },
     extraReducers: builder => {
@@ -32,7 +35,7 @@ export const loadingSlice = createSlice({
     }
 });
 
-export const {resetToIdle} = loadingSlice.actions;
+export const {resetToIdle, setPending} = loadingSlice.actions;
 
 export const loadingState = (state:RootState) => state.loading.status;
 
