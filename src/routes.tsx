@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from "react";
 import {Route, Switch} from 'react-router-dom';
-import Shops from "./features/shopper/Shops";
+import Shops from "./features/shop/Shops";
 
 const Routes: FC = (): ReactElement => {
 

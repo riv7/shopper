@@ -1,5 +1,6 @@
 import { Button, Container, CssBaseline } from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core/styles';
+// import { createMuiTheme } from '@material-ui/core/styles';
+import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import React from 'react';
 import { useDispatch } from 'react-redux';
