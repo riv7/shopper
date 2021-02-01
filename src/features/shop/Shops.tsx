@@ -2,8 +2,10 @@ import React, { FC, ReactElement, useEffect } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { fetchShops, Shop, shops, shopsLoaded } from './shopSlice';
+
+import { useAppDispatch } from '../../app/store';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,13 +26,19 @@ const Shops: FC = (): ReactElement => {
   const classes = useStyles();
   const allShops: Shop[] = useSelector(shops);
   const loaded: boolean = useSelector(shopsLoaded);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
+
     // Fetch async data only when data is not yet loaded
-    if (!loaded) {
-      dispatch(fetchShops(""));
+    const fetchAndInit = async () => {
+      if (!loaded) {
+        const promise = await dispatch(fetchShops());
+        console.log(promise);
+      }
     }
+
+    fetchAndInit();    
   }, [loaded, dispatch])
 
   return (

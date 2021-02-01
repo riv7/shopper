@@ -1,5 +1,8 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
+import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { AppDispatch, RootState } from "../../app/store";
+import firebase from 'firebase/app';
+import "firebase/database";
+import { showMessage } from "../message/messageSlice";
 
 // types
  export type Shop = {
@@ -16,79 +19,85 @@ type FetchError = {
 
 type ShopState = {
     shops: Shop[],
-    loaded: boolean
+    loaded: boolean,
+    externalData: boolean
 }
 
-const mockedShops: Shop[] = [
-    {
-        id: 1,
-        name: "Edeka",
-        products: 7
-    },{
-        id: 2,
-        name: "Rewe",
-        products: 3
-    },
-    {
-        id: 3,
-        name: "Aldi",
-        products: 3
-    }
-];
+export const fetchShops = createAsyncThunk<Shop[], void, {dispatch: AppDispatch, state: RootState}>('shop/fetchShops',
+    async (_, thunkApi) => new Promise((resolve, reject) => {
 
-// Thunk created with createAsyncThunk from redux toolkit
-export const fetchShops = createAsyncThunk<
-    Shop[],
-    string,
-    {rejectValue: FetchError}
->('shop/fetchShops',
-    async (_,{ rejectWithValue }) => {
+        firebase.database().ref('shops/').on('value', (snapshot) => {
+            const shops: Shop[] = snapshot.val();
 
-        let mockResultPromise: Promise<Shop[]> = new Promise((resolve, reject) => {
-            setTimeout(() => resolve(mockedShops), 2000)
-        });
+            // Show message when data from external is received over the listener
+            if (thunkApi.getState().shop.externalData) {
+                thunkApi.dispatch(showMessage({status: "success", message: "hello from createAsyncThunk"}))
+            }
 
-        return await mockResultPromise;
+            // Push changes received over the listener
+            if (thunkApi.getState().shop.loaded) {
+                thunkApi.dispatch(pushShops(shops));
+            }
 
-        // const headers = new Headers();
-        // headers.append('Content-Type', 'application/json');
-
-        // const response = await fetch(`/api/shops`,
-        //     {headers, method: 'GET', credentials: 'same-origin'})
-
-        // // Since fetch api does successfully resolve (non network) errors from the backend
-        // // we have to check them here ourselves and dispatch a reject action
-        // if (!response.ok) {
-        //     return rejectWithValue({
-        //         name: "Fetch error",
-        //         message: "Error while fetching async data",
-        //         code: response.status
-        //     })
-        // } else {
-        //     return await response.json()
-        // }
+            // Return initially loaded data to create async thunk
+            resolve(shops);
+        })
     })
+);
+
+// Use a plain redux thunk and dispatch actions by urself. Alternative to using createAsyncThunk above.
+//
+// const fetchShopsFullfilled = createAction<Shop[]>('fetchShops/fulfilled');
+//
+// export const fetchShops6 = (): AppThunk<Promise<Shop[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
+
+//     dispatch(setPending())
+
+//     firebase.database().ref('shops/').on('value', (snapshot) => {
+//         const shops: Shop[] = snapshot.val();
+
+//         if (getState().shop.loaded) {
+//             dispatch(showMessage({status: "success", message: "hello from createAsyncThunk"}))
+//         }
+        
+//         dispatch(fetchShopsFullfilled(shops));
+
+//         resolve(shops);
+//     });
+// });
 
 // Initial state
 const initialState: ShopState = {
     shops: [],
-    loaded: false
+    loaded: false,
+    externalData: false
 }
+
 
 // Slice with reducers, generated actions, ...
 // No immutable necessary because of immer library
 export const shopSlice = createSlice({
     name: 'shop',
     initialState,
-    reducers: {},
+    reducers: {
+        pushShops: (state, action) => {
+            state.shops = action.payload;
+            state.loaded = true;
+        }
+    },
     extraReducers: builder => {
         builder.addCase(fetchShops.fulfilled, (state, action) => {
             state.shops = action.payload
             state.loaded = true
         })
+        // builder.addCase(fetchShopsFullfilled, (state, action) => {
+        //     state.shops = action.payload
+        //     state.loaded = true
+        // })
     }
 });
 
+export const {pushShops} = shopSlice.actions;
 
 // Selectors to access data from state
 export const shops = (state:RootState) => state.shop.shops;
