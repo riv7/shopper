@@ -3,9 +3,11 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { fetchShops, Shop, shops, shopsLoaded } from './shopSlice';
+import { fetchShops, addShop, Shop, shops, shopsLoaded, initShopListener } from './shopSlice';
 
 import { useAppDispatch } from '../../app/store';
+import { Fab } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,6 +20,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },
+    fab : {
+      margin: 0,
+      top: 'auto',
+      right: 20,
+      bottom: 20,
+      left: 'auto',
+      position: 'fixed',
+    }
   }),
 );
 
@@ -33,6 +43,7 @@ const Shops: FC = (): ReactElement => {
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
       if (!loaded) {
+        await dispatch(initShopListener());
         const promise = await dispatch(fetchShops());
         console.log(promise);
       }
@@ -41,6 +52,8 @@ const Shops: FC = (): ReactElement => {
     fetchAndInit();    
   }, [loaded, dispatch])
 
+  const handleAddClick = () => dispatch(addShop());
+  
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -52,6 +65,9 @@ const Shops: FC = (): ReactElement => {
         )}
         
       </Grid>
+      <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
+        <AddIcon />
+      </Fab>
     </div>
   );
 }

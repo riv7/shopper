@@ -1,12 +1,12 @@
-import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import { AppDispatch, RootState } from "../../app/store";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
 
 // types
- export type Shop = {
-    id: number
+export type Shop = {
+    id: string
     name: string,
     products: number
 }
@@ -20,59 +20,76 @@ type FetchError = {
 type ShopState = {
     shops: Shop[],
     loaded: boolean,
-    externalData: boolean
+    dataRequested: boolean
 }
 
-export const fetchShops = createAsyncThunk<Shop[], void, {dispatch: AppDispatch, state: RootState}>('shop/fetchShops',
-    async (_, thunkApi) => new Promise((resolve, reject) => {
+// helper methods
+const convertShop = (shop: firebase.database.DataSnapshot): Shop => {
+    return {
+        id: shop.key != null ? shop.key : '',
+        name: shop.val().name,
+        products: 0
+    };
+}
 
-        firebase.database().ref('shops/').on('value', (snapshot) => {
-            const shops: Shop[] = snapshot.val();
+const convertShops = (snapshot: firebase.database.DataSnapshot): Shop[] => {
+    const shops: Shop[] = [];
+    snapshot.forEach((shop) => {
+        shops.push(convertShop(shop))
+    });
+    return shops;
+}
 
-            // Show message when data from external is received over the listener
-            if (thunkApi.getState().shop.externalData) {
-                thunkApi.dispatch(showMessage({status: "success", message: "hello from createAsyncThunk"}))
-            }
+// Thunks
+export const initShopListener = (): AppThunk<Promise<Shop[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
 
-            // Push changes received over the listener
-            if (thunkApi.getState().shop.loaded) {
-                thunkApi.dispatch(pushShops(shops));
-            }
+    firebase.database().ref('shops/').orderByKey().on('value', (snapshot) => {
+        const shops: Shop[] = convertShops(snapshot);
 
-            // Return initially loaded data to create async thunk
-            resolve(shops);
-        })
-    })
+        // Show message when data was not requested by user
+        if (!getState().shop.dataRequested) {
+            dispatch(showMessage({ status: "success", message: "hello from listener thunk" }))
+        }
+
+        // Update shops in all cases but the intial load
+        if (getState().shop.loaded) {
+            dispatch(pushShops(shops));
+        }
+
+        // Reset data requested flag so that external data is recognized
+        dispatch(dataRequested(false))
+
+        // Resolve promise
+        resolve(shops);
+    });
+});
+
+export const fetchShops = createAsyncThunk<Shop[]>('shop/fetchShops',
+    async () => {
+        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref('shops/').orderByKey().once('value');
+        const snapshot = (await promise);
+        return convertShops(snapshot);
+    }
 );
 
-// Use a plain redux thunk and dispatch actions by urself. Alternative to using createAsyncThunk above.
-//
-// const fetchShopsFullfilled = createAction<Shop[]>('fetchShops/fulfilled');
-//
-// export const fetchShops6 = (): AppThunk<Promise<Shop[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
+export const addShop = createAsyncThunk('shop/addShop',
+    async () => {
 
-//     dispatch(setPending())
-
-//     firebase.database().ref('shops/').on('value', (snapshot) => {
-//         const shops: Shop[] = snapshot.val();
-
-//         if (getState().shop.loaded) {
-//             dispatch(showMessage({status: "success", message: "hello from createAsyncThunk"}))
-//         }
-        
-//         dispatch(fetchShopsFullfilled(shops));
-
-//         resolve(shops);
-//     });
-// });
+        // Create a new shop reference with an auto-generated id
+        var shopListRef = firebase.database().ref('shops');
+        var newShopRef = shopListRef.push();
+        newShopRef.set({
+            name: "shop7"
+        });
+    }
+)
 
 // Initial state
 const initialState: ShopState = {
     shops: [],
     loaded: false,
-    externalData: false
+    dataRequested: false
 }
-
 
 // Slice with reducers, generated actions, ...
 // No immutable necessary because of immer library
@@ -82,25 +99,26 @@ export const shopSlice = createSlice({
     reducers: {
         pushShops: (state, action) => {
             state.shops = action.payload;
-            state.loaded = true;
+        },
+        dataRequested: (state, action) => {
+            state.dataRequested = action.payload
         }
     },
     extraReducers: builder => {
+        builder.addCase(fetchShops.pending, (state, action) => {
+            state.dataRequested = true;
+        });
         builder.addCase(fetchShops.fulfilled, (state, action) => {
             state.shops = action.payload
             state.loaded = true
-        })
-        // builder.addCase(fetchShopsFullfilled, (state, action) => {
-        //     state.shops = action.payload
-        //     state.loaded = true
-        // })
+        });
     }
 });
 
-export const {pushShops} = shopSlice.actions;
+export const { pushShops, dataRequested } = shopSlice.actions;
 
 // Selectors to access data from state
-export const shops = (state:RootState) => state.shop.shops;
+export const shops = (state: RootState) => state.shop.shops;
 export const shopsLoaded = (state: RootState) => state.shop.loaded;
 
 export default shopSlice.reducer;
