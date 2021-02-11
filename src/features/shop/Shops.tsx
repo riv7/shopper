@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
 import { fetchShops, addShop, Shop, shops, shopsLoaded, initShopListener } from './shopSlice';
+import { useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
 import { Fab } from '@material-ui/core';
@@ -37,6 +38,8 @@ const Shops: FC = (): ReactElement => {
   const allShops: Shop[] = useSelector(shops);
   const loaded: boolean = useSelector(shopsLoaded);
   const dispatch = useAppDispatch();
+  const history = useHistory();
+  
 
   useEffect(() => {
 
@@ -44,15 +47,16 @@ const Shops: FC = (): ReactElement => {
     const fetchAndInit = async () => {
       if (!loaded) {
         await dispatch(initShopListener());
-        const promise = await dispatch(fetchShops());
-        console.log(promise);
+        await dispatch(fetchShops());
       }
     }
 
     fetchAndInit();    
   }, [loaded, dispatch])
 
-  const handleAddClick = () => dispatch(addShop());
+  const handleAddClick = () => {
+    history.push('shops/newShop');
+  }
   
   return (
     <div className={classes.root}>
