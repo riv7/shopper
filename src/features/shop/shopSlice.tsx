@@ -73,13 +73,13 @@ export const fetchShops = createAsyncThunk<Shop[]>('shop/fetchShops',
 );
 
 export const addShop = createAsyncThunk('shop/addShop',
-    async () => {
+    async (shopName: string) => {
 
         // Create a new shop reference with an auto-generated id
         var shopListRef = firebase.database().ref('shops');
         var newShopRef = shopListRef.push();
         newShopRef.set({
-            name: "shop7"
+            name: shopName
         });
     }
 )

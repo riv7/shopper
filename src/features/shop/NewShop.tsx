@@ -1,8 +1,9 @@
-import { Box, Button, createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
+import { createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
+import { useHistory } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { addShop } from './shopSlice';
 
@@ -22,13 +23,15 @@ const NewShop: FC = (): ReactElement => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
+    const [shopName, setShopName] = useState('');
     
     const handleAddClick = () => {
-        dispatch(addShop());
+        dispatch(addShop(shopName));
     }
 
     const handleCancelClick = () => {
-      dispatch(addShop());
+      history.push('/');
   }
 
     return (
@@ -38,12 +41,19 @@ const NewShop: FC = (): ReactElement => {
             <Grid item xs={12}>
               <Grid container justify="space-between" spacing={3}>
                 <Grid item>
-                  <IconButton color="secondary" aria-label="cancel">
+                  <IconButton 
+                    color="secondary"
+                    aria-label="cancel"
+                    onClick={handleCancelClick}>
                     <CloseIcon />
                   </IconButton>
                 </Grid>
                 <Grid item>
-                  <IconButton color="secondary" aria-label="save">
+                  <IconButton 
+                    color="secondary"
+                    aria-label="save"
+                    disabled={shopName === ''}
+                    onClick={handleAddClick}>
                     <SaveIcon />
                   </IconButton>
                 </Grid>
@@ -51,7 +61,12 @@ const NewShop: FC = (): ReactElement => {
               <Grid item xs={12}>
                 <Grid container className={classes.textInput} spacing={3}>
                   <Grid item>
-                    <TextField id="standard-basic" label="Enter shop name ..." />
+                    <TextField 
+                      id="standard-basic" 
+                      label="Enter shop name ..."
+                      fullWidth 
+                      value={shopName}
+                      onChange={event => setShopName(event.target.value)}/>
                   </Grid>
                 </Grid>
               </Grid>
