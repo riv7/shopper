@@ -1,7 +1,4 @@
-import { Button, CssBaseline } from '@material-ui/core';
-// import { createMuiTheme } from '@material-ui/core/styles';
-import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/styles';
+import { Button } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import LoadingIndicator from './features/loading/Loading';
@@ -9,13 +6,6 @@ import { setPending } from './features/loading/loadingSlice';
 import Messagebar from './features/message/Messagebar';
 import { showMessage } from './features/message/messageSlice';
 import Routes from './routes';
-
-
-const theme = createMuiTheme({
-  palette: {
-    type: 'dark'
-  }
-});
 
 const App = () => {
 
@@ -25,14 +15,11 @@ const App = () => {
 
   return (
     <div>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Button onClick={() => handleClick()}>Message</Button>
-        <Button onClick={() => handleLoadingClick()}>Loading</Button>
-        <Routes/>
-        <LoadingIndicator />
-        <Messagebar />
-      </ThemeProvider>
+      <Button onClick={() => handleClick()}>Message</Button>
+      <Button onClick={() => handleLoadingClick()}>Loading</Button>
+      <Routes/>
+      <LoadingIndicator />
+      <Messagebar />
     </div>
   );
 }

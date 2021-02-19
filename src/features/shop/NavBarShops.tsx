@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
 const NavBarShops: FC = () => {
   const classes = useStyles();
 
@@ -41,6 +40,11 @@ const NavBarShops: FC = () => {
           <Typography variant="h6" className={classes.title}>
             shopping list
           </Typography>
+          <MenuItem disabled>
+            <Typography variant="h6" className={classes.title}>
+              {firebase.auth().currentUser!.displayName}
+            </Typography>
+          </MenuItem>
           <MenuItem onClick={handleLogoutClick}>
             <IconButton
               aria-label="logout"
