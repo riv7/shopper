@@ -1,11 +1,11 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,29 +21,33 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type NavBarProps = {
-  title: string,
-  icon: ReactElement
-}
 
-const NavBar: FC<NavBarProps> = ({title, icon}) => {
+const NavBarNewShops: FC = () => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const handleBackClick = () => {
+    history.push('/');
+  }
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            {icon}
+          <IconButton 
+            edge="start" 
+            className={classes.menuButton}
+            color="inherit" aria-label="back"
+            onClick={handleBackClick}>
+              <ArrowBackIosIcon/>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {title}
+            add new shop
           </Typography>
-          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
 
-export default NavBar;
+export default NavBarNewShops;

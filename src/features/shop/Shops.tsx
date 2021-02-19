@@ -2,7 +2,6 @@ import React, { FC, ReactElement, useEffect } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import MenuIcon from '@material-ui/icons/Menu';
 import {  useSelector } from 'react-redux';
 import { fetchShops, Shop, shops, shopsLoaded, initShopListener } from './shopSlice';
 import { useHistory } from "react-router-dom";
@@ -10,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
 import { Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import NavBar from '../ui/NavBar';
+import NavBarShops from './NavBarShops';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,7 +61,7 @@ const Shops: FC = (): ReactElement => {
   
   return (
     <div>
-      <NavBar title="shoppling list" icon={<MenuIcon/>}/>
+      <NavBarShops/>
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
