@@ -1,4 +1,4 @@
-import { Button, Container, CssBaseline } from '@material-ui/core';
+import { Button, CssBaseline } from '@material-ui/core';
 // import { createMuiTheme } from '@material-ui/core/styles';
 import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
@@ -8,7 +8,6 @@ import LoadingIndicator from './features/loading/Loading';
 import { setPending } from './features/loading/loadingSlice';
 import Messagebar from './features/message/Messagebar';
 import { showMessage } from './features/message/messageSlice';
-import NavBar from './features/ui/NavBar';
 import Routes from './routes';
 
 
@@ -30,10 +29,7 @@ const App = () => {
         <CssBaseline />
         <Button onClick={() => handleClick()}>Message</Button>
         <Button onClick={() => handleLoadingClick()}>Loading</Button>
-        <NavBar />
-        <Container>
-          <Routes/>
-        </Container>
+        <Routes/>
         <LoadingIndicator />
         <Messagebar />
       </ThemeProvider>

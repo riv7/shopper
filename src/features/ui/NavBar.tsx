@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,7 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const NavBar = () => {
+type NavBarProps = {
+  title: string,
+  icon: ReactElement
+}
+
+const NavBar: FC<NavBarProps> = ({title, icon}) => {
   const classes = useStyles();
 
   return (
@@ -29,10 +34,10 @@ const NavBar = () => {
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
+            {icon}
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            shopping list
+            {title}
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>

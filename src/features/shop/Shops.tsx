@@ -2,13 +2,15 @@ import React, { FC, ReactElement, useEffect } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import MenuIcon from '@material-ui/icons/Menu';
 import {  useSelector } from 'react-redux';
-import { fetchShops, addShop, Shop, shops, shopsLoaded, initShopListener } from './shopSlice';
+import { fetchShops, Shop, shops, shopsLoaded, initShopListener } from './shopSlice';
 import { useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
-import { Fab } from '@material-ui/core';
+import { Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import NavBar from '../ui/NavBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,19 +61,24 @@ const Shops: FC = (): ReactElement => {
   }
   
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
+    <div>
+      <NavBar title="shoppling list" icon={<MenuIcon/>}/>
+      <Container>
+        <div className={classes.root}>
+          <Grid container spacing={3}>
 
-        {allShops.map(shop => 
-          <Grid item xs={12} key={shop.id}>
-            <Paper className={classes.paper}>{shop.name}</Paper>
+            {allShops.map(shop => 
+              <Grid item xs={12} key={shop.id}>
+                <Paper className={classes.paper}>{shop.name}</Paper>
+              </Grid>
+            )}
+            
           </Grid>
-        )}
-        
-      </Grid>
-      <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
-        <AddIcon />
-      </Fab>
+          <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
+            <AddIcon />
+          </Fab>
+        </div>
+      </Container>
     </div>
   );
 }
