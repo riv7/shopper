@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addShop } from './shopSlice';
-import NavBarNewShops from './NavBarNewShops';
+import NavBarBack from '../ui/NavBarBack';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,9 +28,18 @@ const NewShop: FC = (): ReactElement => {
         dispatch(addShop(shopName));
     }
 
+    const SaveButton: FC = () =>
+      <IconButton 
+        color="secondary"
+        aria-label="save"
+        disabled={shopName === ''}
+        onClick={handleAddClick}>
+        <SaveIcon />
+      </IconButton>;
+
     return (
       <div>
-        <NavBarNewShops />
+        <NavBarBack title="Enter shop" childComp={<SaveButton/>} />
         <Container>
           <div className={classes.root}>
             <Grid container spacing={3}>

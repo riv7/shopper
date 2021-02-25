@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,8 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+type NavBarBackProps = {
+  title: string,
+  childComp?: ReactNode;
+}
 
-const NavBarNewShops: FC = () => {
+
+const NavBarBack: FC<NavBarBackProps> = ({childComp, title}) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -42,12 +47,13 @@ const NavBarNewShops: FC = () => {
               <ArrowBackIosIcon/>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            add new shop
+            {title}
           </Typography>
+          {childComp}
         </Toolbar>
       </AppBar>
     </div>
   );
 }
 
-export default NavBarNewShops;
+export default NavBarBack;

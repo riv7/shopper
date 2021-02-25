@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
 import { Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import NavBarShops from './NavBarShops';
+import NavBarMenu from '../ui/NavBarMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,7 +61,7 @@ const Shops: FC = (): ReactElement => {
   
   return (
     <div>
-      <NavBarShops/>
+      <NavBarMenu/>
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
