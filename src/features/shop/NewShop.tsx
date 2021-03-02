@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      marginTop: '25px'
+      marginTop: '50px'
     },
     textInput: {
       marginLeft: '5px'
@@ -42,28 +42,21 @@ const NewShop: FC = (): ReactElement => {
         <NavBarBack title="Enter shop" childComp={<SaveButton/>} />
         <Container>
           <div className={classes.root}>
-            <Grid container spacing={3}>
-              
-              <Grid item xs={12}>
-                <Grid container justify="space-between" spacing={3}>
-                  <Grid item>
-                    <TextField 
-                      id="standard-basic" 
-                      label="Enter shop name ..."
-                      fullWidth 
-                      value={shopName}
-                      onChange={event => setShopName(event.target.value)}/>
-                  </Grid>
-                  <Grid item>
-                    <IconButton 
-                      color="secondary"
-                      aria-label="save"
-                      disabled={shopName === ''}
-                      onClick={handleAddClick}>
-                      <SaveIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
+            <Grid
+              container
+              justify="center"
+              alignItems="flex-start"
+              spacing={0}
+              style={{ minHeight: '100vh' }}
+              direction="row">
+              <Grid item>
+                <TextField 
+                  id="standard-basic" 
+                  label="Enter shop name ..."
+                  variant="outlined"
+                  fullWidth 
+                  value={shopName}
+                  onChange={event => setShopName(event.target.value)}/>
               </Grid>
             </Grid>
           </div>
