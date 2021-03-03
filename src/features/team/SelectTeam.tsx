@@ -1,7 +1,7 @@
 import { Button, Container, createStyles, Grid, IconButton, makeStyles, TextField, Theme } from "@material-ui/core";
 import React, { FC, ReactElement, useState } from "react";
 import NavBarBack from "../ui/NavBarBack";
-import SaveIcon from '@material-ui/icons/Save';
+import SendIcon from '@material-ui/icons/Send';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const CreateTeam: FC = (): ReactElement => {
+const SelectTeam: FC = (): ReactElement => {
 
     const classes = useStyles();
     const [teamName, setTeamName] = useState('')
@@ -33,18 +33,18 @@ const CreateTeam: FC = (): ReactElement => {
         // dispatch(addShop(shopName));
     }
 
-    const SaveButton: FC = () =>
+    const SendButton: FC = () =>
       <IconButton 
         color="secondary"
-        aria-label="save"
+        aria-label="send"
         disabled={teamName === '' || teamPassword === ''}
         onClick={handleAddClick}>
-        <SaveIcon />
+        <SendIcon />
       </IconButton>;
 
     return (
         <div>
-            <NavBarBack title="Create team" childComp={<SaveButton/>} />
+            <NavBarBack title="Select team" childComp={<SendButton/>} />
             <Container>
                 <div className={classes.root}>
                     <Grid
@@ -88,4 +88,4 @@ const CreateTeam: FC = (): ReactElement => {
     );
 }
 
-export default CreateTeam;
+export default SelectTeam;

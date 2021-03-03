@@ -32,12 +32,16 @@ const SelectOrCreateTeam: FC = (): ReactElement => {
     const history = useHistory();
 
     const handleCreateClick = () => {
-        history.push('create')
+        history.push('team/create')
+    }
+    
+    const handleSelectClick = () => {
+        history.push('team/select')
     }
 
     return (
         <div>
-            <NavBarBack title="bla" />
+            <NavBarBack title="Select or create team" />
             <Container>
                 <div className={classes.root}>
                     <Grid
@@ -57,7 +61,7 @@ const SelectOrCreateTeam: FC = (): ReactElement => {
                                     <Button 
                                         variant="contained" 
                                         color="secondary" 
-                                        // onClick={handleCreateClick}
+                                        onClick={handleSelectClick}
                                         className={classes.button}>
                                         Select team
                                     </Button>
