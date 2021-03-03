@@ -23,16 +23,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type NavBarBackProps = {
   title: string,
-  childComp?: ReactNode;
+  childComp?: ReactNode
+  backPath?: string 
 }
 
 
-const NavBarBack: FC<NavBarBackProps> = ({childComp, title}) => {
+const NavBarBack: FC<NavBarBackProps> = ({title, childComp, backPath}) => {
   const classes = useStyles();
   const history = useHistory();
 
   const handleBackClick = () => {
-    history.push('/');
+    history.push(backPath ? backPath : '/');
   }
 
   return (

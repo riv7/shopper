@@ -1,6 +1,9 @@
 import { Button, Container, createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 import React, { FC, ReactElement } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import NavBarBack from "../ui/NavBarBack";
+import CreateTeam from "./CreateTeam";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -22,9 +25,15 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const SquadOption: FC = (): ReactElement => {
+const SelectOrCreateTeam: FC = (): ReactElement => {
 
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const handleCreateClick = () => {
+        history.push('create')
+    }
 
     return (
         <div>
@@ -45,10 +54,22 @@ const SquadOption: FC = (): ReactElement => {
                                 direction="column"
                                 spacing={3}>
                                 <Grid item>
-                                    <Button variant="contained" color="secondary" className={classes.button}>Select squad</Button>
+                                    <Button 
+                                        variant="contained" 
+                                        color="secondary" 
+                                        // onClick={handleCreateClick}
+                                        className={classes.button}>
+                                        Select team
+                                    </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="secondary" className={classes.button}>Create squad</Button>
+                                    <Button 
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleCreateClick}
+                                        className={classes.button}>
+                                        Create team
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -59,4 +80,4 @@ const SquadOption: FC = (): ReactElement => {
     );
 }
 
-export default SquadOption;
+export default SelectOrCreateTeam;
