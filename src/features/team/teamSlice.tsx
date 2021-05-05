@@ -74,6 +74,7 @@ export const addTeam = createAsyncThunk<Promise<any>, Team, {dispatch: AppDispat
 export const createTeam = (teamData: Team): AppThunk<Promise<string>> => async (dispatch, getState) => {
 
     // Create a new shop reference with an auto-generated id
+    const userId: string = firebase.auth().currentUser!.uid
     const teamListRef = firebase.database().ref('teams');
     const newTeamRef = teamListRef.push();
 
@@ -81,7 +82,7 @@ export const createTeam = (teamData: Team): AppThunk<Promise<string>> => async (
     const someValue: any = await newTeamRef.set({
         name: teamData.name,
         password: teamData.password,
-        owner: teamData.owner
+        owner: userId
     });
 
     return Promise.resolve(newTeamRef.key!)

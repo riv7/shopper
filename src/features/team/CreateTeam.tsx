@@ -2,6 +2,9 @@ import { Button, Container, createStyles, Grid, IconButton, makeStyles, TextFiel
 import React, { FC, ReactElement, useState } from "react";
 import NavBarBack from "../ui/NavBarBack";
 import SaveIcon from '@material-ui/icons/Save';
+import { addTeam, Team } from "./teamSlice";
+import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../app/store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,11 +29,18 @@ const useStyles = makeStyles((theme: Theme) =>
 const CreateTeam: FC = (): ReactElement => {
 
     const classes = useStyles();
+    const dispatch = useDispatch();
     const [teamName, setTeamName] = useState('')
     const [teamPassword, setTeamPassword] = useState('')
 
     const handleAddClick = () => {
-        // dispatch(addShop(shopName));
+        const teamData: Team = {
+            id: '',
+            name: teamName,
+            password: teamPassword,
+            owner: ''
+        }
+        dispatch(addTeam(teamData));
     }
 
     const SaveButton: FC = () =>
