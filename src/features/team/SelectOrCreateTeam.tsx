@@ -32,7 +32,7 @@ const SelectOrCreateTeam: FC = (): ReactElement => {
     const history = useHistory();
 
     const handleCreateClick = () => {
-        history.push('team/create')
+        history.replace('team/create')
     }
     
     const handleSelectClick = () => {

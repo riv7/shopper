@@ -7,13 +7,13 @@ import SelectOrCreateTeam from "./features/team/SelectOrCreateTeam";
 import SelectTeam from "./features/team/SelectTeam";
 
 const Routes: FC = (): ReactElement => {
-
+    
     return (
         <Switch>
             <Route exact path="/" component={Shops} />
             <Route exact path="/team" component={SelectOrCreateTeam} />
-            <Route exact path="/team/create" component={CreateTeam} />
             <Route exact path="/team/select" component={SelectTeam} />
+            <Route exact path="/team/create" component={CreateTeam} />
             <Route exact path="/shops/newShop" component={NewShop} />
         </Switch>
     )

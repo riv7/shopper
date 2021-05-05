@@ -2,7 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';
+import { useAppDispatch } from '../../app/store';
 import App from '../../App';
+import { activeTeam, loaded, fetchActiveTeam, Team } from '../team/teamSlice';
+import { useSelector } from 'react-redux';
+import { useHistory } from "react-router-dom";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBzwoKs5sVWtAV_Br8XIZU3U4tbIHhUAuc",
@@ -31,16 +35,31 @@ const uiConfig = {
   };
   
   function SignInScreen() {
-    const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
+
+    const [isSignedIn, setIsSignedIn] = useState(false);
+    const dispatch = useAppDispatch();
+    const actTeam: Team | undefined = useSelector(activeTeam);
+    const teamLoaded: boolean = useSelector(loaded)
+    const history = useHistory();
   
-    // Listen to the Firebase Auth state and set the local state.
     useEffect(() => {
+      
       const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
         setIsSignedIn(!!user);
       });
+
+      const fetchAndInit = async() => {
+        if (!teamLoaded && isSignedIn) {
+          await dispatch(fetchActiveTeam());
+        }
+      };
+      fetchAndInit();
+      
       return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
-    }, []);
+    }, [dispatch, teamLoaded, isSignedIn]);
   
+
+    // Show login screen
     if (!isSignedIn) {
       return (
         <div>
@@ -50,13 +69,19 @@ const uiConfig = {
         </div>
       );
     }
+
+    // Show create or select team screen
+    if (teamLoaded && actTeam === undefined) {
+      history.push('team')
+      
+      return (
+        <App/>
+      );
+    }
+
+    // Show home screen
     return (
         <App/>
-    //   <div>
-    //     <h1>My App</h1>
-    //     <p>Welcome {firebase.auth().currentUser!.displayName}! You are now signed-in!</p>
-    //     <a onClick={() => firebase.auth().signOut()}>Sign-out</a>
-    //   </div>
     );
   }
   
