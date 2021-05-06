@@ -65,9 +65,9 @@ export const addTeam = createAsyncThunk<Promise<any>, Team, {dispatch: AppDispat
             teamId: teamId,
             userId: userId
         }
-
         await thunkApi.dispatch(addUserToTeam(teamUserTuple))
-        return thunkApi.dispatch(addTeamToUser(teamUserTuple));
+        await thunkApi.dispatch(addTeamToUser(teamUserTuple));
+        return thunkApi.dispatch(setActiveTeam(teamUserTuple));
     }
 )
 
@@ -78,8 +78,7 @@ export const createTeam = (teamData: Team): AppThunk<Promise<string>> => async (
     const teamListRef = firebase.database().ref('teams');
     const newTeamRef = teamListRef.push();
 
-    // TODO wgu: Can we reuse this promise?
-    const someValue: any = await newTeamRef.set({
+    await newTeamRef.set({
         name: teamData.name,
         password: teamData.password,
         owner: userId
@@ -123,6 +122,12 @@ export const addTeamToUser = (teamUserTuple: TeamUserTuple): AppThunk<Promise<vo
     const {teamId, userId} = teamUserTuple;
     const teamsOfUserRef = firebase.database().ref(`users/${userId}/teams`);
     return teamsOfUserRef.update({[teamId]: true});
+}
+
+export const setActiveTeam = (teamUserTuple: TeamUserTuple): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const {teamId, userId} = teamUserTuple;
+    const userRef = firebase.database().ref(`users/${userId}`);
+    return userRef.update({activeTeam: teamId});
 }
 
 // export const addTeamToUser = createAsyncThunk<Promise<any>,TeamUserTuple>('team/addTeamToUser',
