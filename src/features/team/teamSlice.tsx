@@ -32,14 +32,6 @@ const convertTeam = (team: firebase.database.DataSnapshot): Team => {
     };
 }
 
-// export const fetchTeam = createAsyncThunk<Team>('team/fetchActiveTeam',
-//     async () => {
-//         const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref('teams/').orderByKey().once('value');
-//         const snapshot = (await promise);
-//         return convertShops(snapshot);
-//     }
-// );
-
 export const fetchActiveTeam = createAsyncThunk<Team | undefined, void, {dispatch: AppDispatch}>('team/fetchActiveTeam',
     async () => {
         const userId: string = firebase.auth().currentUser!.uid
@@ -55,8 +47,7 @@ export const fetchActiveTeam = createAsyncThunk<Team | undefined, void, {dispatc
     }
 )
 
-
-export const addTeam = createAsyncThunk<Promise<any>, Team, {dispatch: AppDispatch}>('team/addTeam',
+export const addTeam = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('team/addTeam',
     async (teamData, thunkApi) => {
 
         const userId: string = firebase.auth().currentUser!.uid
@@ -67,9 +58,16 @@ export const addTeam = createAsyncThunk<Promise<any>, Team, {dispatch: AppDispat
         }
         await thunkApi.dispatch(addUserToTeam(teamUserTuple))
         await thunkApi.dispatch(addTeamToUser(teamUserTuple));
-        return thunkApi.dispatch(setActiveTeam(teamUserTuple));
+        await thunkApi.dispatch(setActiveTeam(teamUserTuple));
+        return thunkApi.dispatch(fetchTeam(teamId));
     }
 )
+
+export const fetchTeam = (teamId: string): AppThunk<Promise<Team>> => async (dispatch, getState) => {
+    const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`teams/${teamId}`).once('value');
+    const snapshot = await promise;
+    return Promise.resolve(convertTeam(snapshot));
+}
 
 export const createTeam = (teamData: Team): AppThunk<Promise<string>> => async (dispatch, getState) => {
 
@@ -87,36 +85,11 @@ export const createTeam = (teamData: Team): AppThunk<Promise<string>> => async (
     return Promise.resolve(newTeamRef.key!)
 }
 
-// export const createTeam = createAsyncThunk<string,Team>('team/createTeam',
-//     async (teamData) => {
-
-//         // Create a new shop reference with an auto-generated id
-//         var teamListRef = firebase.database().ref('teams');
-//         var newTeamRef = teamListRef.push();
-
-
-//         const someValue: any = await newTeamRef.set({
-//             name: teamData.name,
-//             password: teamData.password,
-//             owner: teamData.owner
-//         });
-//         return newTeamRef.key!;
-//     }
-// )
-
 export const addUserToTeam = (teamUserTuple: TeamUserTuple): AppThunk<Promise<void>> => async (dispatch, getState) => {
     const {teamId, userId} = teamUserTuple;
     const usersOfTeamRef = firebase.database().ref(`teams/${teamId}/users`);
     return usersOfTeamRef.update({[userId]: true});
 }
-
-// export const addUserToTeam = createAsyncThunk<Promise<any>, string>('team/addUserToTeam',
-//     async (teamId) => {
-//         const userId: string = firebase.auth().currentUser!.uid;
-//         const usersOfTeamRef = firebase.database().ref(`teams/${teamId}/users`);
-//         return usersOfTeamRef.update({[userId]: true});
-//     }
-// )
 
 export const addTeamToUser = (teamUserTuple: TeamUserTuple): AppThunk<Promise<void>> => async (dispatch, getState) => {
     const {teamId, userId} = teamUserTuple;
@@ -129,13 +102,6 @@ export const setActiveTeam = (teamUserTuple: TeamUserTuple): AppThunk<Promise<vo
     const userRef = firebase.database().ref(`users/${userId}`);
     return userRef.update({activeTeam: teamId});
 }
-
-// export const addTeamToUser = createAsyncThunk<Promise<any>,TeamUserTuple>('team/addTeamToUser',
-//     async({userId, teamId}) => {
-//         const teamsOfUserRef = firebase.database().ref(`users/${userId}/teams`);
-//         return teamsOfUserRef.update({[teamId]: true});
-//     }
-// )
 
 // Initial state
 const initialState: TeamState = {
@@ -166,6 +132,9 @@ export const teamSlice = createSlice({
             state.loaded = true;
             state.activeTeam = action.payload
         });
+        builder.addCase(addTeam.fulfilled, (state, action) => {
+            state.activeTeam = action.payload
+        })
     }
 });
 
