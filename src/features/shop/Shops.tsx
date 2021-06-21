@@ -10,6 +10,7 @@ import { useAppDispatch } from '../../app/store';
 import { Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import NavBarMenu from '../ui/NavBarMenu';
+import { activeTeam } from '../team/teamSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

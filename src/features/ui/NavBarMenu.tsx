@@ -8,6 +8,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
 import { AccountCircle, ExitToApp } from '@material-ui/icons';
 import firebase from 'firebase';
+import { constants } from 'buffer';
+import { activeTeam, Team } from '../team/teamSlice';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const NavBarMenu: FC = () => {
   const classes = useStyles();
+  const actTeam: Team | undefined = useSelector(activeTeam);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -39,6 +43,9 @@ const NavBarMenu: FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const teamName = () => actTeam ? actTeam.name : ''
+  const owner = () => actTeam ? actTeam.owner === firebase.auth().currentUser!.uid ? ' (owner)' : '' : '';
 
   return (
     <div className={classes.root}>
@@ -76,6 +83,8 @@ const NavBarMenu: FC = () => {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>{firebase.auth().currentUser!.displayName}</MenuItem>
+                <MenuItem onClick={handleClose}>{teamName() + owner()}</MenuItem>
+                {/* <MenuItem onClick={handleClose}>{actTeam!.name + actTeam!.owner === firebase.auth().currentUser!.uid ? ' (owner)': ''}</MenuItem> */}
                 <MenuItem onClick={handleLogoutClick}>
                   Logout
                   <IconButton

@@ -41,7 +41,7 @@ export const fetchActiveTeam = createAsyncThunk<Team | undefined, void, {dispatc
             return undefined;            
         } 
         const activeTeamId = snapshot.val();
-        const teamSnap: firebase.database.DataSnapshot = await firebase.database().ref(`teams/${activeTeamId}/users`).once('value');
+        const teamSnap: firebase.database.DataSnapshot = await firebase.database().ref(`teams/${activeTeamId}`).once('value');
         const team: Team = convertTeam(teamSnap);
         return team;
     }
