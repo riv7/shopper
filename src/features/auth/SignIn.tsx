@@ -4,7 +4,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';
 import { useAppDispatch } from '../../app/store';
 import App from '../../App';
-import { activeTeam, loaded, fetchActiveTeam, Team } from '../team/teamSlice';
+import { activeTeam, activeTeamLoaded, fetchActiveTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 
@@ -39,7 +39,7 @@ const uiConfig = {
     const [isSignedIn, setIsSignedIn] = useState(false);
     const dispatch = useAppDispatch();
     const actTeam: Team | undefined = useSelector(activeTeam);
-    const teamLoaded: boolean = useSelector(loaded)
+    const teamLoaded: boolean = useSelector(activeTeamLoaded)
     const history = useHistory();
   
     useEffect(() => {

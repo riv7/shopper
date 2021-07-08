@@ -1,10 +1,7 @@
 import { Button, Container, createStyles, Grid, IconButton, makeStyles, TextField, Theme } from "@material-ui/core";
 import React, { FC, ReactElement, useState } from "react";
 import NavBarBack from "../ui/NavBarBack";
-import SaveIcon from '@material-ui/icons/Save';
-import { addTeam, Team } from "./teamSlice";
-import { useDispatch } from "react-redux";
-import { useAppDispatch } from "../../app/store";
+import SendIcon from '@material-ui/icons/Send';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,36 +23,28 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const CreateTeam: FC = (): ReactElement => {
+const ConfirmTeam: FC = (): ReactElement => {
 
     const classes = useStyles();
-    const dispatch = useDispatch();
     const [teamName, setTeamName] = useState('')
     const [teamPassword, setTeamPassword] = useState('')
 
     const handleAddClick = () => {
-        const teamData: Team = {
-            id: '',
-            name: teamName,
-            password: teamPassword,
-            ownerId: '',
-            ownerName: ''
-        }
-        dispatch(addTeam(teamData));
+        // dispatch(addShop(shopName));
     }
 
-    const SaveButton: FC = () =>
+    const SendButton: FC = () =>
       <IconButton 
         color="secondary"
-        aria-label="save"
+        aria-label="send"
         disabled={teamName === '' || teamPassword === ''}
         onClick={handleAddClick}>
-        <SaveIcon />
+        <SendIcon />
       </IconButton>;
 
     return (
         <div>
-            <NavBarBack title="Create team" childComp={<SaveButton/>} />
+            <NavBarBack title="Confirm team" childComp={<SendButton/>} />
             <Container>
                 <div className={classes.root}>
                     <Grid
@@ -73,8 +62,8 @@ const CreateTeam: FC = (): ReactElement => {
                                 spacing={3}>
                                 <Grid item>
                                     <TextField 
-                                        id="standard-basic" 
-                                        label="Enter team name ..."
+                                        id="team-name" 
+                                        label="Team name ..."
                                         variant="outlined"
                                         fullWidth 
                                         value={teamName}
@@ -99,4 +88,4 @@ const CreateTeam: FC = (): ReactElement => {
     );
 }
 
-export default CreateTeam;
+export default ConfirmTeam;
