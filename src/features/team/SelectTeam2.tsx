@@ -6,12 +6,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import GroupIcon from '@material-ui/icons/Group';
-import {activeTeam, fetchTeams, Team, teamsOfUser, teamsOfUserLoaded} from './teamSlice';
+import {activeTeam, fetchTeams, setTeamActive, Team, teamsOfUser, teamsOfUserLoaded} from './teamSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/store";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";
 import firebase from "firebase";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,6 +51,7 @@ const SelectTeam2: FC = (): ReactElement => {
     const teams: Team[] = useSelector(teamsOfUser);
     const actTeam:  Team | undefined = useSelector(activeTeam);
     const dispatch = useAppDispatch();
+    const history = useHistory();
 
     useEffect(() => {
 
@@ -83,11 +85,12 @@ const SelectTeam2: FC = (): ReactElement => {
         // dispatch(addShop(shopName));
     }
 
-    const handleTeamSelect = (event:any) => {
-        console.log(event)
-
+    const handleTeamSelect = (index: number) => {
+        dispatch(setTeamActive(teams[index]))
+        history.push('/');
     }
 
+    const currentlyOn = (team: Team) => team.name === actTeam?.name ? " (x)" : "   "
 
     const SendButton: FC = () =>
       <IconButton 
@@ -114,15 +117,15 @@ const SelectTeam2: FC = (): ReactElement => {
                             alignItems="center"
                             xs={12}>
                             <List component="nav" >
-                                {teams.map(team => 
+                                {teams.map((team, index) => 
                                     <Box>
-                                        <ListItem button>
+                                        <ListItem button onClick={event => handleTeamSelect(index)}>
                                             <ListItemIcon >
                                                 <GroupIcon />
                                             </ListItemIcon>
-                                            <ListItemText primary={team.name} />
-                                            <ListItemText primary={team.ownerName} />
-                                            <ListItemText primary={team.name === actTeam?.name ? "(currently on)" : ""} />
+                                            <ListItemText primary={team.name + currentlyOn(team)} />
+                                            {/* <ListItemText primary={team.ownerName + currentlyOn(team)} /> */}
+                                            {/* <ListItemText primary={team.name === actTeam?.name ? "(currently on)" : ""} /> */}
                                         </ListItem>                            
                                         <Divider />
                                     </Box>
