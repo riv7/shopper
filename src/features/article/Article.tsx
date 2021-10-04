@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { fetchShops, Shop, shops, shopsLoaded, initShopListener } from './shopSlice';
+import { fetchArticles, Article, articles, articlesLoaded, initArticleListener } from './articleSlice';
 import { useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
@@ -34,11 +34,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Shops: FC = (): ReactElement => {
+const Articles: FC = (): ReactElement => {
  
   const classes = useStyles();
-  const allShops: Shop[] = useSelector(shops);
-  const loaded: boolean = useSelector(shopsLoaded);
+  const allArticles: Article[] = useSelector(articles);
+  const loaded: boolean = useSelector(articlesLoaded);
   const dispatch = useAppDispatch();
   const history = useHistory();
   
@@ -48,8 +48,8 @@ const Shops: FC = (): ReactElement => {
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
       if (!loaded) {
-        await dispatch(initShopListener());
-        await dispatch(fetchShops());
+        await dispatch(initArticleListener());
+        await dispatch(fetchArticles());
       }
     }
 
@@ -57,7 +57,7 @@ const Shops: FC = (): ReactElement => {
   }, [loaded, dispatch])
 
   const handleAddClick = () => {
-    history.push('shops/newShop');
+    history.push('articles/newArticle');
   }
   
   return (
@@ -67,9 +67,9 @@ const Shops: FC = (): ReactElement => {
         <div className={classes.root}>
           <Grid container spacing={3}>
 
-            {allShops.map(shop => 
-              <Grid item xs={12} key={shop.id}>
-                <Paper className={classes.paper}>{shop.name}</Paper>
+            {allArticles.map(article => 
+              <Grid item xs={12} key={article.id}>
+                <Paper className={classes.paper}>{article.name}</Paper>
               </Grid>
             )}
             
@@ -83,4 +83,4 @@ const Shops: FC = (): ReactElement => {
   );
 }
 
-export default Shops;
+export default Articles;

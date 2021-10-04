@@ -3,7 +3,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addShop } from './shopSlice';
+import { addArticle } from './articleSlice';
 import NavBarBack from '../ui/NavBarBack';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -18,28 +18,28 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const NewShop: FC = (): ReactElement => {
+const NewArticle: FC = (): ReactElement => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
-    const [shopName, setShopName] = useState('');
+    const [articleName, setArticleName] = useState('');
     
     const handleAddClick = () => {
-        dispatch(addShop(shopName));
+        dispatch(addArticle(articleName));
     }
 
     const SaveButton: FC = () =>
       <IconButton 
         color="secondary"
         aria-label="save"
-        disabled={shopName === ''}
+        disabled={articleName === ''}
         onClick={handleAddClick}>
         <SaveIcon />
       </IconButton>;
 
     return (
       <div>
-        <NavBarBack title="Enter shop" childComp={<SaveButton/>} />
+        <NavBarBack title="Enter article" childComp={<SaveButton/>} />
         <Container>
           <div className={classes.root}>
             <Grid
@@ -52,11 +52,11 @@ const NewShop: FC = (): ReactElement => {
               <Grid item>
                 <TextField 
                   id="standard-basic" 
-                  label="Enter shop name ..."
+                  label="Enter article name ..."
                   variant="outlined"
                   fullWidth 
-                  value={shopName}
-                  onChange={event => setShopName(event.target.value)}/>
+                  value={articleName}
+                  onChange={event => setArticleName(event.target.value)}/>
               </Grid>
             </Grid>
           </div>
@@ -65,4 +65,4 @@ const NewShop: FC = (): ReactElement => {
     );
 };
 
-export default NewShop;
+export default NewArticle;

@@ -222,10 +222,7 @@ export const teamSlice = createSlice({
     }
 });
 
-// export const { pushShops, dataRequested } = shopSlice.actions;
-
-// Selectors to access data from state
-// export const shops = (state: RootState) => state.shop.shops;
+export const severity = (state:RootState) => state.message.status;
 export const activeTeam = (state: RootState) => state.team.activeTeam;
 export const activeTeamLoaded = (state: RootState) => state.team.activeTeamLoaded;
 export const teamsOfUser = (state: RootState) => state.team.teamsOfUser;

@@ -1,0 +1,16 @@
+teams
+    teamID
+        name: team1
+        owner: ownerID1
+        password: teampw1
+        users:
+            userID1
+
+users
+    userID
+        activeTeam: teamID1
+        name: Wolfram Gulde
+        teams
+            teamID1: true
+            teamID2: true
+
