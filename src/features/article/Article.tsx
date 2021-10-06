@@ -11,6 +11,7 @@ import { Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import NavBarMenu from '../ui/NavBarMenu';
 import { activeTeam } from '../team/teamSlice';
+import ArticleItem from './ArticleItem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,9 +68,15 @@ const Articles: FC = (): ReactElement => {
         <div className={classes.root}>
           <Grid container spacing={3}>
 
-            {allArticles.map(article => 
+            {/* {allArticles.map(article => 
               <Grid item xs={12} key={article.id}>
                 <Paper className={classes.paper}>{article.name}</Paper>
+              </Grid>
+            )} */}
+
+            {allArticles.map(article => 
+              <Grid item xs={12} key={article.id}>
+                <ArticleItem title={article.name} />
               </Grid>
             )}
             
