@@ -76,7 +76,7 @@ const Articles: FC = (): ReactElement => {
 
             {allArticles.map(article => 
               <Grid item xs={12} key={article.id}>
-                <ArticleItem title={article.name} />
+                <ArticleItem article={article} />
               </Grid>
             )}
             

@@ -23,9 +23,20 @@ const NewArticle: FC = (): ReactElement => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const [articleName, setArticleName] = useState('');
+    const [articleShop, setArticleShop] = useState('');
+    const [articleUnit, setArticleUnit] = useState('');
+    const [articleAmount, setArticleAmount] = useState(0);
     
     const handleAddClick = () => {
-        dispatch(addArticle(articleName));
+        const article = {
+          id: '',
+          name: articleName,
+          amount: articleAmount,
+          unit: articleUnit,
+          active: true,
+          shop: articleShop
+        }
+        dispatch(addArticle(article));
     }
 
     const SaveButton: FC = () =>
@@ -49,15 +60,87 @@ const NewArticle: FC = (): ReactElement => {
               spacing={0}
               style={{ minHeight: '100vh' }}
               direction="row">
-              <Grid item>
+
+                              <Grid
+                                container
+                                justify="center"
+                                direction="column"
+                                spacing={3}>
+                                <Grid item>
+                                  <TextField 
+                                    id="article-name" 
+                                    label="Enter article name ..."
+                                    variant="outlined"
+                                    fullWidth 
+                                    value={articleName}
+                                    onChange={event => setArticleName(event.target.value)}/>
+                                </Grid>
+                                <Grid item>
+                                  <TextField 
+                                    id="article-amount" 
+                                    label="Enter article amount ..."
+                                    variant="outlined"
+                                    fullWidth 
+                                    value={articleAmount}
+                                    onChange={event => setArticleAmount(Number(event.target.value))}/>
+                                </Grid>
+                                <Grid item>
+                                  <TextField 
+                                    id="article-unit" 
+                                    label="Enter article unit ..."
+                                    variant="outlined"
+                                    fullWidth 
+                                    value={articleUnit}
+                                    onChange={event => setArticleUnit(event.target.value)}/>
+                                </Grid>
+                                <Grid item>
+                                  <TextField 
+                                    id="article-shop" 
+                                    label="Enter article shop ..."
+                                    variant="outlined"
+                                    fullWidth 
+                                    value={articleShop}
+                                    onChange={event => setArticleShop(event.target.value)}/>
+                                </Grid>
+                            </Grid>
+
+
+              {/* <Grid item>
                 <TextField 
-                  id="standard-basic" 
+                  id="article-name" 
                   label="Enter article name ..."
                   variant="outlined"
                   fullWidth 
                   value={articleName}
                   onChange={event => setArticleName(event.target.value)}/>
               </Grid>
+              <Grid item>
+                <TextField 
+                  id="article-shop" 
+                  label="Enter article shop ..."
+                  variant="outlined"
+                  fullWidth 
+                  value={articleShop}
+                  onChange={event => setArticleShop(event.target.value)}/>
+              </Grid>
+              <Grid item>
+                <TextField 
+                  id="article-amount" 
+                  label="Enter article amount ..."
+                  variant="outlined"
+                  fullWidth 
+                  value={articleAmount}
+                  onChange={event => setArticleAmount(Number(event.target.value))}/>
+              </Grid>
+              <Grid item>
+                <TextField 
+                  id="article-unit" 
+                  label="Enter article unit ..."
+                  variant="outlined"
+                  fullWidth 
+                  value={articleUnit}
+                  onChange={event => setArticleUnit(event.target.value)}/>
+              </Grid> */}
             </Grid>
           </div>
         </Container>

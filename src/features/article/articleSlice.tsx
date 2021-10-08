@@ -8,8 +8,10 @@ import { showMessage } from "../message/messageSlice";
 export type Article = {
     id: string
     name: string,
+    amount: number,
+    unit: string,
+    active: boolean,
     shop: string,
-    active: boolean
 }
 
 type FetchError = {
@@ -29,8 +31,10 @@ const convertArticle = (article: firebase.database.DataSnapshot): Article => {
     return {
         id: article.key != null ? article.key : '',
         name: article.val().name,
-        shop: article.val().shop,
-        active: article.val().active
+        amount: article.val().amount,
+        unit: article.val().unit,
+        active: article.val().active,
+        shop: article.val().shop
     };
 }
 
@@ -75,14 +79,12 @@ export const fetchArticles = createAsyncThunk<Article[]>('article/fetchArticles'
 );
 
 export const addArticle = createAsyncThunk('article/addArticle',
-    async (articleName: string) => {
+    async (article: Article) => {
 
         // Create a new article reference with an auto-generated id
         var articleListRef = firebase.database().ref('articles');
         var newArticleRef = articleListRef.push();
-        newArticleRef.set({
-            name: articleName
-        });
+        newArticleRef.set(article);
     }
 )
 
