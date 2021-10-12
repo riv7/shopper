@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
+import { Container, createStyles, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Theme } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
@@ -39,6 +39,10 @@ const NewArticle: FC = (): ReactElement => {
         dispatch(addArticle(article));
     }
 
+    const handleSelectChange = (event:any) => {
+      setArticleUnit(event.target.value);
+    };
+
     const SaveButton: FC = () =>
       <IconButton 
         color="secondary"
@@ -52,97 +56,77 @@ const NewArticle: FC = (): ReactElement => {
       <div>
         <NavBarBack title="Enter article" childComp={<SaveButton/>} />
         <Container>
-          <div className={classes.root}>
-            <Grid
-              container
-              justify="center"
-              alignItems="flex-start"
-              spacing={0}
-              style={{ minHeight: '100vh' }}
-              direction="row">
+          <form>
+            <div className={classes.root}>
+              <Grid
+                container
+                justify="center"
+                alignItems="flex-start"
+                spacing={0}
+                style={{ minHeight: '100vh' }}
+                direction="row">
 
-                              <Grid
-                                container
-                                justify="center"
-                                direction="column"
-                                spacing={3}>
-                                <Grid item>
-                                  <TextField 
-                                    id="article-name" 
-                                    label="Enter article name ..."
-                                    variant="outlined"
-                                    fullWidth 
-                                    value={articleName}
-                                    onChange={event => setArticleName(event.target.value)}/>
-                                </Grid>
-                                <Grid item>
-                                  <TextField 
-                                    id="article-amount" 
-                                    label="Enter article amount ..."
-                                    variant="outlined"
-                                    fullWidth 
-                                    value={articleAmount}
-                                    onChange={event => setArticleAmount(Number(event.target.value))}/>
-                                </Grid>
-                                <Grid item>
-                                  <TextField 
-                                    id="article-unit" 
-                                    label="Enter article unit ..."
-                                    variant="outlined"
-                                    fullWidth 
-                                    value={articleUnit}
-                                    onChange={event => setArticleUnit(event.target.value)}/>
-                                </Grid>
-                                <Grid item>
-                                  <TextField 
-                                    id="article-shop" 
-                                    label="Enter article shop ..."
-                                    variant="outlined"
-                                    fullWidth 
-                                    value={articleShop}
-                                    onChange={event => setArticleShop(event.target.value)}/>
-                                </Grid>
-                            </Grid>
-
-
-              {/* <Grid item>
-                <TextField 
-                  id="article-name" 
-                  label="Enter article name ..."
-                  variant="outlined"
-                  fullWidth 
-                  value={articleName}
-                  onChange={event => setArticleName(event.target.value)}/>
+                <Grid
+                  container
+                  justify="center"
+                  direction="column"
+                  spacing={3}>
+                  <Grid item>
+                    <TextField 
+                      id="article-name" 
+                      label="Enter article name ..."
+                      variant="outlined"
+                      fullWidth 
+                      value={articleName}
+                      onChange={event => setArticleName(event.target.value)}/>
+                  </Grid>
+                  <Grid item>
+                    <Grid
+                      container
+                      justify="space-between"
+                      spacing={1}>
+                        <Grid item xs={8}>
+                          <TextField 
+                            id="article-amount" 
+                            label="Enter article amount ..."
+                            variant="outlined"
+                            fullWidth 
+                            value={articleAmount}
+                            onChange={event => setArticleAmount(Number(event.target.value))}/>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <FormControl fullWidth variant="filled">
+                            <InputLabel id="unit-label">unit</InputLabel>
+                            <Select
+                              labelId="unit-label"
+                              id="unit-select"
+                              value={articleUnit}
+                              onChange={handleSelectChange}
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value={"g"}>Gramm</MenuItem>
+                              <MenuItem value={"l"}>liter</MenuItem>
+                              <MenuItem value={"kg"}>KG</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <TextField 
+                      id="article-shop" 
+                      label="Enter article shop ..."
+                      variant="outlined"
+                      fullWidth 
+                      value={articleShop}
+                      onChange={event => setArticleShop(event.target.value)}/>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item>
-                <TextField 
-                  id="article-shop" 
-                  label="Enter article shop ..."
-                  variant="outlined"
-                  fullWidth 
-                  value={articleShop}
-                  onChange={event => setArticleShop(event.target.value)}/>
-              </Grid>
-              <Grid item>
-                <TextField 
-                  id="article-amount" 
-                  label="Enter article amount ..."
-                  variant="outlined"
-                  fullWidth 
-                  value={articleAmount}
-                  onChange={event => setArticleAmount(Number(event.target.value))}/>
-              </Grid>
-              <Grid item>
-                <TextField 
-                  id="article-unit" 
-                  label="Enter article unit ..."
-                  variant="outlined"
-                  fullWidth 
-                  value={articleUnit}
-                  onChange={event => setArticleUnit(event.target.value)}/>
-              </Grid> */}
-            </Grid>
-          </div>
+            </div>
+          </form>
         </Container>
       </div>
     );
