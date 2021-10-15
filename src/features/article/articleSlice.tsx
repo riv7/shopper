@@ -88,6 +88,14 @@ export const addArticle = createAsyncThunk('article/addArticle',
     }
 )
 
+export const updateArticle = createAsyncThunk('article/updateArticle',
+    async (article: Article) => {
+        const key = article.id;
+        const articleRef = firebase.database().ref(`articles/${key}`);
+        articleRef.update(article);
+    }
+)
+
 // Initial state
 const initialState: ArticleState = {
     articles: [],

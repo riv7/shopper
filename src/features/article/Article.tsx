@@ -67,19 +67,13 @@ const Articles: FC = (): ReactElement => {
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
-
-            {/* {allArticles.map(article => 
-              <Grid item xs={12} key={article.id}>
-                <Paper className={classes.paper}>{article.name}</Paper>
-              </Grid>
-            )} */}
-
-            {allArticles.map(article => 
-              <Grid item xs={12} key={article.id}>
-                <ArticleItem article={article} />
-              </Grid>
-            )}
-            
+            {allArticles
+              .filter(articel => articel.active === true)
+              .map(article => 
+                <Grid item xs={12} key={article.id}>
+                  <ArticleItem article={article} />
+                </Grid>
+              )}
           </Grid>
           <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
