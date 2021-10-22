@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
 import { fetchArticles, Article, articles, articlesLoaded, initArticleListener } from './articleSlice';
-import { useHistory } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
 import { Container, Fab } from '@material-ui/core';
@@ -35,14 +35,18 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Articles: FC = (): ReactElement => {
+type ArticleRouteProps = {
+  shopId: string;
+}
+
+
+const Articles: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactElement => {
  
   const classes = useStyles();
   const allArticles: Article[] = useSelector(articles);
   const loaded: boolean = useSelector(articlesLoaded);
   const dispatch = useAppDispatch();
   const history = useHistory();
-  
 
   useEffect(() => {
 
