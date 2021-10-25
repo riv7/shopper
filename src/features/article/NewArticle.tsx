@@ -36,7 +36,7 @@ const NewArticle: FC = (): ReactElement => {
           active: true,
           shop: articleShop
         }
-        dispatch(addArticle(article));
+        // dispatch(addArticle(article));
     }
 
     const handleSelectChange = (event:any) => {

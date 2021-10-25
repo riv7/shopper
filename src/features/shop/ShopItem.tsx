@@ -16,6 +16,7 @@ import { updateArticle } from './shopSlice';
 import { useDispatch } from 'react-redux';
 import NewArticle from './NewShop';
 import ShopIcon from '@material-ui/icons/Shop';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,6 +46,7 @@ const ArticleItem: FC<ShopItemProps> = ({shop}): ReactElement => {
 
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   
   
   // const amountText = article.unit === '' ? article.amount : article.amount+' '+article.unit;
@@ -63,17 +65,16 @@ const ArticleItem: FC<ShopItemProps> = ({shop}): ReactElement => {
   //   dispatch(updateArticle(articleItem));
   // };
 
-  // const handleResolvedClick = (event:any) => {
-  //   articleItem.active = false;
-  //   dispatch(updateArticle(articleItem));
-  // };
+  const handleSelectClick = (event:any) => {
+    history.push(`articles/${shop.id}`);
+  };
 
   return (
     <Card>
         <Grid container spacing={3}>
             <Grid item xs={1}>
                 <CardActions>
-                  <IconButton aria-label="shop">
+                  <IconButton aria-label="shop" onClick={handleSelectClick}>
                       <ShopIcon />
                    </IconButton>
                 </CardActions>
