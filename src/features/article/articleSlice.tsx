@@ -83,20 +83,20 @@ export const fetchCurrentArticles = createAsyncThunk<Article[], string, {state: 
     }
 );
 
-export const addArticle = createAsyncThunk('article/addArticle',
-    async (article: Article) => {
-
-        // Create a new article reference with an auto-generated id
-        var articleListRef = firebase.database().ref('articles');
+export const addArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/addArticle',
+    async (article, thunkApi) => {
+        // Create a new article reference with an auto-generated id TODO
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        var articleListRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles/${article.id}`);
         var newArticleRef = articleListRef.push();
         newArticleRef.set(article);
     }
 );
 
-export const updateArticle = createAsyncThunk('article/updateArticle',
-    async (article: Article) => {
-        const key = article.id;
-        const articleRef = firebase.database().ref(`articles/${key}`);
+export const updateArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/updateArticle',
+    async (article, thunkApi) => {
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        var articleRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles/${article.id}`);
         articleRef.update(article);
     }
 );
