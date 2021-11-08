@@ -10,12 +10,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
-import { TextField } from '@material-ui/core';
-import { Shop } from './shopSlice';
+import { Menu, MenuItem, TextField } from '@material-ui/core';
+import { deleteShop, Shop } from './shopSlice';
 import { updateArticle } from './shopSlice';
 import { useDispatch } from 'react-redux';
-import NewArticle from './NewShop';
+import NewShop from './NewShop';
 import ShopIcon from '@material-ui/icons/Shop';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,29 +44,27 @@ type ShopItemProps = {
     shop: Shop
 }
 
-const ArticleItem: FC<ShopItemProps> = ({shop}): ReactElement => {
+const ShopItem: FC<ShopItemProps> = ({shop}): ReactElement => {
 
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
   
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteShop(shop));
+  }
+
   
-  // const amountText = article.unit === '' ? article.amount : article.amount+' '+article.unit;
-
-  // var articleItem: Shop = {...article};
-
-  // const handleIncreaseClick = (event:any) => {
-  //   const newAmount = article.amount + 1;
-  //   articleItem.amount = newAmount;
-  //   dispatch(updateArticle(articleItem));
-  // };
-
-  // const handleDecreaseClick = (event:any) => {
-  //   const newAmount = article.amount - 1;
-  //   articleItem.amount = newAmount;
-  //   dispatch(updateArticle(articleItem));
-  // };
-
   const handleSelectClick = (event:any) => {
     history.push(`articles/${shop.id}`);
   };
@@ -88,9 +88,38 @@ const ArticleItem: FC<ShopItemProps> = ({shop}): ReactElement => {
             </Grid>
             <Grid item xs={2}>
                 <CardActions className={classes.menuButton}>
-                  <IconButton aria-label="menu">
-                      <MenuIcon />
+                  <IconButton 
+                     aria-label="shop menu"
+                     aria-controls="simple"
+                     aria-haspopup="true"
+                     onClick={handleClick}>
+                    <MenuIcon />
                   </IconButton>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}>
+                    <MenuItem>
+                      <IconButton
+                        aria-label="shop-edit"
+                        color="inherit"
+                        onClick={handleClose}>
+                        <EditIcon />
+                      </IconButton>
+                      Edit
+                    </MenuItem>
+                    <MenuItem>
+                      <IconButton
+                        aria-label="shop-delete"
+                        color="inherit"
+                        onClick={handleDelete}>
+                        <DeleteIcon />
+                      </IconButton>
+                      Delete
+                    </MenuItem>
+                  </Menu>
                 </CardActions>
             </Grid>
         </Grid>
@@ -98,4 +127,6 @@ const ArticleItem: FC<ShopItemProps> = ({shop}): ReactElement => {
   );
 }
 
-export default ArticleItem;
+export default ShopItem;
+
+

@@ -3,11 +3,13 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
+import { deleteCurrentArticles } from "../article/articleSlice";
 
 // types
 export type Shop = {
     id: string
-    name: string
+    name: string,
+    teamId: string
 }
 
 type FetchError = {
@@ -26,7 +28,8 @@ type ShopState = {
 const convertShop = (shop: firebase.database.DataSnapshot): Shop => {
     return {
         id: shop.key != null ? shop.key : '',
-        name: shop.val().name
+        name: shop.val().name,
+        teamId: shop.val().teamId
     };
 }
 
@@ -36,6 +39,15 @@ const convertShops = (snapshot: firebase.database.DataSnapshot): Shop[] => {
         shops.push(convertShop(shop))
     });
     return shops;
+}
+
+// TODO move to util
+const convertArticleIds = (articles: firebase.database.DataSnapshot): string[] => {
+    const articleIds: string[] = [];
+    articles.forEach((article) => {
+        articleIds.push(article.key!);
+    });
+    return articleIds;
 }
 
 // Thunks
@@ -70,13 +82,21 @@ export const fetchShops = createAsyncThunk<Shop[]>('shop/fetchShops',
     }
 );
 
-export const addArticle = createAsyncThunk('article/addArticle',
-    async (article: Shop) => {
+export const addShop = createAsyncThunk('shop/addShop',
+    async (shop: Shop) => {
+        // Create a new shop reference with an auto-generated id
+        var shopListRef = firebase.database().ref('shops');
+        var newShopRef = shopListRef.push();
+        newShopRef.set(shop);
+    }
+)
 
-        // Create a new article reference with an auto-generated id
-        var articleListRef = firebase.database().ref('articles');
-        var newArticleRef = articleListRef.push();
-        newArticleRef.set(article);
+export const deleteShop = createAsyncThunk<void, Shop, {dispatch: AppDispatch}>('shop/deleteShop',
+    async (shop, thunkApi) => {
+        const articleIds: string[] = await thunkApi.dispatch(fetchArticleIdsOfShop(shop))
+        await thunkApi.dispatch(deleteCurrentArticles(articleIds));
+        var shopRef = firebase.database().ref(`shops/${shop.id}`);
+        shopRef.remove();
     }
 )
 
@@ -87,6 +107,12 @@ export const updateArticle = createAsyncThunk('article/updateArticle',
         articleRef.update(article);
     }
 )
+
+const fetchArticleIdsOfShop = (shop: Shop): AppThunk<Promise<string[]>> => async (dispatch, getState) => {
+    const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`shops/${shop.id}/currentArticles`).once('value');
+    const snapshot = await promise;
+    return Promise.resolve(convertArticleIds(snapshot));
+}
 
 // Initial state
 const initialState: ShopState = {

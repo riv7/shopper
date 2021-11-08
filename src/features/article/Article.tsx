@@ -63,7 +63,7 @@ const Articles: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactEle
   }, [loaded, actTeam, dispatch])
 
   const handleAddClick = () => {
-    history.push('articles/newArticle');
+    history.push(`newArticle/${shopId}`);
   }
   
   return (

@@ -1,10 +1,12 @@
-import { Container, createStyles, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Theme } from '@material-ui/core';
+import { Container, createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addArticle } from './shopSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addShop } from './shopSlice';
 import NavBarBack from '../ui/NavBarBack';
+import { Team, activeTeam } from '../team/teamSlice';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,43 +20,36 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const NewArticle: FC = (): ReactElement => {
+const NewShop: FC = (): ReactElement => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
-    const [articleName, setArticleName] = useState('');
-    const [articleShop, setArticleShop] = useState('');
-    const [articleUnit, setArticleUnit] = useState('');
-    const [articleAmount, setArticleAmount] = useState(0);
+    const actTeam: Team | undefined = useSelector(activeTeam);
+    const history = useHistory();
+    const [shopName, setShopName] = useState('');
     
     const handleAddClick = () => {
-        const article = {
+        const shop = {
           id: '',
-          name: articleName,
-          amount: articleAmount,
-          unit: articleUnit,
-          active: true,
-          shop: articleShop
+          name: shopName,
+          teamId: actTeam!.id
         }
-        dispatch(addArticle(article));
+        dispatch(addShop(shop));
+        history.goBack();
     }
-
-    const handleSelectChange = (event:any) => {
-      setArticleUnit(event.target.value);
-    };
 
     const SaveButton: FC = () =>
       <IconButton 
         color="secondary"
         aria-label="save"
-        disabled={articleName === ''}
+        disabled={shopName === ''}
         onClick={handleAddClick}>
         <SaveIcon />
       </IconButton>;
 
     return (
       <div>
-        <NavBarBack title="Enter article" childComp={<SaveButton/>} />
+        <NavBarBack title="Enter shop" childComp={<SaveButton/>} />
         <Container>
           <form>
             <div className={classes.root}>
@@ -73,55 +68,12 @@ const NewArticle: FC = (): ReactElement => {
                   spacing={3}>
                   <Grid item>
                     <TextField 
-                      id="article-name" 
-                      label="Enter article name ..."
+                      id="shop-name" 
+                      label="Enter shop name ..."
                       variant="outlined"
                       fullWidth 
-                      value={articleName}
-                      onChange={event => setArticleName(event.target.value)}/>
-                  </Grid>
-                  <Grid item>
-                    <Grid
-                      container
-                      justify="space-between"
-                      spacing={1}>
-                        <Grid item xs={8}>
-                          <TextField 
-                            id="article-amount" 
-                            label="Enter article amount ..."
-                            variant="outlined"
-                            fullWidth 
-                            value={articleAmount}
-                            onChange={event => setArticleAmount(Number(event.target.value))}/>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <FormControl fullWidth variant="filled">
-                            <InputLabel id="unit-label">unit</InputLabel>
-                            <Select
-                              labelId="unit-label"
-                              id="unit-select"
-                              value={articleUnit}
-                              onChange={handleSelectChange}
-                            >
-                              <MenuItem value="">
-                                <em>None</em>
-                              </MenuItem>
-                              <MenuItem value={"g"}>Gramm</MenuItem>
-                              <MenuItem value={"l"}>liter</MenuItem>
-                              <MenuItem value={"kg"}>KG</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <TextField 
-                      id="article-shop" 
-                      label="Enter article shop ..."
-                      variant="outlined"
-                      fullWidth 
-                      value={articleShop}
-                      onChange={event => setArticleShop(event.target.value)}/>
+                      value={shopName}
+                      onChange={event => setShopName(event.target.value)}/>
                   </Grid>
                 </Grid>
               </Grid>
@@ -132,4 +84,4 @@ const NewArticle: FC = (): ReactElement => {
     );
 };
 
-export default NewArticle;
+export default NewShop;

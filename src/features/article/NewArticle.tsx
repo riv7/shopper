@@ -5,6 +5,7 @@ import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addArticle } from './articleSlice';
 import NavBarBack from '../ui/NavBarBack';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,14 +19,20 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const NewArticle: FC = (): ReactElement => {
+type NewArticleRouteProps = {
+  shopId: string;
+}
+
+const NewArticle: FC<RouteComponentProps<NewArticleRouteProps>> = ({match}): ReactElement => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
     const [articleName, setArticleName] = useState('');
     const [articleShop, setArticleShop] = useState('');
     const [articleUnit, setArticleUnit] = useState('');
     const [articleAmount, setArticleAmount] = useState(0);
+    const shopId: string = match.params.shopId
     
     const handleAddClick = () => {
         const article = {
@@ -34,9 +41,10 @@ const NewArticle: FC = (): ReactElement => {
           amount: articleAmount,
           unit: articleUnit,
           active: true,
-          shop: articleShop
+          shopId: shopId
         }
-        // dispatch(addArticle(article));
+        dispatch(addArticle(article));
+        history.goBack();
     }
 
     const handleSelectChange = (event:any) => {

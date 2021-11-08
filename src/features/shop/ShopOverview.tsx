@@ -58,7 +58,7 @@ const ShopOverview: FC = (): ReactElement => {
   }, [loaded, dispatch])
 
   const handleAddClick = () => {
-    history.push('shops/newShop');
+    history.push('shop/newShop');
   }
   
   return (

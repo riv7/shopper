@@ -85,11 +85,14 @@ export const fetchCurrentArticles = createAsyncThunk<Article[], string, {state: 
 
 export const addArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/addArticle',
     async (article, thunkApi) => {
-        // Create a new article reference with an auto-generated id TODO
+        // Create a new article reference with an auto-generated id
         const actTeam = thunkApi.getState().team.activeTeam!;
-        var articleListRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles/${article.id}`);
+        var articleListRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles`);
         var newArticleRef = articleListRef.push();
         newArticleRef.set(article);
+
+        const articleId: string = newArticleRef.key!
+        await thunkApi.dispatch(addArticleToShop(article.shopId, articleId));
     }
 );
 
@@ -101,6 +104,20 @@ export const updateArticle = createAsyncThunk<void, Article, {state: RootState, 
     }
 );
 
+const addArticleToShop = (shopId: string, articleId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const teamsOfUserRef = firebase.database().ref(`shops/${shopId}/currentArticles`);
+    return teamsOfUserRef.update({[articleId]: true});
+}
+
+export const deleteCurrentArticles = (articleIds: string[]): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const actTeam = getState().team.activeTeam!;
+    // TODO: To many remote calls?
+    articleIds.forEach(articleId => {
+        const articleRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles/${articleId}`);
+        articleRef.remove();
+    })
+    return Promise.resolve();
+}
 
 // Initial state
 const initialState: ArticleState = {
