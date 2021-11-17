@@ -29,7 +29,6 @@ const NewArticle: FC<RouteComponentProps<NewArticleRouteProps>> = ({match}): Rea
     const dispatch = useDispatch();
     const history = useHistory();
     const [articleName, setArticleName] = useState('');
-    const [articleShop, setArticleShop] = useState('');
     const [articleUnit, setArticleUnit] = useState('');
     const [articleAmount, setArticleAmount] = useState(0);
     const shopId: string = match.params.shopId
@@ -121,15 +120,6 @@ const NewArticle: FC<RouteComponentProps<NewArticleRouteProps>> = ({match}): Rea
                           </FormControl>
                         </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item>
-                    <TextField 
-                      id="article-shop" 
-                      label="Enter article shop ..."
-                      variant="outlined"
-                      fullWidth 
-                      value={articleShop}
-                      onChange={event => setArticleShop(event.target.value)}/>
                   </Grid>
                 </Grid>
               </Grid>

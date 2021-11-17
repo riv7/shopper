@@ -9,6 +9,7 @@ import SelectTeam from "./features/team/SelectTeam";
 import SelectTeam2 from "./features/team/SelectTeam2";
 import ShopOverview from "./features/shop/ShopOverview";
 import NewShop from "./features/shop/NewShop";
+import EditShop from "./features/shop/EditShop";
 
 const Routes: FC = (): ReactElement => {
     
@@ -17,6 +18,7 @@ const Routes: FC = (): ReactElement => {
             <Route exact path="/" component={Articles} />
             <Route exact path="/shop" component={ShopOverview} />
             <Route exact path="/shop/newShop" component={NewShop} />
+            <Route exact path="/shop/editShop/:shopId" component={EditShop} />
             <Route exact path="/team" component={SelectOrCreateTeam} />
             <Route exact path="/team/select" component={SelectTeam2} />
             <Route exact path="/team/create" component={CreateTeam} />

@@ -26,7 +26,6 @@ type NavBarBackProps = {
   childComp?: ReactNode
 }
 
-
 const NavBarBack: FC<NavBarBackProps> = ({title, childComp}) => {
   const classes = useStyles();
   const history = useHistory();

@@ -84,12 +84,18 @@ export const fetchShops = createAsyncThunk<Shop[]>('shop/fetchShops',
 
 export const addShop = createAsyncThunk('shop/addShop',
     async (shop: Shop) => {
-        // Create a new shop reference with an auto-generated id
         var shopListRef = firebase.database().ref('shops');
         var newShopRef = shopListRef.push();
         newShopRef.set(shop);
     }
-)
+);
+
+export const updateShop = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('shop/editShop',
+    async (shop, thunkApi) => {
+        const shopRef = firebase.database().ref(`shops/${shop.id}`);
+        shopRef.update(shop)
+    }
+);
 
 export const deleteShop = createAsyncThunk<void, Shop, {dispatch: AppDispatch}>('shop/deleteShop',
     async (shop, thunkApi) => {
@@ -97,14 +103,6 @@ export const deleteShop = createAsyncThunk<void, Shop, {dispatch: AppDispatch}>(
         await thunkApi.dispatch(deleteCurrentArticles(articleIds));
         var shopRef = firebase.database().ref(`shops/${shop.id}`);
         shopRef.remove();
-    }
-)
-
-export const updateArticle = createAsyncThunk('article/updateArticle',
-    async (article: Shop) => {
-        const key = article.id;
-        const articleRef = firebase.database().ref(`articles/${key}`);
-        articleRef.update(article);
     }
 )
 
@@ -145,9 +143,11 @@ export const shopSlice = createSlice({
     }
 });
 
+// Exported actions
 export const { pushShops, dataRequested } = shopSlice.actions;
 
 // Selectors to access data from state
+export const shopById = (shopId: string) => (state: RootState) => state.shop.shops.find(shop => shop.id === shopId);
 export const shops = (state: RootState) => state.shop.shops;
 export const shopsLoaded = (state: RootState) => state.shop.loaded;
 

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -7,14 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
-import { Menu, MenuItem, TextField } from '@material-ui/core';
+import { Menu, MenuItem } from '@material-ui/core';
 import { deleteShop, Shop } from './shopSlice';
-import { updateArticle } from './shopSlice';
 import { useDispatch } from 'react-redux';
-import NewShop from './NewShop';
 import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -64,7 +59,10 @@ const ShopItem: FC<ShopItemProps> = ({shop}): ReactElement => {
     dispatch(deleteShop(shop));
   }
 
-  
+  const handleEdit = () => {
+    history.push(`shop/editShop/${shop.id}`)
+  }
+
   const handleSelectClick = (event:any) => {
     history.push(`articles/${shop.id}`);
   };
@@ -105,7 +103,7 @@ const ShopItem: FC<ShopItemProps> = ({shop}): ReactElement => {
                       <IconButton
                         aria-label="shop-edit"
                         color="inherit"
-                        onClick={handleClose}>
+                        onClick={handleEdit}>
                         <EditIcon />
                       </IconButton>
                       Edit
