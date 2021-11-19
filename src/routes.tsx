@@ -10,6 +10,7 @@ import SelectTeam2 from "./features/team/SelectTeam2";
 import ShopOverview from "./features/shop/ShopOverview";
 import NewShop from "./features/shop/NewShop";
 import EditShop from "./features/shop/EditShop";
+import TemplateOverview from "./features/template/TemplateOverview";
 
 const Routes: FC = (): ReactElement => {
     
@@ -25,6 +26,7 @@ const Routes: FC = (): ReactElement => {
             <Route exact path="/team/confirm" component={ConfirmTeam} />
             <Route exact path="/articles/newArticle/:shopId" component={NewArticle} />
             <Route exact path="/articles/:shopId" component={Articles} />
+            <Route exact path="/templates" component={TemplateOverview} />
         </Switch>
     )
 }

@@ -4,6 +4,7 @@ import shopReducer from '../features/shop/shopSlice'
 import teamReducer from '../features/team/teamSlice'
 import loadingReducer from '../features/loading/loadingSlice'
 import messageReducer from '../features/message/messageSlice'
+import templateReducer from '../features/template/templateSlice'
 import { useDispatch } from 'react-redux'
 
 const store = configureStore({
@@ -12,8 +13,8 @@ const store = configureStore({
         shop: shopReducer,
         team: teamReducer,
         loading: loadingReducer,
-        message: messageReducer
-        
+        message: messageReducer,
+        template: templateReducer
     }
 })
 export type RootState = ReturnType<typeof store.getState>
