@@ -1,11 +1,12 @@
 import React, { FC, ReactElement } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme, alpha } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
@@ -14,11 +15,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
 import { Template } from './templateSlice';
+import { addArticle } from '../article/articleSlice';
+import { yellow } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: "flex",
+      display: "flex"
     },
     menuButton: {
       justifyContent:'right'
@@ -29,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
     decreaseButton: {
       justifyContent:'left'
     },
+    typography: {
+      color: alpha(theme.palette.common.white, 0.75)
+    },
     title: {
       flexGrow: 1,
     },
@@ -36,10 +42,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type TemplateItemProps = {
-    template: Template
+    template: Template,
+    shopId: string,
+    presentInShop: boolean
 }
 
-const TemplateItem: FC<TemplateItemProps> = ({template}): ReactElement => {
+const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentInShop}): ReactElement => {
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -67,19 +75,32 @@ const TemplateItem: FC<TemplateItemProps> = ({template}): ReactElement => {
     // history.push(`articles/${shop.id}`);
   };
 
+  const handleAddClick = () => {
+    const article = {
+      id: '',
+      name: template.name,
+      amount: 1,
+      unit: "piece",
+      active: true,
+      shopId: shopId
+    };
+    dispatch(addArticle(article));
+    history.goBack();
+}
+
   return (
-    <Card>
+    <Card className={classes.root}>
         <Grid container spacing={3}>
             <Grid item xs={1}>
                 <CardActions>
-                  <IconButton aria-label="addIcon" onClick={handleSelectClick}>
-                      <ShopIcon />
+                  <IconButton aria-label="addIcon" onClick={handleAddClick}>
+                      <AddCircleOutlineIcon />
                    </IconButton>
                 </CardActions>
             </Grid>
             <Grid item xs={9}>
                 <CardContent>
-                    <Typography variant="h5" component="h2">
+                    <Typography className={classes.typography} variant="h5" component="h2" >
                     {template.name}
                     </Typography>
                 </CardContent>

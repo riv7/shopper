@@ -26,7 +26,7 @@ const Routes: FC = (): ReactElement => {
             <Route exact path="/team/confirm" component={ConfirmTeam} />
             <Route exact path="/articles/newArticle/:shopId" component={NewArticle} />
             <Route exact path="/articles/:shopId" component={Articles} />
-            <Route exact path="/templates" component={TemplateOverview} />
+            <Route exact path="/templates/:shopId" component={TemplateOverview} />
         </Switch>
     )
 }

@@ -1,8 +1,8 @@
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { useHistory } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
 import { Container, Fab } from '@material-ui/core';
@@ -11,6 +11,8 @@ import { activeTeam, Team } from '../team/teamSlice';
 import NavBarBack from '../ui/NavBarBack';
 import { Template, selectTemplates, selectTemplatesLoaded, initTeamTemplateListener, initGlobalTemplateListener, fetchTemplates } from './templateSlice';
 import TemplateItem from './TemplateItem';
+import NavBarSearch from '../ui/NavBarSearch';
+import { Article, articles } from '../article/articleSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,14 +36,21 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const TemplateOverview: FC = (): ReactElement => {
+type TemplateOverviewRouteProps = {
+  shopId: string;
+}
+
+const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({match}): ReactElement => {
  
   const classes = useStyles();
   const allTemplates: Template[] = useSelector(selectTemplates);
+  const allArticles: Article[] = useSelector(articles);
   const loaded: boolean = useSelector(selectTemplatesLoaded);
   const actTeam: Team | undefined = useSelector(activeTeam);
+  const shopId = match.params.shopId;
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
 
@@ -57,20 +66,34 @@ const TemplateOverview: FC = (): ReactElement => {
     fetchAndInit();    
   }, [loaded, actTeam, dispatch])
 
+  const isPresent = (template: Template): boolean => {
+    return allArticles.map(art => art.name).includes(template.name);
+  }
+
   const handleAddClick = () => {
     history.push('shop/newShop');
   }
+
+  const searchChange = (event: any) => {
+    setFilterText(event.target.value);
+  };
   
   return (
     <div>
-      <NavBarBack title="TODO" />
+      <NavBarSearch 
+        title="" 
+        onChange={searchChange} />
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
             {allTemplates
+              .filter(template => template.name.includes(filterText))
               .map(template => 
                 <Grid item xs={12} key={template.id}>
-                  <TemplateItem template={template} />
+                  <TemplateItem 
+                    template={template}
+                    shopId={shopId}
+                    presentInShop={isPresent(template)} />
                 </Grid>
               )}
           </Grid>
