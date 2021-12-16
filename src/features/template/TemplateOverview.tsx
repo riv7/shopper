@@ -66,8 +66,10 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
     fetchAndInit();    
   }, [loaded, actTeam, dispatch])
 
-  const isPresent = (template: Template): boolean => {
-    return allArticles.map(art => art.name).includes(template.name);
+  const presentArticle = (template: Template): Article | undefined => {
+    return allArticles
+      .filter(article => (article.shopId === shopId))
+      .find(article => (article.name === template.name));
   }
 
   const handleAddClick = () => {
@@ -93,7 +95,7 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
                   <TemplateItem 
                     template={template}
                     shopId={shopId}
-                    presentInShop={isPresent(template)} />
+                    presentArticle={presentArticle(template)} />
                 </Grid>
               )}
           </Grid>

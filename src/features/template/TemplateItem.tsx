@@ -8,14 +8,14 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, TextField } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
 import { Template } from './templateSlice';
-import { addArticle } from '../article/articleSlice';
+import { addArticle, Article } from '../article/articleSlice';
 import { yellow } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) =>
     typography: {
       color: alpha(theme.palette.common.white, 0.75)
     },
+    typographyLight: {
+      color: alpha(theme.palette.common.white, 0.25)
+    },
     title: {
       flexGrow: 1,
     },
@@ -44,16 +47,19 @@ const useStyles = makeStyles((theme: Theme) =>
 type TemplateItemProps = {
     template: Template,
     shopId: string,
-    presentInShop: boolean
+    presentArticle: Article | undefined
 }
 
-const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentInShop}): ReactElement => {
+const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle}): ReactElement => {
 
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const typoClass = presentArticle !== undefined ? classes.typography : classes.typographyLight;
+  const amountText = (article: Article) => article.unit === '' ? article.amount : article.amount+' '+article.unit;
+  const amountInArticles = presentArticle !== undefined ?  amountText(presentArticle) : '';
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -93,16 +99,21 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentInShop}):
         <Grid container spacing={3}>
             <Grid item xs={1}>
                 <CardActions>
-                  <IconButton aria-label="addIcon" onClick={handleAddClick}>
+                  <IconButton className={typoClass} aria-label="addIcon" onClick={handleAddClick}>
                       <AddCircleOutlineIcon />
                    </IconButton>
                 </CardActions>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={5}>
                 <CardContent>
-                    <Typography className={classes.typography} variant="h5" component="h2" >
+                    <Typography className={typoClass} variant="h5" component="h2" >
                     {template.name}
                     </Typography>
+                </CardContent>
+            </Grid>
+            <Grid item xs={4}>
+                <CardContent>
+                  {presentArticle !== undefined && <TextField variant="standard" disabled id="outlined-basic" inputProps={{min: 0, style: { textAlign: 'center' }}} value={amountInArticles}/>}
                 </CardContent>
             </Grid>
             <Grid item xs={2}>
