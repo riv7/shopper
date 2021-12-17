@@ -90,18 +90,15 @@ export const initGlobalTemplateListener = (): AppThunk<Promise<Template[]>> => a
     })
 });
 
-// export const addArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/addArticle',
-//     async (article, thunkApi) => {
-//         // Create a new article reference with an auto-generated id
-//         const actTeam = thunkApi.getState().team.activeTeam!;
-//         var articleListRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles`);
-//         var newArticleRef = articleListRef.push();
-//         newArticleRef.set(article);
-
-//         const articleId: string = newArticleRef.key!
-//         await thunkApi.dispatch(addArticleToShop(article.shopId, articleId));
-//     }
-// );
+export const addTemplate = createAsyncThunk<void, Template, {state: RootState, dispatch: AppDispatch}>('article/addTemplate',
+    async (template, thunkApi) => {
+        // Create a new template reference with an auto-generated id
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        var templateListRef = firebase.database().ref(`templates/teams/${actTeam.id}/templates`);
+        var newTemplateRef = templateListRef.push();
+        newTemplateRef.set(template);
+    }
+);
 
 // export const updateArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/updateArticle',
 //     async (article, thunkApi) => {

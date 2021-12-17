@@ -8,15 +8,13 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Menu, MenuItem, TextField } from '@material-ui/core';
+import { Menu, MenuItem } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import { Template } from './templateSlice';
+import { addTemplate, Template } from './templateSlice';
 import { addArticle, Article } from '../article/articleSlice';
-import { yellow } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +55,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const typoClass = presentArticle !== undefined ? classes.typography : classes.typographyLight;
+  const typoClass = presentArticle !== undefined ? classes.typographyLight : classes.typography;
   const amountText = (article: Article) => article.unit === '' ? article.amount : article.amount+' '+article.unit;
   const amountInArticles = presentArticle !== undefined ?  amountText(presentArticle) : '';
 
@@ -82,17 +80,25 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
   };
 
   const handleAddClick = () => {
-    const article = {
-      id: '',
-      name: template.name,
-      amount: 1,
-      unit: "piece",
-      active: true,
-      shopId: shopId
-    };
-    dispatch(addArticle(article));
+
+    if (template.id === '') {
+      dispatch(addTemplate(template));
+    }
+
+    if (presentArticle === undefined) {
+      const article = {
+        id: '',
+        name: template.name,
+        amount: 1,
+        unit: "piece",
+        active: true,
+        shopId: shopId
+      };
+      dispatch(addArticle(article));
+    }
+
     history.goBack();
-}
+  }
 
   return (
     <Card className={classes.root}>
@@ -113,7 +119,10 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
             </Grid>
             <Grid item xs={4}>
                 <CardContent>
-                  {presentArticle !== undefined && <TextField variant="standard" disabled id="outlined-basic" inputProps={{min: 0, style: { textAlign: 'center' }}} value={amountInArticles}/>}
+                  {presentArticle !== undefined &&
+                   <Typography className={typoClass} variant="h6" >
+                     {amountInArticles}
+                   </Typography>}
                 </CardContent>
             </Grid>
             <Grid item xs={2}>

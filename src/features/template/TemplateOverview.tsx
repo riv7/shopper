@@ -5,7 +5,7 @@ import {  useSelector } from 'react-redux';
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
-import { Container, Fab } from '@material-ui/core';
+import { Box, Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { activeTeam, Team } from '../team/teamSlice';
 import NavBarBack from '../ui/NavBarBack';
@@ -79,7 +79,46 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
   const searchChange = (event: any) => {
     setFilterText(event.target.value);
   };
-  
+
+  const emptyTemplate = (templateName: string): Template => ({
+    id: '',
+    name: templateName,
+    unit: 'piece',
+    global: false
+  });
+
+  const FilteredTemplates = () => {
+    const filteredTemplates: Template[] = allTemplates.filter(template => template.name.includes(filterText));
+    if (filteredTemplates.length === 0) {
+      const tmpl = emptyTemplate(filterText);
+      return (
+        <Grid container spacing={3}>
+          <Grid item xs={12} key={"new"}>
+            <TemplateItem 
+              template={tmpl}
+              shopId={shopId}
+              presentArticle={undefined} />
+          </Grid>
+        </Grid>
+      );
+    } else {
+      return (
+        <Grid container spacing={3}>
+          {filteredTemplates
+            .map(template => 
+              <Grid item xs={12} key={template.id}>
+                <TemplateItem 
+                  template={template}
+                  shopId={shopId}
+                  presentArticle={presentArticle(template)} />
+              </Grid>
+            )
+          }
+        </Grid>
+      );
+    }
+  }
+
   return (
     <div>
       <NavBarSearch 
@@ -87,18 +126,7 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
         onChange={searchChange} />
       <Container>
         <div className={classes.root}>
-          <Grid container spacing={3}>
-            {allTemplates
-              .filter(template => template.name.includes(filterText))
-              .map(template => 
-                <Grid item xs={12} key={template.id}>
-                  <TemplateItem 
-                    template={template}
-                    shopId={shopId}
-                    presentArticle={presentArticle(template)} />
-                </Grid>
-              )}
-          </Grid>
+          <FilteredTemplates />
           <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
           </Fab>
