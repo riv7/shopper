@@ -13,8 +13,9 @@ import { useDispatch } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import { addTemplate, Template } from './templateSlice';
+import { addTemplate, deleteTemplate, Template } from './templateSlice';
 import { addArticle, Article } from '../article/articleSlice';
+import { showMessage } from '../message/messageSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,10 +68,6 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
     setAnchorEl(null);
   };
 
-  const handleDelete = () => {
-    // dispatch(deleteShop(shop));
-  }
-
   const handleEdit = () => {
     // history.push(`shop/editShop/${shop.id}`)
   }
@@ -78,6 +75,14 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
   const handleSelectClick = (event:any) => {
     // history.push(`articles/${shop.id}`);
   };
+
+  const handleDelete = () => {
+    if (template.global === false) {
+      dispatch(deleteTemplate(template.id));
+    } else {
+      dispatch(showMessage({ status: "error", message: "Only user created templates can be deleted" }));
+    }
+  }
 
   const handleAddClick = () => {
 

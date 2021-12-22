@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { useDispatch, useSelector } from 'react-redux';
-import { display, hideMessage, severity } from './messageSlice';
+import { display, hideMessage, severity, message } from './messageSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,6 +20,7 @@ const Messagebar: FC = (): ReactElement => {
   const classes = useStyles();
   const showMessage = useSelector(display);
   const messageSeverity = useSelector(severity)
+  const messageText = useSelector(message)
   const dispatch = useDispatch();
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -37,7 +38,7 @@ const Messagebar: FC = (): ReactElement => {
       className={classes.snackbar}>
 
       <Alert onClose={handleClose} severity={messageSeverity}>
-        This is a message with severity {messageSeverity}
+        {messageText}
       </Alert>
 
     </Snackbar>

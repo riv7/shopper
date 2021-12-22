@@ -117,6 +117,14 @@ export const fetchTemplates = createAsyncThunk<Template[], string, {state: RootS
     }
 );
 
+export const deleteTemplate = createAsyncThunk<void, string, {state: RootState, dispatch: AppDispatch}>('templates/deleteTemplate',
+    async (templateId, thunkApi) => {
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        const templateRef = firebase.database().ref(`templates/teams/${actTeam.id}/templates/${templateId}`);
+        templateRef.remove();
+    }
+);
+
 const fetchTeamTemplates = (teamId: string): AppThunk<Promise<Template[]>> => async (dispatch, getState) => {
     const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`templates/teams/${teamId}/templates`).once('value');
     const snapshot = await promise;
