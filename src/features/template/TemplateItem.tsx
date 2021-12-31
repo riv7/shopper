@@ -68,10 +68,6 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
     setAnchorEl(null);
   };
 
-  const handleEdit = () => {
-    // history.push(`shop/editShop/${shop.id}`)
-  }
-
   const handleSelectClick = (event:any) => {
     // history.push(`articles/${shop.id}`);
   };
@@ -81,6 +77,14 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
       dispatch(deleteTemplate(template.id));
     } else {
       dispatch(showMessage({ status: "error", message: "Only user created templates can be deleted" }));
+    }
+  }
+
+  const handleEdit = () => {
+    if (template.global === false) {
+      history.push(`editTemplate/${template.id}`);
+    } else {
+      dispatch(showMessage({ status: "error", message: "Only user created templates can be edited" }));
     }
   }
 

@@ -125,6 +125,14 @@ export const deleteTemplate = createAsyncThunk<void, string, {state: RootState, 
     }
 );
 
+export const updateTemplate = createAsyncThunk<void, Template, {state: RootState, dispatch: AppDispatch}>('templates/editTemplates',
+    async (template, thunkApi) => {
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        const templateRef = firebase.database().ref(`templates/teams/${actTeam.id}/templates/${template.id}`);
+        templateRef.update(template)
+    }
+);
+
 const fetchTeamTemplates = (teamId: string): AppThunk<Promise<Template[]>> => async (dispatch, getState) => {
     const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`templates/teams/${teamId}/templates`).once('value');
     const snapshot = await promise;
@@ -199,5 +207,6 @@ export const { pushTeamTemplates, pushGlobalTemplates, dataRequested } = templat
 // Selectors to access data from state
 export const selectTemplates = (state: RootState) => state.template.templates;
 export const selectTemplatesLoaded = (state: RootState) => state.template.loaded;
+export const templateById = (templateId: string) => (state: RootState) => state.template.templates.find(template => template.id === templateId);
 
 export default templateSlice.reducer;
