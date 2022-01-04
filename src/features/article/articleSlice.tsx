@@ -52,7 +52,7 @@ export const initCurrentArticleListener = (teamId: string): AppThunk<Promise<Art
 
     // const teamId: string = getState().team.activeTeam!.id
 
-    firebase.database().ref(`articles/current/teams/${teamId}/articles`).on('value', (snapshot) => {
+    firebase.database().ref(`articles/teams/${teamId}/articles`).on('value', (snapshot) => {
         const articles: Article[] = convertArticles(snapshot);
 
          // Article message when data was not requested by user
@@ -77,7 +77,7 @@ export const initCurrentArticleListener = (teamId: string): AppThunk<Promise<Art
 export const fetchCurrentArticles = createAsyncThunk<Article[], string, {state: RootState, dispatch: AppDispatch}>('article/fetchArticles',
     async (teamId, thunkApi) => {
         // const activeTeam: Team = thunkApi.getState().team.activeTeam!
-        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`articles/current/teams/${teamId}/articles`).once('value');
+        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`articles/teams/${teamId}/articles`).once('value');
         const snapshot = await promise;
         return convertArticles(snapshot);
     }
@@ -87,7 +87,7 @@ export const addArticle = createAsyncThunk<void, Article, {state: RootState, dis
     async (article, thunkApi) => {
         // Create a new article reference with an auto-generated id
         const actTeam = thunkApi.getState().team.activeTeam!;
-        var articleListRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles`);
+        var articleListRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles`);
         var newArticleRef = articleListRef.push();
         newArticleRef.set(article);
 
@@ -99,7 +99,7 @@ export const addArticle = createAsyncThunk<void, Article, {state: RootState, dis
 export const updateArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/updateArticle',
     async (article, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
-        var articleRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles/${article.id}`);
+        var articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${article.id}`);
         articleRef.update(article);
     }
 );
@@ -113,7 +113,7 @@ export const deleteCurrentArticles = (articleIds: string[]): AppThunk<Promise<vo
     const actTeam = getState().team.activeTeam!;
     // TODO: To many remote calls?
     articleIds.forEach(articleId => {
-        const articleRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles/${articleId}`);
+        const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${articleId}`);
         articleRef.remove();
     })
     return Promise.resolve();
@@ -155,5 +155,6 @@ export const { pushArticles, dataRequested } = articleSlice.actions;
 // Selectors to access data from state
 export const articles = (state: RootState) => state.article.articles;
 export const articlesLoaded = (state: RootState) => state.article.loaded;
+export const articleById = (articleId: string) => (state: RootState) => state.article.articles.find(article => article.id === articleId);
 
 export default articleSlice.reducer;

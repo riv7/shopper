@@ -6,7 +6,7 @@ import { fetchCurrentArticles, Article, articles, articlesLoaded, initCurrentArt
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
-import { Container, Fab } from '@material-ui/core';
+import { Container, Divider, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { activeTeam, Team } from '../team/teamSlice';
 import ArticleItem from './ArticleItem';
@@ -39,7 +39,7 @@ type ArticleRouteProps = {
   shopId: string;
 }
 
-const Articles: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactElement => {
+const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactElement => {
  
   const classes = useStyles();
   const allArticles: Article[] = useSelector(articles);
@@ -80,6 +80,19 @@ const Articles: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactEle
                   <ArticleItem article={article} />
                 </Grid>
               )}
+              <Grid item xs={12} key="div2">
+              </Grid>
+              <Grid item xs={12} key="div1">
+                <Divider variant="middle" />
+              </Grid>
+              <Grid item xs={12} key="div3"></Grid>
+              {allArticles
+              .filter(article => (article.shopId === shopId) && (article.active === false))
+              .map(article => 
+                <Grid item xs={12} key={article.id}>
+                  <ArticleItem article={article} />
+                </Grid>
+              )}
           </Grid>
           <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
@@ -90,4 +103,4 @@ const Articles: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactEle
   );
 }
 
-export default Articles;
+export default ArticleOverview;
