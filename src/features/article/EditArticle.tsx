@@ -33,8 +33,8 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
 
     const history = useHistory();
     const [articleName, setArticleName] = useState(article === undefined ? '' : article.name);
-    const [articleUnit, setArticleUnit] = useState('');
-    const [articleAmount, setArticleAmount] = useState(0);
+    const [articleUnit, setArticleUnit] = useState(article === undefined ? '' : article.unit);
+    const [articleAmount, setArticleAmount] = useState(article === undefined ? 0 : article.amount);
     const [valueChanged, setValueChanged] = useState(false);
 
     const handleSaveClick = () => {
@@ -119,8 +119,7 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
                               labelId="unit-label"
                               id="unit-select"
                               value={articleUnit}
-                              onChange={handleSelectChange}
-                            >
+                              onChange={handleSelectChange}>
                               <MenuItem value="">
                                 <em>None</em>
                               </MenuItem>
