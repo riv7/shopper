@@ -124,8 +124,8 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
                                 <em>None</em>
                               </MenuItem>
                               <MenuItem value={"g"}>Gramm</MenuItem>
-                              <MenuItem value={"l"}>liter</MenuItem>
-                              <MenuItem value={"kg"}>KG</MenuItem>
+                              <MenuItem value={"l"}>Liter</MenuItem>
+                              <MenuItem value={"kg"}>Kilo</MenuItem>
                             </Select>
                           </FormControl>
                         </Grid>

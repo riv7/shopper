@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, Select } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -109,6 +109,39 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
     history.goBack();
   }
 
+  const AmountOrSelect: FC = () => {
+    if (template.id === '') {
+      return (
+      <Select
+        fullWidth
+        labelId="unit-label"
+        id="unit-select"
+        // value={articleUnit}
+        // onChange={handleSelectChange}>
+        >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        <MenuItem value={"g"}>Gramm</MenuItem>
+        <MenuItem value={"l"}>Liter</MenuItem>
+        <MenuItem value={"kg"}>Kilo</MenuItem>
+      </Select>
+
+        // <Typography></Typography>
+      )
+    } else if (presentArticle === undefined) {
+      return (
+        <Typography></Typography>
+      )
+    } else {
+      return (
+        <Typography className={typoClass} variant="h6" >
+          {amountInArticles}
+        </Typography>
+      )
+    }
+  }
+
   return (
     <Card className={classes.root}>
         <Grid container spacing={3}>
@@ -128,10 +161,11 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
             </Grid>
             <Grid item xs={4}>
                 <CardContent>
-                  {presentArticle !== undefined &&
+                  <AmountOrSelect />
+                  {/* {presentArticle !== undefined &&
                    <Typography className={typoClass} variant="h6" >
                      {amountInArticles}
-                   </Typography>}
+                   </Typography>} */}
                 </CardContent>
             </Grid>
             <Grid item xs={2}>

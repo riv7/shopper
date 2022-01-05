@@ -76,23 +76,27 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
     .filter(article => (article.shopId === shopId) && (article.active === active));
 
   const ArticleDivider: FC = () => {
-    return (
-      <Grid container spacing={5} className={classes.aricleDiv}>
-        <Grid item xs={12} key="div1">
-          <Grid container
-            justify="space-between"
-            spacing={1}>
-            <Grid item xs={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid item xs={8}></Grid>
-            <Grid item xs={4}>
-              <Button color="secondary" fullWidth>Clear all</Button>
+    if (filteredArticles(false).length === 0) {
+      return <Grid />
+    } else {
+      return (
+        <Grid container spacing={5} className={classes.aricleDiv}>
+          <Grid item xs={12} key="div1">
+            <Grid container
+              justify="space-between"
+              spacing={1}>
+              <Grid item xs={12}>
+                <Divider variant="middle" />
+              </Grid>
+              <Grid item xs={8}></Grid>
+              <Grid item xs={4}>
+                <Button color="secondary" fullWidth>Clear all</Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    )
+      );
+    }
   }
 
   return (
@@ -107,13 +111,6 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
               </Grid>
             )}
             <ArticleDivider />
-            {/* <Grid item xs={12} key="div2">
-            </Grid>
- 
-            <Grid item xs={12} key="div1">
-              <Divider variant="middle" />
-            </Grid>
-            <Grid item xs={12} key="div3"></Grid> */}
             {filteredArticles(false).map(article => 
               <Grid item xs={12} key={article.id}>
                 <ArticleItem article={article} />

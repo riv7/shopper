@@ -70,7 +70,7 @@ const ArticleItem: FC<ArticleItemProps> = ({article}): ReactElement => {
   };
 
   const handleResolvedClick = (event:any) => {
-    articleItem.active = false;
+    articleItem.active = !articleItem.active;
     dispatch(updateArticle(articleItem));
   };
 
@@ -88,14 +88,14 @@ const ArticleItem: FC<ArticleItemProps> = ({article}): ReactElement => {
                    </IconButton>
                 </CardActions>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={3} md={5}>
                 <CardContent>
                     <Typography className={typoClass} variant="h5" component="h2">
                     {article.name}
                     </Typography>
                 </CardContent>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6} md={4}>
                 <Grid container spacing={3}>
                     <Grid item xs={2}>
                       <CardActions className={classes.decreaseButton}>
@@ -106,14 +106,7 @@ const ArticleItem: FC<ArticleItemProps> = ({article}): ReactElement => {
                     </Grid>
                     <Grid item xs={8}>
                       <CardContent>
-                      <Button variant="outlined" fullWidth onClick={handleEdit}>{amountText}</Button>
-                      {/* <Button variant="contained">{amountText}</Button> */}
-                      {/* <Button>{amountText}</Button> */}
-                      {/* <Input className={typoClass} disableUnderline={true} value={amountText}  /> */}
-                      {/* <Typography className={typoClass} variant="h6" >
-                        {amountText}
-                        </Typography> */}
-                        {/* <TextField className={typoClass} disabled id="outlined-basic" variant="filled" inputProps={{min: 0, style: { textAlign: 'center' }}} value={amountText}/> */}
+                        <Button variant="outlined" fullWidth onClick={handleEdit}>{amountText}</Button>
                       </CardContent>
                     </Grid>
                     <Grid item xs={2}>
