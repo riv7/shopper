@@ -1,4 +1,4 @@
-import { Container, createStyles, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Theme } from '@material-ui/core';
+import { Container, createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import NavBarBack from '../ui/NavBarBack';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { Article, articleById, updateArticle } from './articleSlice';
+import SelectUnit from '../ui/SelectUnit';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,17 +33,21 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
     const article: Article | undefined = useSelector(articleById(articleId));
 
     const history = useHistory();
+    
     const [articleName, setArticleName] = useState(article === undefined ? '' : article.name);
-    const [articleUnit, setArticleUnit] = useState(article === undefined ? '' : article.unit);
     const [articleAmount, setArticleAmount] = useState(article === undefined ? 0 : article.amount);
-    const [valueChanged, setValueChanged] = useState(false);
+    const unitState = useState(article === undefined ? '' : article.unit);
+    const [selectedUnit] = unitState;
+    const valueChangedState = useState(false);
+    const [valueChanged, setValueChanged] = valueChangedState;
+
 
     const handleSaveClick = () => {
       const changedArticle = {
         id: article!.id,
         name: articleName,
         amount: articleAmount,
-        unit: articleUnit,
+        unit: selectedUnit,
         active: article!.active,
         shopId: article!.shopId
       }
@@ -50,11 +55,6 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
       history.goBack();
     }
 
-    const handleSelectChange = (event:any) => {
-      setArticleUnit(event.target.value);
-      setValueChanged(true);
-    };
-    
     const SaveButton: FC = () =>
       <IconButton 
         color="secondary"
@@ -113,21 +113,7 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
                               setValueChanged(true)}}/>
                         </Grid>
                         <Grid item xs={4}>
-                          <FormControl fullWidth variant="filled">
-                            <InputLabel id="unit-label">unit</InputLabel>
-                            <Select
-                              labelId="unit-label"
-                              id="unit-select"
-                              value={articleUnit}
-                              onChange={handleSelectChange}>
-                              <MenuItem value="">
-                                <em>None</em>
-                              </MenuItem>
-                              <MenuItem value={"g"}>Gramm</MenuItem>
-                              <MenuItem value={"l"}>Liter</MenuItem>
-                              <MenuItem value={"kg"}>Kilo</MenuItem>
-                            </Select>
-                          </FormControl>
+                          <SelectUnit unitState={unitState} valueChangedState={valueChangedState} />
                         </Grid>
                       </Grid>
                   </Grid>
