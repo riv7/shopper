@@ -2,15 +2,17 @@ import React, { FC, ReactElement, useEffect } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { fetchCurrentArticles, Article, articles, articlesLoaded, initCurrentArticleListener } from './articleSlice';
+import { fetchCurrentArticles, Article, articles, articlesLoaded, initCurrentArticleListener, activateArticles } from './articleSlice';
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
-import { Box, Button, Container, Divider, Fab } from '@material-ui/core';
+import { Button, Container, Divider, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { activeTeam, Team } from '../team/teamSlice';
 import ArticleItem from './ArticleItem';
 import NavBarBack from '../ui/NavBarBack';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Shop, shopById } from '../shop/shopSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -72,6 +74,10 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
     history.push(`/templates/${shopId}`);
   }
 
+  const handleAddAll = () => {
+    dispatch(activateArticles(shop!));
+  }
+
   const filteredArticles = (active: boolean) => allArticles
     .filter(article => (article.shopId === shopId) && (article.active === active));
 
@@ -88,9 +94,12 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
               <Grid item xs={12}>
                 <Divider variant="middle" />
               </Grid>
-              <Grid item xs={8}></Grid>
-              <Grid item xs={4}>
-                <Button color="secondary" fullWidth>Clear all</Button>
+              <Grid item xs={3}>
+                <Button fullWidth color="secondary" startIcon={<ExpandLessIcon />} onClick={handleAddAll}>Add all</Button>
+              </Grid>
+              <Grid item xs={6}></Grid>
+              <Grid item xs={3}>
+                <Button fullWidth color="secondary" startIcon={<ExpandMoreIcon />}>Clear all</Button>
               </Grid>
             </Grid>
           </Grid>
