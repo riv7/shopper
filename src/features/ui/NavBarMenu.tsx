@@ -8,10 +8,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
 import { AccountCircle, ExitToApp } from '@material-ui/icons';
 import firebase from 'firebase';
-import { constants } from 'buffer';
 import { activeTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import Sidedrawer from './Sidedrawer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +33,7 @@ const NavBarMenu: FC = () => {
   const history = useHistory();
   const actTeam: Team | undefined = useSelector(activeTeam);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const drawerOpenState = React.useState(false);
   const open = Boolean(anchorEl);
 
   const handleLogoutClick = () => {
@@ -47,6 +48,10 @@ const NavBarMenu: FC = () => {
     history.push('team');
   };
 
+  const handleSidedrawerClick = () => {
+    drawerOpenState[1](true);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -56,9 +61,10 @@ const NavBarMenu: FC = () => {
 
   return (
     <div className={classes.root}>
+      <Sidedrawer drawerOpenState={drawerOpenState} />
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" className={classes.menuButton} onClick={handleSidedrawerClick} color="inherit" aria-label="menu">
             <MenuIcon/>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
