@@ -3,7 +3,7 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
-import { Team } from "../team/teamSlice";
+import { Shop } from "../shop/shopSlice";
 
 // types
 export type Article = {
@@ -90,24 +90,57 @@ export const addArticle = createAsyncThunk<void, Article, {state: RootState, dis
         var articleListRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles`);
         var newArticleRef = articleListRef.push();
         newArticleRef.set(article);
-
-        const articleId: string = newArticleRef.key!
-        await thunkApi.dispatch(addArticleToShop(article.shopId, articleId));
     }
 );
 
 export const updateArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/updateArticle',
     async (article, thunkApi) => {
-        const actTeam = thunkApi.getState().team.activeTeam!;
-        var articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${article.id}`);
-        articleRef.update(article);
+        await thunkApi.dispatch(updateArticleOfTeam(article));
     }
 );
 
-const addArticleToShop = (shopId: string, articleId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
-    const teamsOfUserRef = firebase.database().ref(`shops/${shopId}/currentArticles`);
-    return teamsOfUserRef.update({[articleId]: true});
+export const deleteArticle = createAsyncThunk<void, string, {state: RootState, dispatch: AppDispatch}>('article/deleteArticle',
+    async (articleId, thunkApi) => {
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${articleId}`);
+        articleRef.remove();
+    }
+);
+
+export const clearArticles = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('article/clearArticles',
+    async (shop, thunkApi) => {
+        const articles: Article[] = thunkApi.getState().article.articles;
+        const filteredArticleIds = articles
+            .filter(article => article.shopId === shop.id)
+            .filter(article => article.active === false)
+            .map(article => article.id);
+
+        await thunkApi.dispatch(deleteCurrentArticles(filteredArticleIds));
+    }
+)
+
+export const activateArticles = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('article/activateArticles',
+    async (shop, thunkApi) => {
+        const articles: Article[] = thunkApi.getState().article.articles;
+        const filteredArticles = articles
+            .filter(article => article.shopId === shop.id)
+            .filter(article => article.active === false);
+
+        for (var article of filteredArticles) {
+            const copy = {...article}
+            copy.active = true;
+            await thunkApi.dispatch(updateArticleOfTeam(copy));
+        }
+    }
+);
+
+const updateArticleOfTeam = (article: Article): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const actTeam = getState().team.activeTeam!;
+    const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${article.id}`);
+    articleRef.update(article);
+    return Promise.resolve();
 }
+
 
 export const deleteCurrentArticles = (articleIds: string[]): AppThunk<Promise<void>> => async (dispatch, getState) => {
     const actTeam = getState().team.activeTeam!;
