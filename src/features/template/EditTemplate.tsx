@@ -4,10 +4,9 @@ import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBarBack from '../ui/NavBarBack';
-import { Team, activeTeam } from '../team/teamSlice';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { AppAsyncThunk } from '../../app/store';
 import { Template, templateById, updateTemplate } from './templateSlice';
+import SelectUnit from '../ui/SelectUnit';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,19 +29,21 @@ const EditTemplate: FC<RouteComponentProps<EditTemplateRouteProps>> = ({match}):
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const actTeam: Team | undefined = useSelector(activeTeam);
     const templateId: string = match.params.templateId;
     const template: Template | undefined = useSelector(templateById(templateId));
 
     const history = useHistory();
     const [templateName, setTemplateName] = useState(template === undefined ? '' : template.name);
-    const [nameChanged, setNameChanged] = useState(false);
+    const unitState = useState(template === undefined ? '' : template.unit);
+    const [selectedUnit] = unitState;
+    const valueChangedState = useState(false);
+    const [valueChanged, setValueChanged] = valueChangedState;
     
     const handleSaveClick = () => {
         const changedTemplate = {
           id: template!.id,
           name: templateName,
-          unit: "g",
+          unit: selectedUnit,
           global: false
         }
         dispatch(updateTemplate(changedTemplate));
@@ -53,7 +54,7 @@ const EditTemplate: FC<RouteComponentProps<EditTemplateRouteProps>> = ({match}):
       <IconButton 
         color="secondary"
         aria-label="save"
-        disabled={nameChanged === false}
+        disabled={valueChanged === false}
         onClick={handleSaveClick}>
         <SaveIcon />
       </IconButton>;
@@ -80,16 +81,26 @@ const EditTemplate: FC<RouteComponentProps<EditTemplateRouteProps>> = ({match}):
                   direction="column"
                   spacing={3}>
                   <Grid item>
-                    <TextField 
-                      id="template-name" 
-                      label="Change template name..."
-                      variant="outlined"
-                      fullWidth 
-                      value={templateName}
-                      onChange={event => {
-                        setTemplateName(event.target.value);
-                        setNameChanged(true)}}/>
-                  </Grid>
+                    <Grid
+                      container
+                      justify="space-between"
+                      spacing={1}>
+                        <Grid item xs={8}>
+                          <TextField 
+                            id="template-name" 
+                            label="Change template name..."
+                            variant="outlined"
+                            fullWidth 
+                            value={templateName}
+                            onChange={event => {
+                              setTemplateName(event.target.value);
+                              setValueChanged(true)}}/>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <SelectUnit unitState={unitState} valueChangedState={valueChangedState} />
+                        </Grid>
+                      </Grid>
+                    </Grid>
                 </Grid>
               </Grid>
             </div>
