@@ -16,7 +16,7 @@ const Routes: FC = (): ReactElement => {
     
     return (
         <Switch>
-            <Route exact path="/" component={ArticleOverview} />
+            <Route exact path="/" component={ShopOverview} />
             <Route exact path="/shop" component={ShopOverview} />
             <Route exact path="/shop/newShop" component={NewShop} />
             <Route exact path="/shop/editShop/:shopId" component={EditShop} />
