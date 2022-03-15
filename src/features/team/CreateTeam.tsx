@@ -1,10 +1,11 @@
-import { Button, Container, createStyles, Grid, IconButton, makeStyles, TextField, Theme } from "@material-ui/core";
+import { Button, Card, CardContent, Container, createStyles, FilledInput, Grid, IconButton, Input, InputAdornment, makeStyles, OutlinedInput, TextField, Theme, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState } from "react";
 import NavBarBack from "../ui/NavBarBack";
 import SaveIcon from '@material-ui/icons/Save';
 import { addTeam, Team } from "./teamSlice";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "../../app/store";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,16 +33,24 @@ const CreateTeam: FC = (): ReactElement => {
     const dispatch = useDispatch();
     const [teamName, setTeamName] = useState('')
     const [teamPassword, setTeamPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+    const [teamAdded, setTeamAdded] = useState(false)
 
     const handleAddClick = () => {
-        const teamData: Team = {
-            id: '',
-            name: teamName,
-            password: teamPassword,
-            ownerId: '',
-            ownerName: ''
-        }
-        dispatch(addTeam(teamData));
+        // const teamData: Team = {
+        //     id: '',
+        //     name: teamName,
+        //     password: teamPassword,
+        //     ownerId: '',
+        //     ownerName: ''
+        // }
+        // dispatch(addTeam(teamData));
+        setTeamAdded(true);
+    }
+
+    const handleShowPassword = () => {
+        console.log(showPassword)
+        setShowPassword(!showPassword);
     }
 
     const SaveButton: FC = () =>
@@ -53,6 +62,23 @@ const CreateTeam: FC = (): ReactElement => {
         <SaveIcon />
       </IconButton>;
 
+    const InfoBox: FC = () =>
+        <Card>
+            <CardContent>
+                <Typography variant="h5" >
+                    Team {teamName} created
+                </Typography>
+                {/* <Typography variant="body1" component="p">
+                    Please copy your team name and password with the button below.
+                    <br />
+                    Afterwards send the copied content to your shopping friends.
+                    <br />
+                    They can join your team by pasting the credentials in the join team section
+                </Typography> */}
+            </CardContent>
+        </Card>
+        
+
     return (
         <div>
             <NavBarBack title="Create team" childComp={<SaveButton/>} />
@@ -63,6 +89,7 @@ const CreateTeam: FC = (): ReactElement => {
                         justify="center"
                         alignItems="flex-start"
                         spacing={0}
+                        // style={{ minHeight: '100vh', width: "200px"} }
                         style={{ minHeight: '100vh' }}
                         direction="row">
                         <Grid item>
@@ -81,15 +108,30 @@ const CreateTeam: FC = (): ReactElement => {
                                         onChange={event => setTeamName(event.target.value)}/>
                                 </Grid>
                                 <Grid item>
-                                    <TextField 
+                                    <OutlinedInput 
                                         id="standard-basic" 
-                                        label="Enter team password..."
-                                        variant="outlined"
-                                        type="password"
+                                        //label="Enter team password..."
+                                        //variant="outlined"
+                                        type={showPassword ? 'text' : 'password'}
                                         fullWidth 
                                         value={teamPassword}
-                                        onChange={event => setTeamPassword(event.target.value)}/>
+                                        onChange={event => setTeamPassword(event.target.value)}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleShowPassword}
+                                                >
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                            }/>
                                 </Grid>
+                                {teamAdded === true &&
+                                    <Grid item>
+                                        <InfoBox />
+                                    </Grid>
+                                }
                             </Grid>
                         </Grid>
                     </Grid>

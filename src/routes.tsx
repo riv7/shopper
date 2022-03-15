@@ -11,6 +11,7 @@ import EditShop from "./features/shop/EditShop";
 import TemplateOverview from "./features/template/TemplateOverview";
 import EditTemplate from "./features/template/EditTemplate";
 import EditArticle from "./features/article/EditArticle";
+import TeamOverview from "./features/team/TeamOverview";
 
 const Routes: FC = (): ReactElement => {
     
@@ -22,6 +23,7 @@ const Routes: FC = (): ReactElement => {
             <Route exact path="/shop/editShop/:shopId" component={EditShop} />
             <Route exact path="/team" component={SelectOrCreateTeam} />
             <Route exact path="/team/select" component={SelectTeam2} />
+            <Route exact path="/team/select2" component={TeamOverview} />
             <Route exact path="/team/create" component={CreateTeam} />
             <Route exact path="/team/confirm" component={ConfirmTeam} />
             {/* <Route exact path="/articles/newArticle/:shopId" component={NewArticle} /> */}
