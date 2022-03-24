@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +10,8 @@ import AddIcon from '@material-ui/icons/Add';
 import NavBarMenu from '../ui/NavBarMenu';
 import { activeTeam, fetchTeams, Team, teamsOfUser, teamsOfUserLoaded } from '../team/teamSlice';
 import TeamItem from './TeamItem';
+import NavBarBack from '../ui/NavBarBack';
+import NavigationIcon from '@material-ui/icons/Navigation';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,7 +31,29 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: 20,
       left: 'auto',
       position: 'fixed',
-    }
+    },
+    fabJoin : {
+      margin: 0,
+      top: 'auto',
+      right: 20,
+      bottom: 90,
+      left: 'auto',
+      position: 'fixed'
+    },
+    fabCreate : {
+      margin: 0,
+      top: 'auto',
+      right: 20,
+      bottom: 140,
+      left: 'auto',
+      position: 'fixed',
+    },
+    extendedIcon: {
+      marginRight: theme.spacing(1),
+    },
+    extendedIcon2: {
+      marginRight: theme.spacing(3),
+    },
   }),
 );
 
@@ -41,6 +65,7 @@ const TeamOverview: FC = (): ReactElement => {
   const actTeam:  Team | undefined = useSelector(activeTeam);
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const [addSelected, setAddSelected] = useState(false);
   
 
   useEffect(() => {
@@ -56,12 +81,13 @@ const TeamOverview: FC = (): ReactElement => {
   }, [teamsLoaded, dispatch])
 
   const handleAddClick = () => {
-    history.push('shop/newShop');
+    setAddSelected(!addSelected);
+    // history.push('shop/newShop');
   }
   
   return (
     <div>
-      <NavBarMenu/>
+      <NavBarBack title="My shopping teams" />
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
@@ -75,6 +101,26 @@ const TeamOverview: FC = (): ReactElement => {
           <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
           </Fab>
+          {addSelected && <Fab
+            variant="extended"
+            size="medium"
+            color="primary"
+            aria-label="add"
+            className={classes.fabCreate}
+          >
+            <NavigationIcon className={classes.extendedIcon} />
+            Create
+          </Fab>}
+          {addSelected && <Fab
+            variant="extended"
+            size="medium"
+            color="primary"
+            aria-label="add"
+            className={classes.fabJoin}
+          >
+            <NavigationIcon className={classes.extendedIcon2} />
+            Join
+          </Fab>}
         </div>
       </Container>
     </div>

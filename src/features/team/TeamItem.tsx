@@ -13,7 +13,7 @@ import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import { Team } from './teamSlice';
+import { setTeamActive, Team } from './teamSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,12 +70,17 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
     // history.push(`articles/${shop.id}`);
   };
 
+  const handleTeamSelect = () => {
+    dispatch(setTeamActive(team))
+    history.push('/');
+}
+
   return (
     <Card>
         <Grid container spacing={3}>
             <Grid item xs={1}>
                 <CardActions>
-                  <IconButton aria-label="team" onClick={handleSelectClick}>
+                  <IconButton aria-label="team" onClick={handleTeamSelect}>
                       <ShopIcon />
                    </IconButton>
                 </CardActions>
@@ -90,10 +95,10 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
             <Grid item xs={2}>
                 <CardActions className={classes.menuButton}>
                   <IconButton 
-                     aria-label="team menu"
+                     aria-label="team select"
                      aria-controls="simple"
                      aria-haspopup="true"
-                     onClick={handleClick}>
+                     onClick={handleTeamSelect}>
                     <MenuIcon />
                   </IconButton>
                   <Menu
