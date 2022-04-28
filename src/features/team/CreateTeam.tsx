@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Container, createStyles, FilledInput, Grid, IconButton, Input, InputAdornment, makeStyles, OutlinedInput, TextField, Theme, Typography } from "@material-ui/core";
+import { Button, Card, CardActions, CardContent, Container, createStyles, FilledInput, Grid, IconButton, Input, InputAdornment, makeStyles, OutlinedInput, TextField, Theme, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState } from "react";
 import NavBarBack from "../ui/NavBarBack";
 import SaveIcon from '@material-ui/icons/Save';
@@ -6,6 +6,8 @@ import { addTeam, Team } from "./teamSlice";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "../../app/store";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import InfoIcon from '@material-ui/icons/Info';
+import { showMessage } from "../message/messageSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,12 +48,15 @@ const CreateTeam: FC = (): ReactElement => {
         // }
         // dispatch(addTeam(teamData));
         setTeamAdded(true);
+        displayMessage();
     }
 
     const handleShowPassword = () => {
         console.log(showPassword)
         setShowPassword(!showPassword);
     }
+
+    const displayMessage = () => dispatch(showMessage({status: "success", message: "Team added"}));
 
     const SaveButton: FC = () =>
       <IconButton 
@@ -65,17 +70,17 @@ const CreateTeam: FC = (): ReactElement => {
     const InfoBox: FC = () =>
         <Card>
             <CardContent>
-                <Typography variant="h5" >
+                {/* <Typography variant="h5" >
                     Team {teamName} created
-                </Typography>
-                {/* <Typography variant="body1" component="p">
-                    Please copy your team name and password with the button below.
-                    <br />
-                    Afterwards send the copied content to your shopping friends.
-                    <br />
-                    They can join your team by pasting the credentials in the join team section
                 </Typography> */}
+                <Typography variant="body1" >
+                    <InfoIcon /> Copy and send credentials to a shooping friend
+                </Typography>
             </CardContent>
+            {/* <CardActions>
+                <Button size="small">Copy</Button>
+            </CardActions> */}
+                   
         </Card>
         
 
@@ -127,11 +132,20 @@ const CreateTeam: FC = (): ReactElement => {
                                             </InputAdornment>
                                             }/>
                                 </Grid>
-                                {teamAdded === true &&
-                                    <Grid item>
-                                        <InfoBox />
-                                    </Grid>
-                                }
+                                <Grid item>
+                                    <InfoBox />
+                                </Grid>
+                                <Grid item>
+                                    <Button 
+                                        fullWidth
+                                        variant="contained" 
+                                        color="secondary" 
+                                        disabled={!teamAdded}
+                                        // onClick={handleSelectClick}
+                                        className={classes.button}>
+                                        Copy to clipboard
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>

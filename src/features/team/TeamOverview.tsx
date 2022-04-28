@@ -84,6 +84,10 @@ const TeamOverview: FC = (): ReactElement => {
     setAddSelected(!addSelected);
     // history.push('shop/newShop');
   }
+
+  const handleCreateClick = () => {
+    history.push('create');
+  }
   
   return (
     <div>
@@ -107,6 +111,7 @@ const TeamOverview: FC = (): ReactElement => {
             color="primary"
             aria-label="add"
             className={classes.fabCreate}
+            onClick={() => handleCreateClick()}
           >
             <NavigationIcon className={classes.extendedIcon} />
             Create

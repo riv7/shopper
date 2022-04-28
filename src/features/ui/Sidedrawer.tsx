@@ -47,7 +47,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   const owner = () => actTeam ? actTeam.ownerId === firebase.auth().currentUser!.uid ? ' (owner)' : '' : '';
 
   const handleTeamClick = () => {
-    history.push('team');
+    history.push('team/select2');
   };
 
   const handleLogoutClick = () => {
