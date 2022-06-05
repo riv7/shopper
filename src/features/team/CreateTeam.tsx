@@ -52,9 +52,29 @@ const CreateTeam: FC = (): ReactElement => {
     }
 
     const handleShowPassword = () => {
-        console.log(showPassword)
         setShowPassword(!showPassword);
     }
+
+    const handleCopyClick = async () => {
+        await copyToClip(teamName);
+        dispatch(showMessage({ status: "success", message: "Copy to clipboard xuccessfull" }));
+    }
+
+    const copyToClip = async (text: string) => {
+        if ('clipboard' in navigator) {
+            return await navigator.clipboard.writeText(text);
+        } else {
+            return document.execCommand('copy', true, text);
+        }
+    }
+
+    // async function copyTextToClipboard(text: string) {
+    //     if ('clipboard' in navigator) {
+    //       return await navigator.clipboard.writeText(text);
+    //     } else {
+    //       return document.execCommand('copy', true, text);
+    //     }
+    //   }
 
     const displayMessage = () => dispatch(showMessage({status: "success", message: "Team added"}));
 
@@ -74,7 +94,7 @@ const CreateTeam: FC = (): ReactElement => {
                     Team {teamName} created
                 </Typography> */}
                 <Typography variant="body1" >
-                    <InfoIcon /> Copy and send credentials to a shooping friend
+                    <InfoIcon /> Copy and send credentials to a shopping friend
                 </Typography>
             </CardContent>
             {/* <CardActions>
@@ -140,8 +160,8 @@ const CreateTeam: FC = (): ReactElement => {
                                         fullWidth
                                         variant="contained" 
                                         color="secondary" 
-                                        disabled={!teamAdded}
-                                        // onClick={handleSelectClick}
+                                        disabled={!teamName || !teamPassword}
+                                        onClick={handleCopyClick}
                                         className={classes.button}>
                                         Copy to clipboard
                                     </Button>
