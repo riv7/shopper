@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme, alpha } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,12 +8,14 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import { setTeamActive, Team } from './teamSlice';
+import { activeTeam, setTeamActive, Team } from './teamSlice';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,6 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
+    typography: {
+      color: alpha(theme.palette.common.white, 0.75)
+    },
+    typographyLight: {
+      color: alpha(theme.palette.secondary.main, 0.75)
+    },
   }),
 );
 
@@ -44,8 +52,12 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
+  const actTeam: Team | undefined = useSelector(activeTeam);
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const isActiveTeam = actTeam && team.id === actTeam.id;
+  const typoClass = isActiveTeam ? classes.typographyLight : classes.typography;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -64,9 +76,9 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
     history.push(`edit/${team.id}`)
   }
 
-  const handleTeamSelect = () => {
+  const handleSelect = () => {
     dispatch(setTeamActive(team))
-    history.push('/');
+    // history.push('/');
   }
 
   return (
@@ -74,15 +86,15 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
         <Grid container spacing={3}>
             <Grid item xs={1}>
                 <CardActions>
-                  <IconButton aria-label="team" onClick={handleTeamSelect}>
-                      <ShopIcon />
+                  <IconButton aria-label="team" onClick={handleSelect}>
+                      {isActiveTeam ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
                    </IconButton>
                 </CardActions>
             </Grid>
             <Grid item xs={9}>
                 <CardContent>
-                    <Typography variant="h5" component="h2">
-                    {team.name}
+                    <Typography className={typoClass} variant="h5" component="h2">
+                    {isActiveTeam ? team.name + " (active)" : team.name}
                     </Typography>
                 </CardContent>
             </Grid>

@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
-import { Container, Fab } from '@material-ui/core';
+import { Container, Fab, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import NavBarMenu from '../ui/NavBarMenu';
 import { activeTeam, fetchTeams, Team, teamsOfUser, teamsOfUserLoaded } from '../team/teamSlice';
@@ -29,6 +29,14 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 'auto',
       right: 20,
       bottom: 20,
+      left: 'auto',
+      position: 'fixed',
+    },
+    fabInfo : {
+      margin: 0,
+      top: 'auto',
+      right: 20,
+      bottom: 90,
       left: 'auto',
       position: 'fixed',
     },
@@ -109,6 +117,10 @@ const TeamOverview: FC = (): ReactElement => {
           <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
           </Fab>
+          {!addSelected && 
+          <Typography variant="h6" className={classes.fabInfo}>
+            Create/Join
+          </Typography>}
           {addSelected && <Fab
             variant="extended"
             size="medium"
