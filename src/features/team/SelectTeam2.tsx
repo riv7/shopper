@@ -66,7 +66,7 @@ const SelectTeam2: FC = (): ReactElement => {
     }, [dispatch, teamsLoaded])
 
 
-    // TODO wgu: Example: Load without store
+    //TODO wgu: Example: Load without store
     // useEffect(() => {
 
     //     // Fetch async data

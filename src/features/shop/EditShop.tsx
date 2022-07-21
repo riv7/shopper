@@ -10,7 +10,7 @@ type EditShopRouteProps = {
 
 const EditShop: FC<RouteComponentProps<EditShopRouteProps>> = ({match}): ReactElement => {
 
-    const shopId: string = match.params.shopId
+    const shopId: string = match.params.shopId;
     const shop: Shop | undefined = useSelector(shopById(shopId));
 
     return (

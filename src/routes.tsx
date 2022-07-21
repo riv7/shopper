@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from "react";
 import {Route, Switch} from 'react-router-dom';
 import ArticleOverview from "./features/article/ArticleOverview";
 import ConfirmTeam from "./features/team/ConfirmTeam";
-import CreateTeam from "./features/team/CreateTeam";
+import CreateEditTeam from "./features/team/CreateEditTeam";
 import SelectOrCreateTeam from "./features/team/SelectOrCreateTeam";
 import SelectTeam2 from "./features/team/SelectTeam2";
 import ShopOverview from "./features/shop/ShopOverview";
@@ -12,6 +12,9 @@ import TemplateOverview from "./features/template/TemplateOverview";
 import EditTemplate from "./features/template/EditTemplate";
 import EditArticle from "./features/article/EditArticle";
 import TeamOverview from "./features/team/TeamOverview";
+import CreateTeam from "./features/team/CreateTeam";
+import EditTeam from "./features/team/EditTeam";
+import JoinTeam from "./features/team/JoinTeam";
 
 const Routes: FC = (): ReactElement => {
     
@@ -25,6 +28,8 @@ const Routes: FC = (): ReactElement => {
             <Route exact path="/team/select" component={SelectTeam2} />
             <Route exact path="/team/select2" component={TeamOverview} />
             <Route exact path="/team/create" component={CreateTeam} />
+            <Route exact path="/team/edit/:teamId" component={EditTeam} />
+            <Route exact path="/team/join" component={JoinTeam} />
             <Route exact path="/team/confirm" component={ConfirmTeam} />
             {/* <Route exact path="/articles/newArticle/:shopId" component={NewArticle} /> */}
             <Route exact path="/articles/:shopId" component={ArticleOverview} />

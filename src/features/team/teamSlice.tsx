@@ -43,6 +43,14 @@ const convertTeam = (team: firebase.database.DataSnapshot, owningUsing: string):
     };
 }
 
+const convertTeams = (snapshot: firebase.database.DataSnapshot): Team[] => {
+    const teams: Team[] = [];
+    snapshot.forEach((team) => {
+        teams.push(convertTeam(team,""))
+    });
+    return teams;
+}
+
 const convertUser = (user: firebase.database.DataSnapshot): User => {
     return {
         id: user.key != null ? user.key : '',
@@ -89,9 +97,38 @@ export const addTeam = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('te
         await thunkApi.dispatch(addTeamToUser(teamUserTuple));
         await thunkApi.dispatch(setActiveTeam(teamUserTuple));
         await thunkApi.dispatch(setUserName(userId));
-        return thunkApi.dispatch(fetchTeam(teamId));
+        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(teamId));
+        return persistentTeam;
     }
 )
+
+export const joinTeam = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('team/joinTeam',
+    async (teamData, thunkApi) => {
+        const team: Team = await thunkApi.dispatch(fetchTeam(teamData.id));
+        const userId: string = firebase.auth().currentUser!.uid
+        const teamId: string = team.id;
+        const teamUserTuple = {
+            teamId: teamId,
+            userId: userId
+        }
+        await thunkApi.dispatch(addUserToTeam(teamUserTuple))
+        await thunkApi.dispatch(addTeamToUser(teamUserTuple));
+        await thunkApi.dispatch(setActiveTeam(teamUserTuple));
+        await thunkApi.dispatch(setUserName(userId));
+        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(teamId));
+        return persistentTeam;
+    }
+)
+
+export const updateTeam = createAsyncThunk<Team, Team, {state: RootState, dispatch: AppDispatch}>('team/updateTeam',
+    async (team, thunkApi) => {
+        const teamRef = firebase.database().ref(`teams/${team.id}`);
+        teamRef.update(team)
+        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(team.id));
+        return persistentTeam;
+    }
+);
+
 
 export const fetchTeams = createAsyncThunk<Team[], void, {dispatch: AppDispatch}>('team/fetchTeams',
     async (_, thunkApi) => {
@@ -151,6 +188,7 @@ const createTeam = (teamData: Team): AppThunk<Promise<string>> => async (dispatc
     });
 
     return Promise.resolve(newTeamRef.key!)
+
 }
 
 const addUserToTeam = (teamUserTuple: TeamUserTuple): AppThunk<Promise<void>> => async (dispatch, getState) => {
@@ -183,6 +221,7 @@ const initialState: TeamState = {
     activeTeamLoaded: false,
     teamsOfUser: [],
     teamsOfUserLoaded: false,
+
     dataRequested: false
 }
 
@@ -216,6 +255,15 @@ export const teamSlice = createSlice({
             state.activeTeam = action.payload
             state.teamsOfUser.push(action.payload)
         });
+        builder.addCase(joinTeam.fulfilled, (state, action) => {
+            state.activeTeam = action.payload
+            state.teamsOfUser.push(action.payload)
+        });
+        builder.addCase(updateTeam.fulfilled, (state, action) => {
+            state.activeTeam = action.payload
+            const index = state.teamsOfUser.findIndex(team => team.id = action.payload.id);
+            state.teamsOfUser[index] = action.payload;
+        });
         builder.addCase(setTeamActive.fulfilled, (state, action) => {
             state.activeTeam = action.payload
         });
@@ -227,5 +275,6 @@ export const activeTeam = (state: RootState) => state.team.activeTeam;
 export const activeTeamLoaded = (state: RootState) => state.team.activeTeamLoaded;
 export const teamsOfUser = (state: RootState) => state.team.teamsOfUser;
 export const teamsOfUserLoaded = (state: RootState) => state.team.teamsOfUserLoaded;
+export const teamById = (teamId: string) => (state: RootState) => state.team.teamsOfUser.find(team => team.id === teamId);
 
 export default teamSlice.reducer;

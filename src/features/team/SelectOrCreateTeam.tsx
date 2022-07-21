@@ -3,7 +3,7 @@ import React, { FC, ReactElement } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import NavBarBack from "../ui/NavBarBack";
-import CreateTeam from "./CreateTeam";
+import CreateEditTeam from "./CreateEditTeam";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

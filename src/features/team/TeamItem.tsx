@@ -61,19 +61,13 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   }
 
   const handleEdit = () => {
-    console.log("TODO handle edit")
-    // history.push(`shop/editShop/${shop.id}`)
+    history.push(`edit/${team.id}`)
   }
-
-  const handleSelectClick = (event:any) => {
-    console.log("TODO handle select")
-    // history.push(`articles/${shop.id}`);
-  };
 
   const handleTeamSelect = () => {
     dispatch(setTeamActive(team))
     history.push('/');
-}
+  }
 
   return (
     <Card>
@@ -98,7 +92,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                      aria-label="team select"
                      aria-controls="simple"
                      aria-haspopup="true"
-                     onClick={handleTeamSelect}>
+                     onClick={handleClick}>
                     <MenuIcon />
                   </IconButton>
                   <Menu

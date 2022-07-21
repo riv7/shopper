@@ -88,6 +88,10 @@ const TeamOverview: FC = (): ReactElement => {
   const handleCreateClick = () => {
     history.push('create');
   }
+
+  const handleJoinClick = () => {
+    history.push('join');
+  }
   
   return (
     <div>
@@ -122,6 +126,7 @@ const TeamOverview: FC = (): ReactElement => {
             color="primary"
             aria-label="add"
             className={classes.fabJoin}
+            onClick={() => handleJoinClick()}
           >
             <NavigationIcon className={classes.extendedIcon2} />
             Join
