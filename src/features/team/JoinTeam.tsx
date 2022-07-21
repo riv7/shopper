@@ -35,11 +35,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const JoinTeam: FC = (): ReactElement => {
 
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [teamId, setTeamId] = useState('')
     const [teamPassword, setTeamPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
-    const [teamAdded, setTeamAdded] = useState(false)
 
     const handleJoinClick = async () => {
          const teamData: Team = {
@@ -49,17 +48,17 @@ const JoinTeam: FC = (): ReactElement => {
              ownerId: '',
              ownerName: ''
         }
-        await dispatch(joinTeam(teamData));
-        setTeamAdded(true);
-        displayMessage();
+        const asyncThunk = await dispatch(joinTeam(teamData));
+        const loadedTeam: Team = unwrapResult(asyncThunk);
+        loadedTeam.id === '' ? displayNotFoundMessage() : displaySuccessMessage();
     }
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
     }
-
    
-    const displayMessage = () => dispatch(showMessage({status: "success", message: "Team joined"}));
+    const displaySuccessMessage = () => dispatch(showMessage({status: "success", message: "Team joined"}));
+    const displayNotFoundMessage = () => dispatch(showMessage({status: "error", message: "No team found with given credentials"}));
 
     const JoinButton: FC = () =>
       <IconButton 
