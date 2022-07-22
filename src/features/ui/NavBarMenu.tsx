@@ -45,7 +45,7 @@ const NavBarMenu: FC = () => {
             <MenuIcon/>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {"Shops of team " + teamName()}
+            {"Shops of team"}
           </Typography>
           <div>
             <Typography className={classes.title}>

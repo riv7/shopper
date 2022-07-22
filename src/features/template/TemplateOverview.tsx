@@ -3,13 +3,11 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
 import { RouteComponentProps, useHistory } from "react-router-dom";
-
 import { useAppDispatch } from '../../app/store';
-import { Box, Container, Fab } from '@material-ui/core';
+import { Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { activeTeam, Team } from '../team/teamSlice';
-import NavBarBack from '../ui/NavBarBack';
-import { Template, selectTemplates, selectTemplatesLoaded, initTeamTemplateListener, initGlobalTemplateListener, fetchTemplates } from './templateSlice';
+import { Template, selectTemplates, initTeamTemplateListener, initGlobalTemplateListener, fetchTemplates } from './templateSlice';
 import TemplateItem from './TemplateItem';
 import NavBarSearch from '../ui/NavBarSearch';
 import { Article, articles } from '../article/articleSlice';
@@ -45,7 +43,6 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
   const classes = useStyles();
   const allTemplates: Template[] = useSelector(selectTemplates);
   const allArticles: Article[] = useSelector(articles);
-  const loaded: boolean = useSelector(selectTemplatesLoaded);
   const actTeam: Team | undefined = useSelector(activeTeam);
   const shopId = match.params.shopId;
   const dispatch = useAppDispatch();
@@ -56,15 +53,14 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
 
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
-      if (!loaded && actTeam) {
+      if (actTeam) {
         await dispatch(initGlobalTemplateListener());
         await dispatch(initTeamTemplateListener(actTeam!.id));
         await dispatch(fetchTemplates(actTeam!.id));
       }
     }
-
     fetchAndInit();    
-  }, [loaded, actTeam, dispatch])
+  }, [actTeam, dispatch])
 
   const presentArticle = (template: Template): Article | undefined => {
     return allArticles

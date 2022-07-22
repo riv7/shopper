@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
     },
+    appbar: {
+      // background: alpha(theme.palette.secondary.main, 0.7)
+      background: theme.palette.secondary.main
+    },
     grow: {
       flexGrow: 1,
     },
@@ -30,9 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
     search: {
       position: 'relative',
       borderRadius: theme.shape.borderRadius,
-      backgroundColor: alpha(theme.palette.common.white, 0.15),
+      backgroundColor: alpha(theme.palette.common.white, 0.8),
       '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
+        backgroundColor: alpha(theme.palette.common.white, 0.9),
       },
       marginRight: theme.spacing(2),
       marginLeft: 0,
@@ -44,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     searchIcon: {
+      color: theme.palette.secondary.main,
       padding: theme.spacing(0, 2),
       height: '100%',
       position: 'absolute',
@@ -53,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
     },
     inputRoot: {
-      color: 'inherit',
+      color: theme.palette.secondary.main,
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
@@ -84,7 +89,7 @@ const NavBarSearch: FC<NavBarSearchProps> = ({ title, onChange, childComp }) => 
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar className={classes.appbar} position="static">
         <Toolbar>
           <IconButton
             edge="start"

@@ -61,14 +61,14 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
 
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
-      if (!loaded && actTeam) {
+      if (actTeam) {
         await dispatch(initCurrentArticleListener(actTeam!.id));
         await dispatch(fetchCurrentArticles(actTeam!.id));
       }
     }
 
     fetchAndInit();    
-  }, [loaded, actTeam, dispatch])
+  }, [actTeam, dispatch])
 
   const handleAddClick = () => {
     history.push(`/templates/${shopId}`);

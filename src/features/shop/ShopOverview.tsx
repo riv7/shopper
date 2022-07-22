@@ -49,14 +49,13 @@ const ShopOverview: FC = (): ReactElement => {
 
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
-      if (!loaded && actTeam) {
+      if (actTeam) {
         await dispatch(initShopListener(actTeam!.id));
         await dispatch(fetchShops(actTeam!.id));
       }
     }
-
     fetchAndInit();    
-  }, [loaded, actTeam, dispatch])
+  }, [actTeam, dispatch])
 
   const handleAddClick = () => {
     history.push('shop/newShop');
