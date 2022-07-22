@@ -69,6 +69,15 @@ const convertUserIds = (users: firebase.database.DataSnapshot): string[] => {
     return userIds;
 }
 
+export const copyToClipboard = async (teamId: string, teamPassword: string) => {
+    const text = `Paste the following credentials in the join team dialog.\nTeam ID: ${teamId} | Team PW: ${teamPassword}`
+    if ('clipboard' in navigator) {
+        return await navigator.clipboard.writeText(text);
+    } else {
+        return document.execCommand('copy', true, text);
+    }
+}
+
 // thunks
 export const fetchActiveTeam = createAsyncThunk<Team | undefined, void, {dispatch: AppDispatch}>('team/fetchActiveTeam',
     async () => {

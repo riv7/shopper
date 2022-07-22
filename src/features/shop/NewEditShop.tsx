@@ -39,7 +39,7 @@ const NewEditShop: FC<NewEditShopProps> = ({title, label, shop, thunkAction}): R
     
     const handleSaveClick = () => {
         const changedShop = {
-          id: shop!.id,
+          id: shop === undefined ? '' : shop.id,
           name: shopName,
           teamId: actTeam!.id
         }

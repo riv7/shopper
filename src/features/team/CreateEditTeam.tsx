@@ -2,7 +2,7 @@ import { Button, Card, CardActions, CardContent, Container, createStyles, Filled
 import React, { FC, ReactElement, useState } from "react";
 import NavBarBack from "../ui/NavBarBack";
 import SaveIcon from '@material-ui/icons/Save';
-import { addTeam, Team } from "./teamSlice";
+import { addTeam, copyToClipboard, Team } from "./teamSlice";
 import { useDispatch } from "react-redux";
 import { AppAsyncThunk, useAppDispatch } from "../../app/store";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
@@ -70,25 +70,10 @@ const CreateEditTeam: FC<CreateEditTeamProps> = ({title, team, thunkAction}): Re
     }
 
     const handleCopyClick = async () => {
-        await copyToClip(`Paste the following credentials in the join team dialog.\nTeam ID: ${teamId} | Team PW: ${teamPassword}`);
+        copyToClipboard(teamId, teamPassword);
         dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull" }));
     }
 
-    const copyToClip = async (text: string) => {
-        if ('clipboard' in navigator) {
-            return await navigator.clipboard.writeText(text);
-        } else {
-            return document.execCommand('copy', true, text);
-        }
-    }
-
-    // async function copyTextToClipboard(text: string) {
-    //     if ('clipboard' in navigator) {
-    //       return await navigator.clipboard.writeText(text);
-    //     } else {
-    //       return document.execCommand('copy', true, text);
-    //     }
-    //   }
     const displayMessage = () => dispatch(showMessage({status: "success", message: "Team saved"}));
 
     const SaveButton: FC = () =>

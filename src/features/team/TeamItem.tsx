@@ -13,9 +13,11 @@ import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import { activeTeam, setTeamActive, Team } from './teamSlice';
+import { activeTeam, copyToClipboard, setTeamActive, Team } from './teamSlice';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import { showMessage } from '../message/messageSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,6 +78,11 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
     history.push(`edit/${team.id}`)
   }
 
+  const handleCopy = () => {
+    copyToClipboard(team.id, team.password);
+    dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull.\nPlease send them to your shopping mate to join." }));
+  }
+
   const handleSelect = () => {
     dispatch(setTeamActive(team))
     // history.push('/');
@@ -121,6 +128,15 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                         <EditIcon />
                       </IconButton>
                       Edit
+                    </MenuItem>
+                    <MenuItem>
+                      <IconButton
+                        aria-label="team-copy"
+                        color="inherit"
+                        onClick={handleCopy}>
+                        <FileCopyIcon />
+                      </IconButton>
+                      Copy credentials
                     </MenuItem>
                     <MenuItem>
                       <IconButton

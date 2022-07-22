@@ -10,7 +10,7 @@ import { useAppDispatch } from '../../app/store';
 import { Container, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import NavBarMenu from '../ui/NavBarMenu';
-import { activeTeam } from '../team/teamSlice';
+import { activeTeam, Team } from '../team/teamSlice';
 import ShopItem from './ShopItem';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,20 +42,21 @@ const ShopOverview: FC = (): ReactElement => {
   const loaded: boolean = useSelector(shopsLoaded);
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const actTeam: Team | undefined = useSelector(activeTeam);
   
 
   useEffect(() => {
 
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
-      if (!loaded) {
-        await dispatch(initShopListener());
-        await dispatch(fetchShops());
+      if (!loaded && actTeam) {
+        await dispatch(initShopListener(actTeam!.id));
+        await dispatch(fetchShops(actTeam!.id));
       }
     }
 
     fetchAndInit();    
-  }, [loaded, dispatch])
+  }, [loaded, actTeam, dispatch])
 
   const handleAddClick = () => {
     history.push('shop/newShop');

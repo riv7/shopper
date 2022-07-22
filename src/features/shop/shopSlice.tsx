@@ -51,9 +51,9 @@ const convertArticleIds = (articles: firebase.database.DataSnapshot): string[] =
 }
 
 // Thunks
-export const initShopListener = (): AppThunk<Promise<Shop[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
+export const initShopListener = (teamId: string): AppThunk<Promise<Shop[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
 
-    firebase.database().ref('shops/').orderByKey().on('value', (snapshot) => {
+    firebase.database().ref(`shops/teams/${teamId}/shops`).orderByKey().on('value', (snapshot) => {
         const shops: Shop[] = convertShops(snapshot);
 
         // Article message when data was not requested by user
@@ -74,17 +74,18 @@ export const initShopListener = (): AppThunk<Promise<Shop[]>> => async (dispatch
     });
 });
 
-export const fetchShops = createAsyncThunk<Shop[]>('shop/fetchShops',
-    async () => {
-        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref('shops/').orderByKey().once('value');
+export const fetchShops = createAsyncThunk<Shop[], string, {state: RootState, dispatch: AppDispatch}>('shop/fetchShops',
+    async (teamId, thunkApi) => {
+        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`shops/teams/${teamId}/shops`).orderByKey().once('value');
         const snapshot = (await promise);
         return convertShops(snapshot);
     }
 );
 
-export const addShop = createAsyncThunk('shop/addShop',
-    async (shop: Shop) => {
-        var shopListRef = firebase.database().ref('shops');
+export const addShop = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('shop/addShop',
+    async (shop, thunkApi) => {
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        var shopListRef = firebase.database().ref(`shops/teams/${actTeam.id}/shops`);
         var newShopRef = shopListRef.push();
         newShopRef.set(shop);
     }
@@ -92,25 +93,28 @@ export const addShop = createAsyncThunk('shop/addShop',
 
 export const updateShop = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('shop/editShop',
     async (shop, thunkApi) => {
-        const shopRef = firebase.database().ref(`shops/${shop.id}`);
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        const shopRef = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${shop.id}`);
         shopRef.update(shop)
     }
 );
 
 export const deleteShop = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('shop/deleteShop',
     async (shop, thunkApi) => {
+        const actTeam = thunkApi.getState().team.activeTeam!;
         const articles: Article[] = thunkApi.getState().article.articles;
         const filteredArticleIds = articles
             .filter(article => article.shopId === shop.id)
             .map(article => article.id);
         await thunkApi.dispatch(deleteCurrentArticles(filteredArticleIds));
-        var shopRef = firebase.database().ref(`shops/${shop.id}`);
+        var shopRef = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${shop.id}`);
         shopRef.remove();
     }
 )
 
 export const fetchArticleIdsOfShop = (shop: Shop): AppThunk<Promise<string[]>> => async (dispatch, getState) => {
-    const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`shops/${shop.id}/currentArticles`).once('value');
+    const actTeam = getState().team.activeTeam!;
+    const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${shop.id}/currentArticles`).once('value');
     const snapshot = await promise;
     return Promise.resolve(convertArticleIds(snapshot));
 }

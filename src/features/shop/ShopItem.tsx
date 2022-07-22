@@ -14,6 +14,7 @@ import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,7 +74,7 @@ const ShopItem: FC<ShopItemProps> = ({shop}): ReactElement => {
             <Grid item xs={1}>
                 <CardActions>
                   <IconButton aria-label="shop" onClick={handleSelectClick}>
-                      <ShopIcon />
+                      <RadioButtonUncheckedIcon />
                    </IconButton>
                 </CardActions>
             </Grid>
