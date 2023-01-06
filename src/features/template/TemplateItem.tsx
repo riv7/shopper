@@ -17,6 +17,7 @@ import { addTemplate, deleteTemplate, Template } from './templateSlice';
 import { addArticle, Article } from '../article/articleSlice';
 import { showMessage } from '../message/messageSlice';
 import SelectUnit from '../ui/SelectUnit';
+import { labelById } from '../label/labelSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,7 +106,8 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
         amount: 1,
         unit: selectedUnit,
         active: true,
-        shopId: shopId
+        shopId: shopId,
+        labelId: ''
       };
       dispatch(addArticle(article));
     }

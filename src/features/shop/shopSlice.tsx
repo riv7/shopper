@@ -3,7 +3,7 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
-import { Article, deleteCurrentArticles } from "../article/articleSlice";
+import { Article, deleteArticles } from "../article/articleSlice";
 
 // types
 export type Shop = {
@@ -106,7 +106,7 @@ export const deleteShop = createAsyncThunk<void, Shop, {state: RootState, dispat
         const filteredArticleIds = articles
             .filter(article => article.shopId === shop.id)
             .map(article => article.id);
-        await thunkApi.dispatch(deleteCurrentArticles(filteredArticleIds));
+        await thunkApi.dispatch(deleteArticles(filteredArticleIds));
         var shopRef = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${shop.id}`);
         shopRef.remove();
     }
@@ -117,6 +117,12 @@ export const fetchArticleIdsOfShop = (shop: Shop): AppThunk<Promise<string[]>> =
     const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${shop.id}/currentArticles`).once('value');
     const snapshot = await promise;
     return Promise.resolve(convertArticleIds(snapshot));
+}
+
+export const deleteShopsOfTeam = (teamId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const shopTeamRef = firebase.database().ref(`shops/teams/${teamId}`);
+    shopTeamRef.remove();
+    return Promise.resolve();
 }
 
 // Initial state

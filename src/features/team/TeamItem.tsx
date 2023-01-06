@@ -13,7 +13,7 @@ import ShopIcon from '@material-ui/icons/Shop';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import { activeTeam, copyToClipboard, setTeamActive, Team } from './teamSlice';
+import { activeTeam, copyToClipboard, removeTeam, setTeamActive, Team } from './teamSlice';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -70,8 +70,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   };
 
   const handleDelete = () => {
-    console.log("TODO handle delete")
-    // dispatch(delte(shop));
+    dispatch(removeTeam(team));
   }
 
   const handleEdit = () => {

@@ -1,6 +1,7 @@
 import {Action, AsyncThunk, configureStore, ThunkAction} from '@reduxjs/toolkit'
 import articleReducer from '../features/article/articleSlice'
 import shopReducer from '../features/shop/shopSlice'
+import labelReducer from '../features/label/labelSlice'
 import teamReducer from '../features/team/teamSlice'
 import loadingReducer from '../features/loading/loadingSlice'
 import messageReducer from '../features/message/messageSlice'
@@ -14,7 +15,8 @@ const store = configureStore({
         team: teamReducer,
         loading: loadingReducer,
         message: messageReducer,
-        template: templateReducer
+        template: templateReducer,
+        label: labelReducer
     }
 })
 export type RootState = ReturnType<typeof store.getState>

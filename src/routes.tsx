@@ -15,12 +15,16 @@ import TeamOverview from "./features/team/TeamOverview";
 import CreateTeam from "./features/team/CreateTeam";
 import EditTeam from "./features/team/EditTeam";
 import JoinTeam from "./features/team/JoinTeam";
+import LabelOverview from "./features/label/LabelOverview";
+import NewLabel from "./features/label/NewLabel";
 
 const Routes: FC = (): ReactElement => {
     
     return (
         <Switch>
             <Route exact path="/" component={ShopOverview} />
+            <Route exact path="/label" component={LabelOverview} />
+            <Route exact path="/label/newLabel" component={NewLabel} />
             <Route exact path="/shop" component={ShopOverview} />
             <Route exact path="/shop/newShop" component={NewShop} />
             <Route exact path="/shop/editShop/:shopId" component={EditShop} />

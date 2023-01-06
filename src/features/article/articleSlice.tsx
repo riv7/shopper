@@ -12,7 +12,8 @@ export type Article = {
     amount: number,
     unit: string,
     active: boolean,
-    shopId: string 
+    shopId: string,
+    labelId: string
 }
 
 type FetchError = {
@@ -28,6 +29,66 @@ type ArticleState = {
 }
 
 // helper methods
+
+const compareByLabel = (a: Article, b: Article) => {
+    if (a === undefined && b === undefined) {
+        return 0;
+    } else if (a === undefined) {
+        return 1;
+    } else if (b === undefined) {
+        return -1;
+    } else return b.labelId.localeCompare(a.labelId);
+}
+
+// function compare( a, b ) {
+//     if ( a.last_nom < b.last_nom ){
+//       return -1;
+//     }
+//     if ( a.last_nom > b.last_nom ){
+//       return 1;
+//     }
+//     return 0;
+//   }
+
+export const increaseAmount = (amount: number, unit: string): number => {
+    if (unit === "piece") {
+        if (amount <= 20) {
+        amount = amount+1;
+        } else if (amount <= 100) {
+        amount = amount+10;
+        } else {
+        amount = amount+50;
+        }
+    } else if (unit === "gram") {
+        if (amount <= 100) {
+        amount = amount+10;
+        } else if (amount <= 500) {
+        amount = amount+50;
+        } else if (amount <= 1000) {
+        amount = amount+100;
+        }else {
+        amount = amount+500;
+        }
+    } else if (unit === "liter") {
+        if (amount <= 10) {
+        amount = amount+1;
+        } else if (amount <= 0) {
+        amount = amount+5;
+        } else {
+        amount = amount+10;
+        }
+    } else if (unit === "kilo") {
+        if (amount <= 20) {
+        amount = amount+1;
+        } else if (amount <= 50) {
+        amount = amount+5;
+        } else {
+        amount = amount+10;
+        }
+    }
+    return amount;
+}
+
 const convertArticle = (article: firebase.database.DataSnapshot): Article => {
     return {
         id: article.key != null ? article.key : '',
@@ -35,7 +96,8 @@ const convertArticle = (article: firebase.database.DataSnapshot): Article => {
         amount: article.val().amount,
         unit: article.val().unit,
         active: article.val().active,
-        shopId: article.val().shopId
+        shopId: article.val().shopId,
+        labelId: article.val().labelId
     };
 }
 
@@ -48,7 +110,7 @@ const convertArticles = (snapshot: firebase.database.DataSnapshot): Article[] =>
 };
 
 // Thunks
-export const initCurrentArticleListener = (teamId: string): AppThunk<Promise<Article[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
+export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
 
     // const teamId: string = getState().team.activeTeam!.id
 
@@ -74,10 +136,10 @@ export const initCurrentArticleListener = (teamId: string): AppThunk<Promise<Art
     })
 });
 
-export const fetchCurrentArticles = createAsyncThunk<Article[], string, {state: RootState, dispatch: AppDispatch}>('article/fetchArticles',
+export const fetchArticles = createAsyncThunk<Article[], string, {state: RootState, dispatch: AppDispatch}>('article/fetchArticles',
     async (teamId, thunkApi) => {
         // const activeTeam: Team = thunkApi.getState().team.activeTeam!
-        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`articles/teams/${teamId}/articles`).once('value');
+        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`articles/teams/${teamId}/articles`).orderByValue().once('value');
         const snapshot = await promise;
         return convertArticles(snapshot);
     }
@@ -95,7 +157,7 @@ export const addArticle = createAsyncThunk<void, Article, {state: RootState, dis
 
 export const updateArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/updateArticle',
     async (article, thunkApi) => {
-        await thunkApi.dispatch(updateArticleOfTeam(article));
+        thunkApi.dispatch(updateArticleOfTeam(article));
     }
 );
 
@@ -115,7 +177,7 @@ export const clearArticles = createAsyncThunk<void, Shop, {state: RootState, dis
             .filter(article => article.active === false)
             .map(article => article.id);
 
-        await thunkApi.dispatch(deleteCurrentArticles(filteredArticleIds));
+        await thunkApi.dispatch(deleteArticles(filteredArticleIds));
     }
 )
 
@@ -141,14 +203,19 @@ const updateArticleOfTeam = (article: Article): AppThunk<Promise<void>> => async
     return Promise.resolve();
 }
 
-
-export const deleteCurrentArticles = (articleIds: string[]): AppThunk<Promise<void>> => async (dispatch, getState) => {
+export const deleteArticles = (articleIds: string[]): AppThunk<Promise<void>> => async (dispatch, getState) => {
     const actTeam = getState().team.activeTeam!;
     // TODO: To many remote calls?
     articleIds.forEach(articleId => {
         const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${articleId}`);
         articleRef.remove();
     })
+    return Promise.resolve();
+}
+
+export const deleteArticlesOfTeam = (teamId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const articleTeamRef = firebase.database().ref(`articles/teams/${teamId}`);
+    articleTeamRef.remove();
     return Promise.resolve();
 }
 
@@ -173,10 +240,10 @@ export const articleSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(fetchCurrentArticles.pending, (state, action) => {
+        builder.addCase(fetchArticles.pending, (state, action) => {
             state.dataRequested = true;
         });
-        builder.addCase(fetchCurrentArticles.fulfilled, (state, action) => {
+        builder.addCase(fetchArticles.fulfilled, (state, action) => {
             state.articles = action.payload
             state.loaded = true
         });
@@ -186,7 +253,7 @@ export const articleSlice = createSlice({
 export const { pushArticles, dataRequested } = articleSlice.actions;
 
 // Selectors to access data from state
-export const articles = (state: RootState) => state.article.articles;
+export const articles = (state: RootState) => state.article.articles.slice().sort(compareByLabel);
 export const articlesLoaded = (state: RootState) => state.article.loaded;
 export const articleById = (articleId: string) => (state: RootState) => state.article.articles.find(article => article.id === articleId);
 

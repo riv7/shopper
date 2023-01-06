@@ -1,4 +1,4 @@
-import React, { FC, SetStateAction } from 'react';
+import React, { FC, SetStateAction, useEffect } from 'react';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -10,12 +10,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { Dispatch } from 'react';
-import { Card, CardHeader } from '@material-ui/core';
+import { Avatar, Card, CardHeader, ListItemAvatar } from '@material-ui/core';
 import firebase from 'firebase';
 import { activeTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-
+import GroupIcon from '@material-ui/icons/Group';
+import { fetchLabels, initLabelListener, Label, labels } from '../label/labelSlice';
+import { useAppDispatch } from '../../app/store';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
+import AddIcon from '@material-ui/icons/Add';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,6 +46,22 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   const history = useHistory();
   const [drawerOpen, setDrawerOpen] = drawerOpenState;
   const actTeam: Team | undefined = useSelector(activeTeam);
+  const allLabels: Label[] = useSelector(labels);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+
+    // Fetch async data only when data is not yet loaded
+    const fetchAndInit = async () => {
+      if (actTeam) {
+        await dispatch(initLabelListener(actTeam!.id));
+        await dispatch(fetchLabels(actTeam!.id));
+      }
+    }
+    fetchAndInit();    
+  }, [actTeam, dispatch])
+
+
 
   const teamName = () => actTeam ? actTeam.name : ''
   const owner = () => actTeam ? actTeam.ownerId === firebase.auth().currentUser!.uid ? ' (owner)' : '' : '';
@@ -52,6 +72,10 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
 
   const handleLogoutClick = () => {
     firebase.auth().signOut();
+  }
+
+  const handleAddLabelClick = () => {
+    history.push('../label/newLabel');
   }
 
   const toggleDrawer = (open: boolean) => (
@@ -94,9 +118,36 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
       </List>
       <Divider />
       <List>
+        {allLabels.map((label) => (
+          <ListItem>
+            <ListItemIcon style = {{color: `${label.color}`}}>
+                <LabelImportantIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={label.name}
+              // onClick={() => handleLabelClick(label)}
+              // onDelete={handleDeleteChip} />
+            />
+          </ListItem>
+        ))}
+        <ListItem autoFocus button onClick={handleAddLabelClick}>
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          {/* <ListItemAvatar>
+            <Avatar>
+              <AddIcon />
+            </Avatar>
+          </ListItemAvatar> */}
+          <ListItemText primary="Add label" />
+        </ListItem>
+      </List>
+      
+      <Divider />
+      <List>
         <ListItem button onClick={handleTeamClick} key="team">
-          <ListItemIcon><MailIcon /></ListItemIcon>
-          <ListItemText primary={teamName() + owner()} />
+          <ListItemIcon><GroupIcon /></ListItemIcon>
+          <ListItemText primary={"Change team"} />
         </ListItem>
         {/* {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem button key={text}>

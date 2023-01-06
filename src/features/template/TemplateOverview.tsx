@@ -118,7 +118,7 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
   return (
     <div>
       <NavBarSearch 
-        title="" 
+        title="Add articles" 
         onChange={searchChange} />
       <Container>
         <div className={classes.root}>

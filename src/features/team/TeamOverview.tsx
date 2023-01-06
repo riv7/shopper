@@ -107,7 +107,7 @@ const TeamOverview: FC = (): ReactElement => {
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
-            {teams
+            {teams && teams
               .map(team => 
                 <Grid item xs={12} key={team.id}>
                   <TeamItem team={team} />

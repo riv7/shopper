@@ -3,6 +3,9 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
+import { deleteTemplatesOfTeam } from "../template/templateSlice";
+import { deleteArticlesOfTeam } from "../article/articleSlice";
+import { deleteShopsOfTeam } from "../shop/shopSlice";
 
 // types
 export type Team = {
@@ -61,12 +64,12 @@ const convertUser = (user: firebase.database.DataSnapshot): User => {
     };
 }
 
-const convertUserIds = (users: firebase.database.DataSnapshot): string[] => {
-    const userIds: string[] = [];
-    users.forEach((user) => {
-        userIds.push(user.key!);
+const convertIds = (snapshot: firebase.database.DataSnapshot): string[] => {
+    const ids: string[] = [];
+    snapshot.forEach((snapshot) => {
+        ids.push(snapshot.key!);
     });
-    return userIds;
+    return ids;
 }
 
 export const copyToClipboard = async (teamId: string, teamPassword: string) => {
@@ -154,6 +157,23 @@ export const fetchTeams = createAsyncThunk<Team[], void, {dispatch: AppDispatch}
     }
 )
 
+export const removeTeam = createAsyncThunk<void, Team, {dispatch: AppDispatch}>('team/fetchTeams',
+    async (team, thunkApi) => {
+        const userId: string = firebase.auth().currentUser!.uid
+        if (team.ownerId !== userId) {
+            await thunkApi.dispatch(showMessage({ status: "error", message: "Only team owners are allowed to remove a team" }));
+            return Promise.resolve();
+        }
+        await thunkApi.dispatch(deleteTemplatesOfTeam(team.id));
+        await thunkApi.dispatch(deleteArticlesOfTeam(team.id));
+        await thunkApi.dispatch(deleteShopsOfTeam(team.id));
+        const userIds: string[] = await thunkApi.dispatch(fetchUserIdsOfTeam(team.id));
+        await thunkApi.dispatch(removeTeamFromUsers(userIds, team.id));
+        const teamRef = firebase.database().ref(`teams/${team.id}`);
+        return teamRef.remove();
+    }
+)
+
 export const setTeamActive = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('team/setActiveTeam',
     async (teamData, thunkApi) => {
 
@@ -171,7 +191,13 @@ const fetchTeamIdsOfUser = (): AppThunk<Promise<string[]>> => async (dispatch, g
     const userId: string = firebase.auth().currentUser!.uid
     const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`users/${userId}/teams`).once('value');
     const snapshot = await promise;
-    return Promise.resolve(convertUserIds(snapshot));
+    return Promise.resolve(convertIds(snapshot));
+}
+
+const fetchUserIdsOfTeam = (teamId: string): AppThunk<Promise<string[]>> => async (dispatch, getState) => {
+    const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`teams/${teamId}/users`).once('value');
+    const snapshot = await promise;
+    return Promise.resolve(convertIds(snapshot));
 }
 
 const fetchTeam = (teamId: string): AppThunk<Promise<Team>> => async (dispatch, getState) => {
@@ -230,6 +256,14 @@ const setUserName = (userId: string): AppThunk<Promise<void>> => async (dispatch
     const userRef = firebase.database().ref(`users/${userId}`);
     const usrName = firebase.auth().currentUser!.displayName
     return userRef.update({name: usrName});
+}
+
+const removeTeamFromUsers = (userIds: string[], teamId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    userIds.forEach(userId => {
+        const userTeamRef = firebase.database().ref(`users/${userId}/teams`);
+        userTeamRef.child(teamId).remove();
+    });
+    return Promise.resolve();
 }
 
 // Initial state

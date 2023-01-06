@@ -1,8 +1,8 @@
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { fetchCurrentArticles, Article, articles, articlesLoaded, initCurrentArticleListener, activateArticles } from './articleSlice';
+import { fetchArticles, Article, articles, articlesLoaded, initArticleListener, activateArticles, clearArticles, updateArticle } from './articleSlice';
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
@@ -14,6 +14,8 @@ import NavBarBack from '../ui/NavBarBack';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Shop, shopById } from '../shop/shopSlice';
+import LabelOverview from '../label/LabelOverview';
+import { Label } from '../label/labelSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,9 +53,14 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   const classes = useStyles();
   const allArticles: Article[] = useSelector(articles);
   const shopId: string = match.params.shopId
-  const loaded: boolean = useSelector(articlesLoaded);
   const actTeam: Team | undefined = useSelector(activeTeam);
   const shop: Shop | undefined = useSelector(shopById(shopId));
+  //const labelSelectionState=  useState(false);
+  const [labelSelectionOpened, setLabelSelectionOpened] = useState(false);
+  const [selectedLabel, setSelectedLabel] = React.useState<Label>();
+  const [selectedArticleLabel, setSelectedArticleLabel] = React.useState<Article>();
+
+  // const labelSelectionState=  useState(false);
   const dispatch = useAppDispatch();
   const history = useHistory();
 
@@ -62,8 +69,8 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
       if (actTeam) {
-        await dispatch(initCurrentArticleListener(actTeam!.id));
-        await dispatch(fetchCurrentArticles(actTeam!.id));
+        await dispatch(initArticleListener(actTeam!.id));
+        await dispatch(fetchArticles(actTeam!.id));
       }
     }
 
@@ -76,6 +83,25 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
 
   const handleAddAll = () => {
     dispatch(activateArticles(shop!));
+  }
+
+  const handleClearAll = () => {
+    dispatch(clearArticles(shop!));
+  }
+
+  const handleLabelSelectionClose = (label: Label) => {
+    setLabelSelectionOpened(false);
+    setSelectedLabel(label);
+    const update: Article = {
+      ...selectedArticleLabel!,
+      labelId: label === undefined ? '' : label.id
+    }
+    dispatch(updateArticle(update));
+  }
+
+  const handleArticleLabelSelection = (article: Article) => {
+    setSelectedArticleLabel(article);
+    setLabelSelectionOpened(true)
   }
 
   const filteredArticles = (active: boolean) => allArticles
@@ -99,7 +125,7 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
               </Grid>
               <Grid item xs={6}></Grid>
               <Grid item xs={3}>
-                <Button fullWidth color="secondary" startIcon={<ExpandMoreIcon />}>Clear all</Button>
+                <Button fullWidth color="secondary" startIcon={<ExpandMoreIcon />} onClick={handleClearAll}> Clear all</Button>
               </Grid>
             </Grid>
           </Grid>
@@ -110,25 +136,26 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
 
   return (
     <div>
-      <NavBarBack title={shop === undefined ? 'articles' : `${shop.name} articles`} />
+      <NavBarBack title={shop === undefined ? 'shopping list' : `${shop.name} shopping list`} />
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
             {filteredArticles(true).map(article => 
               <Grid item xs={12} key={article.id}>
-                <ArticleItem article={article} />
+                <ArticleItem article={article} onLabelSelection={handleArticleLabelSelection} />
               </Grid>
             )}
             <ArticleDivider />
             {filteredArticles(false).map(article => 
               <Grid item xs={12} key={article.id}>
-                <ArticleItem article={article} />
+                <ArticleItem article={article} onLabelSelection={handleArticleLabelSelection} />
               </Grid>
             )}
           </Grid>
           <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
           </Fab>
+          <LabelOverview selectedLabel={selectedLabel!} open={labelSelectionOpened} onClose={handleLabelSelectionClose} />
         </div>
       </Container>
     </div>

@@ -100,14 +100,6 @@ export const addTemplate = createAsyncThunk<void, Template, {state: RootState, d
     }
 );
 
-// export const updateArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/updateArticle',
-//     async (article, thunkApi) => {
-//         const actTeam = thunkApi.getState().team.activeTeam!;
-//         var articleRef = firebase.database().ref(`articles/current/teams/${actTeam.id}/articles/${article.id}`);
-//         articleRef.update(article);
-//     }
-// );
-
 export const fetchTemplates = createAsyncThunk<Template[], string, {state: RootState, dispatch: AppDispatch}>('templates/fetchTemplates',
     async (teamId, thunkApi) => {
         const teamTemplates: Template[] = await thunkApi.dispatch(fetchTeamTemplates(teamId));
@@ -124,6 +116,12 @@ export const deleteTemplate = createAsyncThunk<void, string, {state: RootState, 
         templateRef.remove();
     }
 );
+
+export const deleteTemplatesOfTeam = (teamId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const articleTeamRef = firebase.database().ref(`templates/teams/${teamId}`);
+    articleTeamRef.remove();
+    return Promise.resolve();
+}
 
 export const updateTemplate = createAsyncThunk<void, Template, {state: RootState, dispatch: AppDispatch}>('templates/editTemplates',
     async (template, thunkApi) => {
