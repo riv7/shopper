@@ -78,6 +78,10 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
     history.push('../label/newLabel');
   }
 
+  const handleSelectLabel = (labelId: string) => {
+    history.push(`articles/-N85EPsBAnsVwuDB7yNQ/labels/${labelId}`)
+  }
+
   const toggleDrawer = (open: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent,
   ) => {
@@ -118,8 +122,18 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
       </List>
       <Divider />
       <List>
+        <ListItem autoFocus button onClick={() => handleSelectLabel('all')}>
+          <ListItemIcon>
+              <LabelImportantIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary='all labels'
+            // onClick={() => handleLabelClick(label)}
+            // onDelete={handleDeleteChip} />
+          />
+        </ListItem>
         {allLabels.map((label) => (
-          <ListItem>
+          <ListItem autoFocus button onClick={() => handleSelectLabel(label.id)}>
             <ListItemIcon style = {{color: `${label.color}`}}>
                 <LabelImportantIcon />
             </ListItemIcon>

@@ -36,7 +36,7 @@ const Routes: FC = (): ReactElement => {
             <Route exact path="/team/join" component={JoinTeam} />
             <Route exact path="/team/confirm" component={ConfirmTeam} />
             {/* <Route exact path="/articles/newArticle/:shopId" component={NewArticle} /> */}
-            <Route exact path="/articles/:shopId" component={ArticleOverview} />
+            <Route exact path="/articles/:shopId/labels/:labelId" component={ArticleOverview} />
             <Route exact path="/articles/editArticle/:articleId" component={EditArticle} />
             <Route exact path="/templates/:shopId" component={TemplateOverview} />
             <Route exact path="/templates/editTemplate/:templateId" component={EditTemplate} />

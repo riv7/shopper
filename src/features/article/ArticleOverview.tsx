@@ -46,13 +46,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type ArticleRouteProps = {
   shopId: string;
+  labelId: string;
 }
 
 const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactElement => {
  
   const classes = useStyles();
   const allArticles: Article[] = useSelector(articles);
-  const shopId: string = match.params.shopId
+  const shopId: string = match.params.shopId;
+  const labelId: string = match.params.labelId;
   const actTeam: Team | undefined = useSelector(activeTeam);
   const shop: Shop | undefined = useSelector(shopById(shopId));
   //const labelSelectionState=  useState(false);
@@ -105,7 +107,9 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   }
 
   const filteredArticles = (active: boolean) => allArticles
-    .filter(article => (article.shopId === shopId) && (article.active === active));
+    .filter(article => (article.shopId === shopId) 
+      && (article.labelId === labelId || labelId === 'all')
+      && (article.active === active));
 
   const ArticleDivider: FC = () => {
     if (filteredArticles(false).length === 0) {

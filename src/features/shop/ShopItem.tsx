@@ -65,7 +65,7 @@ const ShopItem: FC<ShopItemProps> = ({shop}): ReactElement => {
   }
 
   const handleSelectClick = (event:any) => {
-    history.push(`articles/${shop.id}`);
+    history.push(`articles/${shop.id}/labels/all`);
   };
 
   return (
