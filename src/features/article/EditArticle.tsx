@@ -49,7 +49,6 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
         amount: articleAmount,
         unit: selectedUnit,
         active: article!.active,
-        shopId: article!.shopId,
         labelId: article!.labelId
       }
       dispatch(updateArticle(changedArticle));

@@ -104,7 +104,7 @@ export const deleteShop = createAsyncThunk<void, Shop, {state: RootState, dispat
         const actTeam = thunkApi.getState().team.activeTeam!;
         const articles: Article[] = thunkApi.getState().article.articles;
         const filteredArticleIds = articles
-            .filter(article => article.shopId === shop.id)
+            // .filter(article => article.shopId === shop.id)
             .map(article => article.id);
         await thunkApi.dispatch(deleteArticles(filteredArticleIds));
         var shopRef = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${shop.id}`);

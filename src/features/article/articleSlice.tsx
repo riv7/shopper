@@ -4,6 +4,7 @@ import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
 import { Shop } from "../shop/shopSlice";
+import { Label } from "../label/labelSlice";
 
 // types
 export type Article = {
@@ -12,7 +13,6 @@ export type Article = {
     amount: number,
     unit: string,
     active: boolean,
-    shopId: string,
     labelId: string
 }
 
@@ -96,7 +96,6 @@ const convertArticle = (article: firebase.database.DataSnapshot): Article => {
         amount: article.val().amount,
         unit: article.val().unit,
         active: article.val().active,
-        shopId: article.val().shopId,
         labelId: article.val().labelId
     };
 }
@@ -169,11 +168,11 @@ export const deleteArticle = createAsyncThunk<void, string, {state: RootState, d
     }
 );
 
-export const clearArticles = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('article/clearArticles',
-    async (shop, thunkApi) => {
+export const clearArticles = createAsyncThunk<void, string, {state: RootState, dispatch: AppDispatch}>('article/clearArticles',
+    async (labelId, thunkApi) => {
         const articles: Article[] = thunkApi.getState().article.articles;
         const filteredArticleIds = articles
-            .filter(article => article.shopId === shop.id)
+            .filter(article => (article.labelId === labelId || labelId === 'all'))
             .filter(article => article.active === false)
             .map(article => article.id);
 
@@ -181,11 +180,11 @@ export const clearArticles = createAsyncThunk<void, Shop, {state: RootState, dis
     }
 )
 
-export const activateArticles = createAsyncThunk<void, Shop, {state: RootState, dispatch: AppDispatch}>('article/activateArticles',
-    async (shop, thunkApi) => {
+export const activateArticles = createAsyncThunk<void, string, {state: RootState, dispatch: AppDispatch}>('article/activateArticles',
+    async (labelId, thunkApi) => {
         const articles: Article[] = thunkApi.getState().article.articles;
         const filteredArticles = articles
-            .filter(article => article.shopId === shop.id)
+            .filter(article => (article.labelId === labelId || labelId === 'all'))
             .filter(article => article.active === false);
 
         for (var article of filteredArticles) {

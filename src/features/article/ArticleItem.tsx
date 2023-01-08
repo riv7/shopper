@@ -18,7 +18,7 @@ import { Article, deleteArticle, increaseAmount } from './articleSlice';
 import { updateArticle } from './articleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import LabelOverview from '../label/LabelOverview';
+import LabelPopup from '../label/LabelPopup';
 import { Label, labelById } from '../label/labelSlice';
 
 const useStyles = makeStyles((theme: Theme) =>

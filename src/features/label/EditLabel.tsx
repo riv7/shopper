@@ -8,7 +8,7 @@ type EditLabelRouteProps = {
   labelId: string;
 }
 
-const EditShop: FC<RouteComponentProps<EditLabelRouteProps>> = ({match}): ReactElement => {
+const EditLabel: FC<RouteComponentProps<EditLabelRouteProps>> = ({match}): ReactElement => {
 
     const labelId: string = match.params.labelId;
     const label: Label | undefined = useSelector(labelById(labelId));
@@ -22,4 +22,4 @@ const EditShop: FC<RouteComponentProps<EditLabelRouteProps>> = ({match}): ReactE
     );
 };
 
-export default EditShop;
+export default EditLabel;

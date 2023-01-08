@@ -51,11 +51,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type TemplateItemProps = {
     template: Template,
-    shopId: string,
+    labelId: string,
     presentArticle: Article | undefined
 }
 
-const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle}): ReactElement => {
+const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}): ReactElement => {
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -106,8 +106,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, shopId, presentArticle})
         amount: 1,
         unit: selectedUnit,
         active: true,
-        shopId: shopId,
-        labelId: ''
+        labelId: labelId === 'all' ? '' : labelId
       };
       dispatch(addArticle(article));
     }

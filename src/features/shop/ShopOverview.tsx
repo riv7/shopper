@@ -70,6 +70,7 @@ const ShopOverview: FC = (): ReactElement => {
             {allShops
               .map(shop => 
                 <Grid item xs={12} key={shop.id}>
+        shopId: article!.shopId,
                   <ShopItem shop={shop} />
                 </Grid>
               )}

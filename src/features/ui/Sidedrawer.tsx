@@ -20,6 +20,7 @@ import { fetchLabels, initLabelListener, Label, labels } from '../label/labelSli
 import { useAppDispatch } from '../../app/store';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import AddIcon from '@material-ui/icons/Add';
+import WorkIcon from '@material-ui/icons/Work';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -78,8 +79,12 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
     history.push('../label/newLabel');
   }
 
+  const handleManageLabelClick = () => {
+    history.push(`../label/manage`);
+  }
+
   const handleSelectLabel = (labelId: string) => {
-    history.push(`articles/-N85EPsBAnsVwuDB7yNQ/labels/${labelId}`)
+    history.push(`${labelId}`)
   }
 
   const toggleDrawer = (open: boolean) => (
@@ -148,12 +153,13 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
-          {/* <ListItemAvatar>
-            <Avatar>
-              <AddIcon />
-            </Avatar>
-          </ListItemAvatar> */}
           <ListItemText primary="Add label" />
+        </ListItem>
+        <ListItem autoFocus button onClick={handleManageLabelClick}>
+          <ListItemIcon>
+            <WorkIcon />
+          </ListItemIcon>
+          <ListItemText primary="Manage labels" />
         </ListItem>
       </List>
       

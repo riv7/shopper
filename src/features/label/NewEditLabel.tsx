@@ -51,11 +51,11 @@ const colors = [
   "#795548", 
   "#607d8b"]
 
-const randomColor = ():string => {
-  return colors[Math.floor(Math.random()*colors.length)];
-}
-
 const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}): ReactElement => {
+
+    const initialColor = ():string => {
+      return label === undefined ? colors[Math.floor(Math.random()*colors.length)] : label.color;
+    }
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -63,7 +63,8 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
     const history = useHistory();
     const [labelName, setLabelName] = useState(label === undefined ? '' : label.name);
     const [nameChanged, setNameChanged] = useState(false);
-    const [color, setColor] = useState<Color>(randomColor());
+    const [colorChanged, setColorChanged] = useState(false);
+    const [color, setColor] = useState<Color>(initialColor());
     const [switchColor, setSwitchColor] = useState(false);
 
     const handleSaveClick = () => {
@@ -78,6 +79,7 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
     }
 
     const handleChangeComplete = (color: ColorResult) => {
+      setColorChanged(true)
       setColor(color.hex)
       setSwitchColor(false);
     };
@@ -90,7 +92,7 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
       <IconButton 
         color="secondary"
         aria-label="save"
-        disabled={nameChanged === false || labelName === ''}
+        disabled={(nameChanged === false && colorChanged === false) || labelName === ''}
         onClick={handleSaveClick}>
         <SaveIcon />
       </IconButton>;
@@ -137,7 +139,8 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
                   {switchColor && <Grid item >
                     <CirclePicker 
                       color={color}
-                      onChangeComplete={handleChangeComplete}/>
+                      onChangeComplete={handleChangeComplete}
+                    />
                   </Grid>
                   }
                 </Grid>

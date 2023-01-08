@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type TemplateOverviewRouteProps = {
-  shopId: string;
+  labelId: string;
 }
 
 const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({match}): ReactElement => {
@@ -44,7 +44,7 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
   const allTemplates: Template[] = useSelector(selectTemplates);
   const allArticles: Article[] = useSelector(articles);
   const actTeam: Team | undefined = useSelector(activeTeam);
-  const shopId = match.params.shopId;
+  const labelId = match.params.labelId;
   const dispatch = useAppDispatch();
   const history = useHistory();
   const [filterText, setFilterText] = useState('');
@@ -63,8 +63,10 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
   }, [actTeam, dispatch])
 
   const presentArticle = (template: Template): Article | undefined => {
+    console.log(allArticles);
+    console.log(labelId);
     return allArticles
-      .filter(article => (article.shopId === shopId))
+      .filter(article => (article.labelId === labelId || labelId === 'all'))
       .find(article => (article.name === template.name));
   }
 
@@ -92,7 +94,7 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
           <Grid item xs={12} key={"new"}>
             <TemplateItem 
               template={tmpl}
-              shopId={shopId}
+              labelId={labelId}
               presentArticle={undefined} />
           </Grid>
         </Grid>
@@ -105,7 +107,7 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
               <Grid item xs={12} key={template.id}>
                 <TemplateItem 
                   template={template}
-                  shopId={shopId}
+                  labelId={labelId}
                   presentArticle={presentArticle(template)} />
               </Grid>
             )

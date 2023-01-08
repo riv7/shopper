@@ -14,8 +14,9 @@ import NavBarBack from '../ui/NavBarBack';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Shop, shopById } from '../shop/shopSlice';
-import LabelOverview from '../label/LabelOverview';
-import { Label } from '../label/labelSlice';
+import LabelPopup from '../label/LabelPopup';
+import { Label, labelById } from '../label/labelSlice';
+import NavBarMenu from '../ui/NavBarMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,7 +46,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type ArticleRouteProps = {
-  shopId: string;
   labelId: string;
 }
 
@@ -53,14 +53,13 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
  
   const classes = useStyles();
   const allArticles: Article[] = useSelector(articles);
-  const shopId: string = match.params.shopId;
   const labelId: string = match.params.labelId;
   const actTeam: Team | undefined = useSelector(activeTeam);
-  const shop: Shop | undefined = useSelector(shopById(shopId));
-  //const labelSelectionState=  useState(false);
   const [labelSelectionOpened, setLabelSelectionOpened] = useState(false);
   const [selectedLabel, setSelectedLabel] = React.useState<Label>();
   const [selectedArticleLabel, setSelectedArticleLabel] = React.useState<Article>();
+  const label: Label | undefined = useSelector(labelById(labelId));
+  const labelFilterName = labelId === 'all' ? 'all' : label!.name
 
   // const labelSelectionState=  useState(false);
   const dispatch = useAppDispatch();
@@ -80,15 +79,15 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   }, [actTeam, dispatch])
 
   const handleAddClick = () => {
-    history.push(`/templates/${shopId}`);
+    history.push(`/templates/${labelId}`);
   }
 
   const handleAddAll = () => {
-    dispatch(activateArticles(shop!));
+    dispatch(activateArticles(labelId));
   }
 
   const handleClearAll = () => {
-    dispatch(clearArticles(shop!));
+    dispatch(clearArticles(labelId));
   }
 
   const handleLabelSelectionClose = (label: Label) => {
@@ -107,9 +106,7 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   }
 
   const filteredArticles = (active: boolean) => allArticles
-    .filter(article => (article.shopId === shopId) 
-      && (article.labelId === labelId || labelId === 'all')
-      && (article.active === active));
+    .filter(article => (article.labelId === labelId || labelId === 'all') && (article.active === active));
 
   const ArticleDivider: FC = () => {
     if (filteredArticles(false).length === 0) {
@@ -140,7 +137,8 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
 
   return (
     <div>
-      <NavBarBack title={shop === undefined ? 'shopping list' : `${shop.name} shopping list`} />
+      {/* <NavBarBack title={`shop or label: ${labelFilterName}`} /> */}
+      <NavBarMenu/>
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
@@ -159,7 +157,7 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
           <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
           </Fab>
-          <LabelOverview selectedLabel={selectedLabel!} open={labelSelectionOpened} onClose={handleLabelSelectionClose} />
+          <LabelPopup selectedLabel={selectedLabel!} open={labelSelectionOpened} onClose={handleLabelSelectionClose} />
         </div>
       </Container>
     </div>
