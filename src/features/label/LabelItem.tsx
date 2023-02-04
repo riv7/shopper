@@ -69,7 +69,9 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
         <Grid container spacing={3}>
             <Grid item xs={1}>
                 <CardActions>
-                  <IconButton aria-label="label" >
+                  <IconButton 
+                  aria-label="label"
+                  style = {{color: `${label.color}`}} >
                       <LabelImportantIcon />
                    </IconButton>
                 </CardActions>

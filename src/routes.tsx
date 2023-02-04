@@ -31,7 +31,7 @@ const Routes: FC = (): ReactElement => {
             <Route exact path="/articles/editArticle/:articleId" component={EditArticle} />
             <Route exact path="/label" component={LabelPopup} />
             <Route exact path="/label/manage" component={LabelOverview} />
-            <Route exact path="/label/newLabel" component={NewLabel} />
+            <Route exact path="/label/add" component={NewLabel} />
             <Route exact path="/label/editLabel/:labelId" component={EditLabel} />
             <Route exact path="/shop" component={ShopOverview} />
             <Route exact path="/shop/newShop" component={NewShop} />

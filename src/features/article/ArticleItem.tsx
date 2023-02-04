@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import LabelPopup from '../label/LabelPopup';
 import { Label, labelById } from '../label/labelSlice';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,7 +84,7 @@ const ArticleItem: FC<ArticleItemProps> = ({article, onLabelSelection}): ReactEl
   };
 
   const handleEdit = () => {
-    history.push(`editArticle/${article.id}`);
+    history.push(`../editArticle/${article.id}`);
   }
 
   const handleDelete = () => {
@@ -117,7 +118,7 @@ const ArticleItem: FC<ArticleItemProps> = ({article, onLabelSelection}): ReactEl
             <Grid item xs={1}>
                 <CardActions>
                   <IconButton className={typoClass} aria-label="resolve" onClick={handleResolvedClick}>
-                      <CheckCircleOutlineRoundedIcon />
+                      <RadioButtonUncheckedIcon />
                    </IconButton>
                 </CardActions>
             </Grid>

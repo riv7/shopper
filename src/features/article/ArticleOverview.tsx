@@ -138,7 +138,7 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   return (
     <div>
       {/* <NavBarBack title={`shop or label: ${labelFilterName}`} /> */}
-      <NavBarMenu/>
+      <NavBarMenu title={`shop or label: ${labelFilterName}`}/>
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>

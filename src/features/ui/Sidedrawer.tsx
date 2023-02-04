@@ -68,7 +68,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   const owner = () => actTeam ? actTeam.ownerId === firebase.auth().currentUser!.uid ? ' (owner)' : '' : '';
 
   const handleTeamClick = () => {
-    history.push('team/select2');
+    history.push('../../team/select2');
   };
 
   const handleLogoutClick = () => {
@@ -76,11 +76,11 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   }
 
   const handleAddLabelClick = () => {
-    history.push('../label/newLabel');
+    history.push('../../label/add');
   }
 
   const handleManageLabelClick = () => {
-    history.push(`../label/manage`);
+    history.push(`../../label/manage`);
   }
 
   const handleSelectLabel = (labelId: string) => {

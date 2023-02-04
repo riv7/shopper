@@ -63,7 +63,7 @@ const ShopOverview: FC = (): ReactElement => {
   
   return (
     <div>
-      <NavBarMenu/>
+      <NavBarMenu title="Shop"/>
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>

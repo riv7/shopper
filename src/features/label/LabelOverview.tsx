@@ -7,6 +7,7 @@ import { Container } from '@material-ui/core';
 import NavBarMenu from '../ui/NavBarMenu';
 import LabelItem from './LabelItem';
 import { Label, labels } from './labelSlice';
+import NavBarBack from '../ui/NavBarBack';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +38,8 @@ const LabelOverview: FC = (): ReactElement => {
 
   return (
     <div>
-      <NavBarMenu/>
+      <NavBarBack 
+          title="Labels" />
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>

@@ -24,7 +24,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const NavBarMenu: FC = () => {
+type NavBarMenuProps = {
+  title: string
+}
+
+const NavBarMenu: FC<NavBarMenuProps> = ({title}) => {
 
   const classes = useStyles();
   const actTeam: Team | undefined = useSelector(activeTeam);
@@ -45,7 +49,7 @@ const NavBarMenu: FC = () => {
             <MenuIcon/>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {"Shops"}
+            {title}
           </Typography>
           <div>
             <Typography className={classes.title}>
