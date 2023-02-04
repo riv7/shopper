@@ -2,11 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import store from './app/store'
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
-import firebase from 'firebase/app'
 import SignInScreen from './features/auth/SignIn';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 

@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { Dispatch } from 'react';
-import { Avatar, Card, CardHeader, ListItemAvatar } from '@material-ui/core';
+import { Card, CardHeader } from '@material-ui/core';
 import firebase from 'firebase';
 import { activeTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
@@ -64,8 +64,6 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
 
 
 
-  const teamName = () => actTeam ? actTeam.name : ''
-  const owner = () => actTeam ? actTeam.ownerId === firebase.auth().currentUser!.uid ? ' (owner)' : '' : '';
 
   const handleTeamClick = () => {
     history.push('../../team/select2');

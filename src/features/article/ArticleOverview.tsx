@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { fetchArticles, Article, articles, articlesLoaded, initArticleListener, activateArticles, clearArticles, updateArticle } from './articleSlice';
+import { fetchArticles, Article, articles, initArticleListener, activateArticles, clearArticles, updateArticle } from './articleSlice';
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
@@ -10,10 +10,8 @@ import { Button, Container, Divider, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { activeTeam, Team } from '../team/teamSlice';
 import ArticleItem from './ArticleItem';
-import NavBarBack from '../ui/NavBarBack';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Shop, shopById } from '../shop/shopSlice';
 import LabelPopup from '../label/LabelPopup';
 import { Label, labelById } from '../label/labelSlice';
 import NavBarMenu from '../ui/NavBarMenu';
@@ -60,13 +58,10 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   const [selectedArticleLabel, setSelectedArticleLabel] = React.useState<Article>();
   const label: Label | undefined = useSelector(labelById(labelId));
   const labelFilterName = labelId === 'all' ? 'all' : label!.name
-
-  // const labelSelectionState=  useState(false);
   const dispatch = useAppDispatch();
   const history = useHistory();
 
   useEffect(() => {
-
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
       if (actTeam) {
@@ -74,7 +69,6 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
         await dispatch(fetchArticles(actTeam!.id));
       }
     }
-
     fetchAndInit();    
   }, [actTeam, dispatch])
 
@@ -137,8 +131,7 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
 
   return (
     <div>
-      {/* <NavBarBack title={`shop or label: ${labelFilterName}`} /> */}
-      <NavBarMenu title={`shop or label: ${labelFilterName}`}/>
+      <NavBarMenu title={`${labelFilterName}`}/>
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>

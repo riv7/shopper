@@ -28,19 +28,15 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
 
     const classes = useStyles();
     const dispatch = useDispatch();
-
     const articleId: string = match.params.articleId;
     const article: Article | undefined = useSelector(articleById(articleId));
-
     const history = useHistory();
-    
     const [articleName, setArticleName] = useState(article === undefined ? '' : article.name);
     const [articleAmount, setArticleAmount] = useState(article === undefined ? 0 : article.amount);
     const unitState = useState(article === undefined ? '' : article.unit);
     const [selectedUnit] = unitState;
     const valueChangedState = useState(false);
     const [valueChanged, setValueChanged] = valueChangedState;
-
 
     const handleSaveClick = () => {
       const changedArticle = {

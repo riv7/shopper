@@ -2,10 +2,9 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { RouteComponentProps, useHistory } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
-import { Container, Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Container } from '@material-ui/core';
 import { activeTeam, Team } from '../team/teamSlice';
 import { Template, selectTemplates, initTeamTemplateListener, initGlobalTemplateListener, fetchTemplates } from './templateSlice';
 import TemplateItem from './TemplateItem';
@@ -46,7 +45,6 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
   const actTeam: Team | undefined = useSelector(activeTeam);
   const labelId = match.params.labelId;
   const dispatch = useAppDispatch();
-  const history = useHistory();
   const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
@@ -68,10 +66,6 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
     return allArticles
       .filter(article => (article.labelId === labelId || labelId === 'all'))
       .find(article => (article.name === template.name));
-  }
-
-  const handleAddClick = () => {
-    history.push('shop/newShop');
   }
 
   const searchChange = (event: any) => {
@@ -125,9 +119,6 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
       <Container>
         <div className={classes.root}>
           <FilteredTemplates />
-          <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
-            <AddIcon />
-          </Fab>
         </div>
       </Container>
     </div>

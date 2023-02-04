@@ -1,39 +1,14 @@
-import React, { FC, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { FC } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import { Avatar, Chip, ListItemAvatar, ListItemIcon, ListItemText } from '@material-ui/core';
-import { fetchLabels, initLabelListener, Label, labels, labelsLoaded } from './labelSlice';
-import AddIcon from '@material-ui/icons/Add';
-import { useHistory } from 'react-router-dom';
+import { Chip, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Label, labels } from './labelSlice';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../app/store';
-import { activeTeam, Team } from '../team/teamSlice';
 import InfoIcon from '@material-ui/icons/Info';
 
 // const emails = ['username@gmail.com', 'user02@gmail.com'];
-const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-      '& > *': {
-        margin: theme.spacing(0.5),
-      },
-    },
-    root2: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-    root3: {
-      flexGrow: 1,
-      justifyContent: 'center',
-      marginTop: '25px'
-    },
-  }));
 
 // type LabelOverviewProps = {
 //     article: Article
@@ -52,12 +27,7 @@ type LabelPopupProps = {
 
 const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose}) => {
 
-  const classes = useStyles();
   const allLabels: Label[] = useSelector(labels);
-  const loaded: boolean = useSelector(labelsLoaded);
-  const dispatch = useAppDispatch();
-  const history = useHistory();
-  const actTeam: Team | undefined = useSelector(activeTeam);
 
   // useEffect(() => {
 
@@ -85,9 +55,6 @@ const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose}) => {
     onClose(label);
   };
 
-  const handleAddLabelClick = () => {
-    history.push('../label/newLabel');
-  }
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>

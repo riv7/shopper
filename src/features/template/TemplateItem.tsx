@@ -61,10 +61,8 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
   const dispatch = useDispatch();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
   const unitState = useState("piece");
   const [selectedUnit] = unitState;
-
   const typoClass = presentArticle !== undefined ? classes.typographyLight : classes.typography;
   const amountText = (article: Article) => article.unit === '' ? article.amount : article.amount+' '+article.unit;
   const amountInArticles = presentArticle !== undefined ?  amountText(presentArticle) : '';
@@ -169,20 +167,18 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={handleClose}>
-                    <MenuItem>
+                    <MenuItem onClick={handleEdit}>
                       <IconButton
                         aria-label="shop-edit"
-                        color="inherit"
-                        onClick={handleEdit}>
+                        color="inherit" >
                         <EditIcon />
                       </IconButton>
                       Edit
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={handleDelete}>
                       <IconButton
                         aria-label="shop-delete"
-                        color="inherit"
-                        onClick={handleDelete}>
+                        color="inherit">
                         <DeleteIcon />
                       </IconButton>
                       Delete

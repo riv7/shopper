@@ -3,9 +3,8 @@ import React, { FC, ReactElement } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import NavBarBack from "../ui/NavBarBack";
-import CreateEditTeam from "./CreateEditTeam";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         // root: {
         //   '& > *': {
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const SelectOrCreateTeam: FC = (): ReactElement => {
 
     const classes = useStyles();
-    const dispatch = useDispatch();
     const history = useHistory();
 
     const handleCreateClick = () => {

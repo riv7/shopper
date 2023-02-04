@@ -1,5 +1,5 @@
-import { Box, Button, Container, createStyles, Divider, Grid, IconButton, ListItemIcon, makeStyles, Paper, TextField, Theme } from "@material-ui/core";
-import React, { FC, ReactElement, useEffect, useState } from "react";
+import { Box, Container, createStyles, Divider, Grid, IconButton, ListItemIcon, makeStyles, Theme } from "@material-ui/core";
+import React, { FC, ReactElement, useEffect } from "react";
 import NavBarBack from "../ui/NavBarBack";
 import SendIcon from '@material-ui/icons/Send';
 import List from '@material-ui/core/List';
@@ -7,11 +7,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import GroupIcon from '@material-ui/icons/Group';
 import {activeTeam, fetchTeams, setTeamActive, Team, teamsOfUser, teamsOfUserLoaded} from './teamSlice';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/store";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
-import firebase from "firebase";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -119,7 +116,7 @@ const SelectTeam2: FC = (): ReactElement => {
                             <List component="nav" >
                                 {teams.map((team, index) => 
                                     <Box>
-                                        <ListItem button onClick={event => handleTeamSelect(index)}>
+                                        <ListItem button onClick={() => handleTeamSelect(index)}>
                                             <ListItemIcon >
                                                 <GroupIcon />
                                             </ListItemIcon>

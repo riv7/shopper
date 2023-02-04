@@ -1,17 +1,15 @@
-import { Button, Card, CardActions, CardContent, Container, createStyles, FilledInput, Grid, IconButton, Input, InputAdornment, makeStyles, OutlinedInput, TextField, Theme, Typography } from "@material-ui/core";
+import { Button, Card, CardContent, Container, createStyles, Grid, IconButton, InputAdornment, makeStyles, OutlinedInput, TextField, Theme, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState } from "react";
 import NavBarBack from "../ui/NavBarBack";
 import SaveIcon from '@material-ui/icons/Save';
-import { addTeam, copyToClipboard, Team } from "./teamSlice";
-import { useDispatch } from "react-redux";
+import { copyToClipboard, Team } from "./teamSlice";
 import { AppAsyncThunk, useAppDispatch } from "../../app/store";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import InfoIcon from '@material-ui/icons/Info';
 import { showMessage } from "../message/messageSlice";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { unwrapResult } from "@reduxjs/toolkit";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         // root: {
         //   '& > *': {

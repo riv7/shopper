@@ -2,9 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-
 import { Container } from '@material-ui/core';
-import NavBarMenu from '../ui/NavBarMenu';
 import LabelItem from './LabelItem';
 import { Label, labels } from './labelSlice';
 import NavBarBack from '../ui/NavBarBack';

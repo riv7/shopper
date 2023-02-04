@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,11 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import { Label } from './labelSlice';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 
@@ -98,20 +96,18 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={handleClose}>
-                    <MenuItem>
+                    <MenuItem onClick={handleEdit}>
                       <IconButton
                         aria-label="label-edit"
-                        color="inherit"
-                        onClick={handleEdit}>
+                        color="inherit">
                         <EditIcon />
                       </IconButton>
                       Edit
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={handleDelete}>
                       <IconButton
                         aria-label="label-delete"
-                        color="inherit"
-                        onClick={handleDelete}>
+                        color="inherit">
                         <DeleteIcon />
                       </IconButton>
                       Delete
@@ -125,5 +121,3 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
 }
 
 export default LabelItem;
-
-

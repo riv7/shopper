@@ -7,18 +7,15 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
 import { Button, Chip, Menu, MenuItem } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import DoneIcon from '@material-ui/icons/Done';
-import { Article, deleteArticle, increaseAmount } from './articleSlice';
+import { Article, decreaseAmount, deleteArticle, increaseAmount } from './articleSlice';
 import { updateArticle } from './articleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import LabelPopup from '../label/LabelPopup';
 import { Label, labelById } from '../label/labelSlice';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
@@ -61,24 +58,23 @@ const ArticleItem: FC<ArticleItemProps> = ({article, onLabelSelection}): ReactEl
   const typoClass = article.active === false ? classes.typographyLight : classes.typography;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const label: Label | undefined = useSelector(labelById(article.labelId));
-
   const dispatch = useDispatch();
 
   var articleItem: Article = {...article};
 
-  const handleIncreaseClick = (event:any) => {
+  const handleIncreaseClick = () => {
     const newAmount = increaseAmount(article.amount, article.unit);
     articleItem.amount = newAmount;
     dispatch(updateArticle(articleItem));
   };
 
-  const handleDecreaseClick = (event:any) => {
-    const newAmount = article.amount - 1;
+  const handleDecreaseClick = () => {
+    const newAmount = decreaseAmount(article.amount, article.unit);
     articleItem.amount = newAmount;
     dispatch(updateArticle(articleItem));
   };
 
-  const handleResolvedClick = (event:any) => {
+  const handleResolvedClick = () => {
     articleItem.active = !articleItem.active;
     dispatch(updateArticle(articleItem));
   };
@@ -105,12 +101,8 @@ const ArticleItem: FC<ArticleItemProps> = ({article, onLabelSelection}): ReactEl
   };
 
   const handleClickChip = () => {
-    console.info('You clicked the chip label icon.');
     onLabelSelection(article);
   };
-
-  //helper
-  
 
   return (
     <Card>
@@ -122,14 +114,14 @@ const ArticleItem: FC<ArticleItemProps> = ({article, onLabelSelection}): ReactEl
                    </IconButton>
                 </CardActions>
             </Grid>
-            <Grid item xs={4} md={4}>
+            <Grid item xs={3} md={4}>
                 <CardContent>
                     <Typography className={typoClass} variant="h5" component="h2">
                     {article.name}
                     </Typography>
                 </CardContent>
             </Grid>
-            <Grid item xs={2} md={2}>
+            <Grid item xs={3} md={2}>
               <CardContent>
                 <Chip 
                   label={label === undefined ? "Select label..." : label.name}
@@ -176,20 +168,18 @@ const ArticleItem: FC<ArticleItemProps> = ({article, onLabelSelection}): ReactEl
                   keepMounted
                   open={Boolean(anchorEl)}
                   onClose={handleClose}>
-                  <MenuItem>
+                  <MenuItem onClick={handleEdit}>
                     <IconButton
                       aria-label="article-edit"
-                      color="inherit"
-                      onClick={handleEdit}>
+                      color="inherit">
                       <EditIcon />
                     </IconButton>
                     Edit
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem onClick={handleDelete}>
                     <IconButton
                       aria-label="article-delete"
-                      color="inherit"
-                      onClick={handleDelete}>
+                      color="inherit">
                       <DeleteIcon />
                     </IconButton>
                     Delete

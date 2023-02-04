@@ -3,8 +3,6 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
-import { Shop } from "../shop/shopSlice";
-import { Label } from "../label/labelSlice";
 
 // types
 export type Article = {
@@ -16,11 +14,6 @@ export type Article = {
     labelId: string
 }
 
-type FetchError = {
-    name: string,
-    message: string,
-    code: number
-}
 
 type ArticleState = {
     articles: Article[],
@@ -29,7 +22,6 @@ type ArticleState = {
 }
 
 // helper methods
-
 const compareByLabel = (a: Article, b: Article) => {
     if (a === undefined && b === undefined) {
         return 0;
@@ -40,52 +32,91 @@ const compareByLabel = (a: Article, b: Article) => {
     } else return b.labelId.localeCompare(a.labelId);
 }
 
-// function compare( a, b ) {
-//     if ( a.last_nom < b.last_nom ){
-//       return -1;
-//     }
-//     if ( a.last_nom > b.last_nom ){
-//       return 1;
-//     }
-//     return 0;
-//   }
-
 export const increaseAmount = (amount: number, unit: string): number => {
     if (unit === "piece") {
-        if (amount <= 20) {
+        if (amount < 20) {
         amount = amount+1;
-        } else if (amount <= 100) {
+        } else if (amount < 100) {
         amount = amount+10;
         } else {
         amount = amount+50;
         }
-    } else if (unit === "gram") {
-        if (amount <= 100) {
+    } else if (unit === "g") {
+        if (amount < 100) {
         amount = amount+10;
-        } else if (amount <= 500) {
+        } else if (amount < 500) {
         amount = amount+50;
-        } else if (amount <= 1000) {
+        } else if (amount < 1000) {
         amount = amount+100;
         }else {
         amount = amount+500;
         }
-    } else if (unit === "liter") {
-        if (amount <= 10) {
+    } else if (unit === "l") {
+        if (amount < 10) {
         amount = amount+1;
-        } else if (amount <= 0) {
+        } else if (amount < 0) {
         amount = amount+5;
         } else {
         amount = amount+10;
         }
-    } else if (unit === "kilo") {
-        if (amount <= 20) {
+    } else if (unit === "kg") {
+        if (amount < 20) {
         amount = amount+1;
-        } else if (amount <= 50) {
+        } else if (amount < 50) {
         amount = amount+5;
         } else {
         amount = amount+10;
         }
+    } else {
+        amount = amount+1;
     }
+    return amount;
+}
+
+export const decreaseAmount = (amount: number, unit: string): number => {
+    if (unit === "piece") {
+        if (amount <= 20) {
+        amount = amount-1;
+        } else if (amount <= 100) {
+        amount = amount-10;
+        } else {
+        amount = amount-50;
+        }
+    } else if (unit === "g") {
+        if (amount <= 100) {
+        amount = amount-10;
+        } else if (amount <= 500) {
+        amount = amount-50;
+        } else if (amount <= 1000) {
+        amount = amount-100;
+        }else {
+        amount = amount-500;
+        }
+    } else if (unit === "l") {
+        if (amount <= 10) {
+        amount = amount-1;
+        } else if (amount <= 0) {
+        amount = amount-5;
+        } else {
+        amount = amount-10;
+        }
+    } else if (unit === "kg") {
+        if (amount <= 20) {
+        amount = amount-1;
+        } else if (amount <= 50) {
+        amount = amount-5;
+        } else {
+        amount = amount-10;
+        }
+    } else {
+        amount = amount-1;
+    }
+
+    // Amount should not be smaller than zero
+    if (amount < 0) {
+        amount = 0
+    }
+
     return amount;
 }
 
@@ -109,7 +140,7 @@ const convertArticles = (snapshot: firebase.database.DataSnapshot): Article[] =>
 };
 
 // Thunks
-export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
+export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>> => async (dispatch, getState) => new Promise((resolve) => {
 
     // const teamId: string = getState().team.activeTeam!.id
 
@@ -136,7 +167,7 @@ export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>
 });
 
 export const fetchArticles = createAsyncThunk<Article[], string, {state: RootState, dispatch: AppDispatch}>('article/fetchArticles',
-    async (teamId, thunkApi) => {
+    async (teamId) => {
         // const activeTeam: Team = thunkApi.getState().team.activeTeam!
         const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`articles/teams/${teamId}/articles`).orderByValue().once('value');
         const snapshot = await promise;
@@ -212,7 +243,7 @@ export const deleteArticles = (articleIds: string[]): AppThunk<Promise<void>> =>
     return Promise.resolve();
 }
 
-export const deleteArticlesOfTeam = (teamId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
+export const deleteArticlesOfTeam = (teamId: string): AppThunk<Promise<void>> => async () => {
     const articleTeamRef = firebase.database().ref(`articles/teams/${teamId}`);
     articleTeamRef.remove();
     return Promise.resolve();
@@ -239,7 +270,7 @@ export const articleSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(fetchArticles.pending, (state, action) => {
+        builder.addCase(fetchArticles.pending, (state) => {
             state.dataRequested = true;
         });
         builder.addCase(fetchArticles.fulfilled, (state, action) => {

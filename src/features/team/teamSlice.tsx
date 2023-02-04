@@ -5,7 +5,6 @@ import "firebase/database";
 import { showMessage } from "../message/messageSlice";
 import { deleteTemplatesOfTeam } from "../template/templateSlice";
 import { deleteArticlesOfTeam } from "../article/articleSlice";
-import { deleteShopsOfTeam } from "../shop/shopSlice";
 
 // types
 export type Team = {
@@ -166,7 +165,6 @@ export const removeTeam = createAsyncThunk<void, Team, {dispatch: AppDispatch}>(
         }
         await thunkApi.dispatch(deleteTemplatesOfTeam(team.id));
         await thunkApi.dispatch(deleteArticlesOfTeam(team.id));
-        await thunkApi.dispatch(deleteShopsOfTeam(team.id));
         const userIds: string[] = await thunkApi.dispatch(fetchUserIdsOfTeam(team.id));
         await thunkApi.dispatch(removeTeamFromUsers(userIds, team.id));
         const teamRef = firebase.database().ref(`teams/${team.id}`);

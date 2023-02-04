@@ -1,6 +1,5 @@
 import {Action, AsyncThunk, configureStore, ThunkAction} from '@reduxjs/toolkit'
 import articleReducer from '../features/article/articleSlice'
-import shopReducer from '../features/shop/shopSlice'
 import labelReducer from '../features/label/labelSlice'
 import teamReducer from '../features/team/teamSlice'
 import loadingReducer from '../features/loading/loadingSlice'
@@ -11,7 +10,6 @@ import { useDispatch } from 'react-redux'
 const store = configureStore({
     reducer: {
         article: articleReducer,
-        shop: shopReducer,
         team: teamReducer,
         loading: loadingReducer,
         message: messageReducer,
