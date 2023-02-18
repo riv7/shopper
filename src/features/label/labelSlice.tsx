@@ -110,18 +110,11 @@ export const deleteLabel = createAsyncThunk<void, Label, {state: RootState, disp
      }
  );
 
-// export const fetchArticleIdsOfShop = (shop: Label): AppThunk<Promise<string[]>> => async (dispatch, getState) => {
-//     const actTeam = getState().team.activeTeam!;
-//     const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${shop.id}/currentArticles`).once('value');
-//     const snapshot = await promise;
-//     return Promise.resolve(convertLabelIds(snapshot));
-// }
-
-// export const deleteShopsOfTeam = (teamId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
-//     const shopTeamRef = firebase.database().ref(`shops/teams/${teamId}`);
-//     shopTeamRef.remove();
-//     return Promise.resolve();
-// }
+ export const deleteLabelsOfTeam = (teamId: string): AppThunk<Promise<void>> => async () => {
+    const labelTeamRef = firebase.database().ref(`labels/teams/${teamId}`);
+    labelTeamRef.remove();
+    return Promise.resolve();
+}
 
 // Initial state
 const initialState: LabelState = {

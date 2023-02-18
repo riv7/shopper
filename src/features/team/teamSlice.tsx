@@ -1,10 +1,11 @@
-import { AsyncThunk, createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
 import { deleteTemplatesOfTeam } from "../template/templateSlice";
 import { deleteArticlesOfTeam } from "../article/articleSlice";
+import { deleteLabelsOfTeam } from "../label/labelSlice";
 
 // types
 export type Team = {
@@ -140,11 +141,11 @@ export const updateTeam = createAsyncThunk<Team, Team, {state: RootState, dispat
     async (team, thunkApi) => {
         const teamRef = firebase.database().ref(`teams/${team.id}`);
         teamRef.update(team)
-        thunkApi.dispatch(fetchTeams())
-        return team;
+        //await thunkApi.dispatch(fetchTeams())
+        //return team;
 
-        //const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(team.id));
-        //return persistentTeam;
+        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(team.id));
+        return persistentTeam;
     }
 );
 
@@ -159,7 +160,7 @@ export const fetchTeams = createAsyncThunk<Team[], void, {dispatch: AppDispatch}
     }
 )
 
-export const removeTeam = createAsyncThunk<void, Team, {dispatch: AppDispatch}>('team/fetchTeams',
+export const removeTeam = createAsyncThunk<void, Team, {dispatch: AppDispatch}>('team/removeTeam',
     async (team, thunkApi) => {
         const userId: string = firebase.auth().currentUser!.uid
         if (team.ownerId !== userId) {
@@ -167,6 +168,7 @@ export const removeTeam = createAsyncThunk<void, Team, {dispatch: AppDispatch}>(
             return Promise.resolve();
         }
         await thunkApi.dispatch(deleteTemplatesOfTeam(team.id));
+        await thunkApi.dispatch(deleteLabelsOfTeam(team.id));
         await thunkApi.dispatch(deleteArticlesOfTeam(team.id));
         const userIds: string[] = await thunkApi.dispatch(fetchUserIdsOfTeam(team.id));
         await thunkApi.dispatch(removeTeamFromUsers(userIds, team.id));
@@ -305,19 +307,23 @@ export const teamSlice = createSlice({
         });
         builder.addCase(addTeam.fulfilled, (state, action) => {
             state.activeTeam = action.payload
-            state.teamsOfUser.push(action.payload)
+            state.teamsOfUserLoaded = false;
         });
         builder.addCase(joinTeam.fulfilled, (state, action) => {
             state.activeTeam = action.payload
-            state.teamsOfUser.push(action.payload)
+            state.teamsOfUserLoaded = false;
         });
         builder.addCase(updateTeam.fulfilled, (state, action) => {
             state.activeTeam = action.payload
             const index = state.teamsOfUser.findIndex(team => team.id = action.payload.id);
             state.teamsOfUser[index] = action.payload;
+            state.teamsOfUserLoaded = false;
         });
         builder.addCase(setTeamActive.fulfilled, (state, action) => {
             state.activeTeam = action.payload
+        });
+        builder.addCase(removeTeam.fulfilled, (state, action) => {
+            state.teamsOfUserLoaded = false;
         });
     }
 });

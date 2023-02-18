@@ -38,7 +38,7 @@ const CreateEditTeam: FC<CreateEditTeamProps> = ({title, team, thunkAction}): Re
     const [teamPersistant, setTeamPersistant] = useState(team === undefined ? false : true);
     const [credentialsChanged, setCredentialsChanged] = useState(false)
 
-    const handleAddClick = async () => {
+    const handleSaveClick = async () => {
         const teamData: Team = {
             id: teamId,
             name: teamName,
@@ -71,7 +71,7 @@ const CreateEditTeam: FC<CreateEditTeamProps> = ({title, team, thunkAction}): Re
         color="secondary"
         aria-label="save"
         disabled={teamName === '' || teamPassword === '' || credentialsChanged === false}
-        onClick={handleAddClick}>
+        onClick={handleSaveClick}>
         <SaveIcon />
       </IconButton>;
 

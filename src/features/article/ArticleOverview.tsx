@@ -6,7 +6,7 @@ import { fetchArticles, Article, articles, initArticleListener, activateArticles
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
-import { Button, Container, Divider, Fab } from '@material-ui/core';
+import { Button, Card, CardContent, Container, Divider, Fab, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { activeTeam, Team } from '../team/teamSlice';
 import ArticleItem from './ArticleItem';
@@ -135,6 +135,20 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>
+            {actTeam === undefined &&
+              <Card className={classes.root}>
+                <CardContent>
+                  <Typography>Please select a team</Typography>
+                </CardContent>
+              </Card>
+            }
+            {allArticles.length === 0 &&
+              <Card className={classes.root}>
+                <CardContent>
+                  <Typography>Please add articles</Typography>
+                </CardContent>
+              </Card>
+            }
             {filteredArticles(true).map(article => 
               <Grid item xs={12} key={article.id}>
                 <ArticleItem article={article} onLabelSelection={handleArticleLabelSelection} />
@@ -147,9 +161,9 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
               </Grid>
             )}
           </Grid>
-          <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
+          {actTeam && <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
-          </Fab>
+          </Fab>}
           <LabelPopup selectedLabel={selectedLabel!} open={labelSelectionOpened} onClose={handleLabelSelectionClose} />
         </div>
       </Container>

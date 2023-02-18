@@ -62,9 +62,6 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
     fetchAndInit();    
   }, [actTeam, dispatch])
 
-
-
-
   const handleTeamClick = () => {
     history.push('../../team/select2');
   };
@@ -111,8 +108,6 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
       <Card className={classes.cardBackground}>
         <CardHeader title="shopper"/>
       </Card>
-      {/* <Typography>shopper</Typography> */}
-      {/* <Divider /> */}
       <List>
         <ListItem key="user">
           <ListItemIcon><InboxIcon /></ListItemIcon>
@@ -131,8 +126,6 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
           </ListItemIcon>
           <ListItemText
             primary='all labels'
-            // onClick={() => handleLabelClick(label)}
-            // onDelete={handleDeleteChip} />
           />
         </ListItem>
         {allLabels.map((label) => (
@@ -142,23 +135,21 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
             </ListItemIcon>
             <ListItemText
               primary={label.name}
-              // onClick={() => handleLabelClick(label)}
-              // onDelete={handleDeleteChip} />
             />
           </ListItem>
         ))}
-        <ListItem autoFocus button onClick={handleAddLabelClick}>
+        {actTeam && <ListItem autoFocus button onClick={handleAddLabelClick}>
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
           <ListItemText primary="Add label" />
-        </ListItem>
-        <ListItem autoFocus button onClick={handleManageLabelClick}>
+        </ListItem>}
+        {actTeam && <ListItem autoFocus button onClick={handleManageLabelClick}>
           <ListItemIcon>
             <WorkIcon />
           </ListItemIcon>
           <ListItemText primary="Manage labels" />
-        </ListItem>
+        </ListItem>}
       </List>
       
       <Divider />
@@ -167,12 +158,6 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
           <ListItemIcon><GroupIcon /></ListItemIcon>
           <ListItemText primary={"Change team"} />
         </ListItem>
-        {/* {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))} */}
       </List>
     </div>
   );
