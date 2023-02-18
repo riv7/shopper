@@ -3,7 +3,7 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
-import { Article, deleteArticles } from "../article/articleSlice";
+import { Article, deleteArticles, nullifyLabels } from "../article/articleSlice";
 
 // types
 export type Label = {
@@ -101,19 +101,14 @@ export const updateLabel = createAsyncThunk<void, Label, {state: RootState, disp
     }
 );
 
-// TODO wgu delete label
-// export const deleteLabel = createAsyncThunk<void, Label, {state: RootState, dispatch: AppDispatch}>('label/deleteLabel',
-//     async (label, thunkApi) => {
-//         const actTeam = thunkApi.getState().team.activeTeam!;
-//         const articles: Article[] = thunkApi.getState().article.articles;
-//         const filteredArticleIds = articles
-//             .filter(article => article.labelId === label.id)
-//             .map(article => article.id);
-//         await thunkApi.dispatch(deleteArticles(filteredArticleIds));
-//         var shopRef = firebase.database().ref(`shops/teams/${actTeam.id}/shops/${label.id}`);
-//         shopRef.remove();
-//     }
-// )
+export const deleteLabel = createAsyncThunk<void, Label, {state: RootState, dispatch: AppDispatch}>('label/deleteLabel',
+     async (label, thunkApi) => {
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        await thunkApi.dispatch(nullifyLabels(label.id));
+        const labelRef = firebase.database().ref(`labels/teams/${actTeam.id}/labels/${label.id}`);
+        labelRef.remove();
+     }
+ );
 
 // export const fetchArticleIdsOfShop = (shop: Label): AppThunk<Promise<string[]>> => async (dispatch, getState) => {
 //     const actTeam = getState().team.activeTeam!;

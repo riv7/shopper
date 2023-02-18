@@ -61,8 +61,6 @@ const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({
   }, [actTeam, dispatch])
 
   const presentArticle = (template: Template): Article | undefined => {
-    console.log(allArticles);
-    console.log(labelId);
     return allArticles
       .filter(article => (article.labelId === labelId || labelId === 'all'))
       .find(article => (article.name === template.name));

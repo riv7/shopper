@@ -3,6 +3,7 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
 import { showMessage } from "../message/messageSlice";
+import { labels } from "../label/labelSlice";
 
 // types
 export type Article = {
@@ -226,6 +227,17 @@ export const activateArticles = createAsyncThunk<void, string, {state: RootState
     }
 );
 
+export const nullifyLabels = (labelId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    const articles: Article[] = getState().article.articles;
+    const filteredArticles = articles
+        .filter(article => article.labelId === labelId)
+
+    for (var article of filteredArticles) {
+        const copy = {...article, labelId: ''}
+        await dispatch(updateArticleOfTeam(copy));
+    }
+}
+  
 const updateArticleOfTeam = (article: Article): AppThunk<Promise<void>> => async (dispatch, getState) => {
     const actTeam = getState().team.activeTeam!;
     const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${article.id}`);

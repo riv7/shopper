@@ -11,21 +11,13 @@ import { unwrapResult } from "@reduxjs/toolkit";
 
 const useStyles = makeStyles(() =>
     createStyles({
-        // root: {
-        //   '& > *': {
-        //     margin: theme.spacing(1),
-        //   },
-        // },
         root: {
             flexGrow: 1,
             marginTop: '50px'
         },
         button: {
-            // margin: theme.spacing(2),
-            // padding: theme.spacing(2),
             textAlign: 'center',
-            //color: theme.palette.text.secondary,
-        },
+        }
     }),
 );
 
@@ -86,19 +78,11 @@ const CreateEditTeam: FC<CreateEditTeamProps> = ({title, team, thunkAction}): Re
     const InfoBox: FC = () =>
         <Card>
             <CardContent>
-                {/* <Typography variant="h5" >
-                    Team {teamName} created
-                </Typography> */}
                 <Typography variant="body1" >
                     <InfoIcon /> Copy and send credentials to a shopping friend
                 </Typography>
             </CardContent>
-            {/* <CardActions>
-                <Button size="small">Copy</Button>
-            </CardActions> */}
-                   
         </Card>
-        
 
     return (
         <div>

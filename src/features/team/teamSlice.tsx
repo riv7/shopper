@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AsyncThunk, createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import firebase from 'firebase/app';
 import "firebase/database";
@@ -140,8 +140,11 @@ export const updateTeam = createAsyncThunk<Team, Team, {state: RootState, dispat
     async (team, thunkApi) => {
         const teamRef = firebase.database().ref(`teams/${team.id}`);
         teamRef.update(team)
-        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(team.id));
-        return persistentTeam;
+        thunkApi.dispatch(fetchTeams())
+        return team;
+
+        //const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(team.id));
+        //return persistentTeam;
     }
 );
 
@@ -322,7 +325,7 @@ export const teamSlice = createSlice({
 export const severity = (state:RootState) => state.message.status;
 export const activeTeam = (state: RootState) => state.team.activeTeam;
 export const activeTeamLoaded = (state: RootState) => state.team.activeTeamLoaded;
-export const teamsOfUser = (state: RootState) => state.team.teamsOfUser;
+export const teamsOfUser = (state: RootState) => state.team.teamsOfUser.slice().sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 export const teamsOfUserLoaded = (state: RootState) => state.team.teamsOfUserLoaded;
 export const teamById = (teamId: string) => (state: RootState) => state.team.teamsOfUser.find(team => team.id === teamId);
 

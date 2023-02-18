@@ -118,29 +118,26 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={handleClose}>
-                    <MenuItem>
+                    <MenuItem onClick={handleEdit}>
                       <IconButton
                         aria-label="team-edit"
-                        color="inherit"
-                        onClick={handleEdit}>
+                        color="inherit">
                         <EditIcon />
                       </IconButton>
                       Edit
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={handleCopy}>
                       <IconButton
                         aria-label="team-copy"
-                        color="inherit"
-                        onClick={handleCopy}>
+                        color="inherit">
                         <FileCopyIcon />
                       </IconButton>
                       Copy credentials
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={handleDelete}>
                       <IconButton
                         aria-label="team-delete"
-                        color="inherit"
-                        onClick={handleDelete}>
+                        color="inherit">
                         <DeleteIcon />
                       </IconButton>
                       Delete

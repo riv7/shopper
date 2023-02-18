@@ -11,8 +11,9 @@ import { Menu, MenuItem } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
-import { Label } from './labelSlice';
+import { deleteLabel, Label } from './labelSlice';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
+import { useDispatch } from 'react-redux';
 
 
 const useStyles = makeStyles(() =>
@@ -43,6 +44,7 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
 
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -55,7 +57,7 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
   };
 
   const handleDelete = () => {
-    // dispatch(deleteShop(shop));
+    dispatch(deleteLabel(label));
   }
 
   const handleEdit = () => {
