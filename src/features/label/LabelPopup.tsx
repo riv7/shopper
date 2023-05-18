@@ -8,17 +8,6 @@ import { Label, labels } from './labelSlice';
 import { useSelector } from 'react-redux';
 import InfoIcon from '@material-ui/icons/Info';
 
-// const emails = ['username@gmail.com', 'user02@gmail.com'];
-
-// type LabelOverviewProps = {
-//     article: Article
-// }
-
-// const labels = [
-//     { id: "0", name: 'basic1', color: '#000', teamId: "123" },
-//     { id: "1", name: 'baasic2', color: '#000', teamId: "123" }
-// ]
-
 type LabelPopupProps = {
   selectedLabel: Label
   open: boolean
@@ -28,19 +17,6 @@ type LabelPopupProps = {
 const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose}) => {
 
   const allLabels: Label[] = useSelector(labels);
-
-  // useEffect(() => {
-
-  //   // Fetch async data only when data is not yet loaded
-  //   const fetchAndInit = async () => {
-  //     if (actTeam) {
-  //       await dispatch(initLabelListener(actTeam!.id));
-  //       await dispatch(fetchLabels(actTeam!.id));
-  //     }
-  //   }
-  //   fetchAndInit();    
-  // }, [actTeam, dispatch])
-
 
   const handleDeleteChip = () => {
     console.info('You clicked the delete icon.');
