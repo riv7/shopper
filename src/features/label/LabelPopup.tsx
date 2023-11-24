@@ -3,24 +3,23 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import { Chip, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Avatar, Chip, ListItemAvatar, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Label, labels } from './labelSlice';
 import { useSelector } from 'react-redux';
 import InfoIcon from '@material-ui/icons/Info';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+
 
 type LabelPopupProps = {
-  selectedLabel: Label
-  open: boolean
+  selectedLabel: Label;
+  open: boolean;
   onClose: (label: Label) => void;
+  onAddLabel: () => void;
 }
 
-const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose}) => {
+const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose, onAddLabel}) => {
 
   const allLabels: Label[] = useSelector(labels);
-
-  const handleDeleteChip = () => {
-    console.info('You clicked the delete icon.');
-  };
 
   const handleClose = () => {
     onClose(selectedLabel);
@@ -29,6 +28,11 @@ const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose}) => {
 
   const handleLabelClick = (label: Label) => {
     onClose(label);
+  };
+
+  const handleAddLabelClick = () => {
+    onAddLabel();
+    //history.push('../../label/add');
   };
 
 
@@ -43,29 +47,21 @@ const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose}) => {
                 //   icon={icon}
                 label={label.name}
                 style = {{backgroundColor: `${label.color}`}}
-                onClick={() => handleLabelClick(label)}
-                onDelete={handleDeleteChip} />
+                onClick={() => handleLabelClick(label)} />
           </ListItem>
         ))}
-        <ListItem>
+        <ListItem autoFocus button onClick={handleAddLabelClick}>
           <ListItemIcon>
-            <InfoIcon />
+            <AddCircleOutlineIcon />
           </ListItemIcon>
-          {/* <ListItemAvatar>
+          <ListItemText primary="Add new label" />
+          {/*<ListItemAvatar>
             <Avatar>
-              <AddIcon />
-            </Avatar>
-          </ListItemAvatar> */}
-          <ListItemText primary="Add more labels in sidebar" />
-        </ListItem>
-        {/* <ListItem autoFocus button onClick={handleAddLabelClick}>
-          <ListItemAvatar>
-            <Avatar>
-              <AddIcon />
+              <AddCircleOutlineIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="Add label" />
-        </ListItem> */}
+        <ListItemText primary="Add new label" />*/}
+        </ListItem>
       </List>
 
     </Dialog>

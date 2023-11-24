@@ -72,7 +72,7 @@ const uiConfig = {
 
     // Show create or select team screen
     if (teamLoaded && actTeam === undefined) {
-      history.push('team')
+      // history.push('team')
       
       return (
         <App/>

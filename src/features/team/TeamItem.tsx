@@ -17,6 +17,8 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { showMessage } from '../message/messageSlice';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,7 +79,14 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   }
 
   const handleCopy = () => {
-    copyToClipboard(team.id, team.password);
+
+    
+
+    <CopyToClipboard text={team.id}>
+             </CopyToClipboard>
+
+
+    //copyToClipboard(team.id, team.password);
     dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull.\nPlease send them to your shopping mate to join." }));
   }
 
@@ -126,7 +135,8 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                       </IconButton>
                       Edit
                     </MenuItem>
-                    <MenuItem onClick={handleCopy}>
+                    <CopyToClipboard text={team.id}>
+                    <MenuItem>
                       <IconButton
                         aria-label="team-copy"
                         color="inherit">
@@ -134,6 +144,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                       </IconButton>
                       Copy credentials
                     </MenuItem>
+                    </CopyToClipboard>
                     <MenuItem onClick={handleDelete}>
                       <IconButton
                         aria-label="team-delete"

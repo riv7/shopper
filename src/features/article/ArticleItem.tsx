@@ -72,8 +72,8 @@ type ArticleItemProps = {
 const ArticleItem: FC<ArticleItemProps> = ({ article, onLabelSelection }): ReactElement => {
 
   const classes = useStyles();
-  // const amountText = article.unit === '' ? article.amount : article.amount + ' ' + article.unit;
-  const amountText = article.amount;
+  const amountText = article.unit === 'piece' ? article.amount : article.amount + ' ' + article.unit;
+  // const amountText = article.amount;
   const typoClass = article.active === false ? classes.typographyLight : classes.typography;
   const textboxCass = article.active === false ? classes.textboxLight : classes.textbox;
   const label: Label | undefined = useSelector(labelById(article.labelId));

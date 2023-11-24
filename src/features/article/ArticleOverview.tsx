@@ -76,6 +76,10 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
     history.push(`/templates/${labelId}`);
   }
 
+  const handleAddLabelClick = () => {
+    history.push('../../label/add');
+  }
+
   const handleAddAll = () => {
     dispatch(activateArticles(labelId));
   }
@@ -138,7 +142,7 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
             {actTeam === undefined &&
               <Card className={classes.root}>
                 <CardContent>
-                  <Typography>Please select a team</Typography>
+                  <Typography>Please create or select a team</Typography>
                 </CardContent>
               </Card>
             }
@@ -164,7 +168,11 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
           {actTeam && <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
           </Fab>}
-          <LabelPopup selectedLabel={selectedLabel!} open={labelSelectionOpened} onClose={handleLabelSelectionClose} />
+          <LabelPopup 
+            selectedLabel={selectedLabel!}
+            open={labelSelectionOpened}
+            onClose={handleLabelSelectionClose}
+            onAddLabel={handleAddLabelClick} />
         </div>
       </Container>
     </div>

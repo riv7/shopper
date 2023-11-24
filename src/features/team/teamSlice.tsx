@@ -74,11 +74,15 @@ const convertIds = (snapshot: firebase.database.DataSnapshot): string[] => {
 
 export const copyToClipboard = async (teamId: string, teamPassword: string) => {
     const text = `Paste the following credentials in the join team dialog.\nTeam ID: ${teamId} | Team PW: ${teamPassword}`
-    if ('clipboard' in navigator) {
+    //return await navigator.clipboard.writeText(text);
+    return document.execCommand('copy', true, text);
+    /*}*/
+    //ccreturn document.execCommand('copy', true, text);
+    /*if (navigator.clipboard) {
         return await navigator.clipboard.writeText(text);
     } else {
         return document.execCommand('copy', true, text);
-    }
+    }*/
 }
 
 // thunks
