@@ -6,8 +6,8 @@ const NewLabel: FC = (): ReactElement => {
 
   return (
     <NewEditLabel
-      title="New Label"
-      header="Enter new label name..."
+      title="New shop"
+      header="Enter new shop name..."
       thunkAction={addLabel} />
   );
 }

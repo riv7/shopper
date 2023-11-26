@@ -15,8 +15,8 @@ const EditLabel: FC<RouteComponentProps<EditLabelRouteProps>> = ({match}): React
 
     return (
       <NewEditLabel
-        title="Edit Label"
-        header="Change label name..."
+        title="Edit shop"
+        header="Change shop name..."
         label={label}
         thunkAction={updateLabel} />
     );

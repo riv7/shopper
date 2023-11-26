@@ -21,6 +21,7 @@ import { useAppDispatch } from '../../app/store';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import AddIcon from '@material-ui/icons/Add';
 import WorkIcon from '@material-ui/icons/Work';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -110,11 +111,11 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
       </Card>
       <List>
         <ListItem key="user">
-          <ListItemIcon><InboxIcon /></ListItemIcon>
+          <ListItemIcon><AccountBoxIcon /></ListItemIcon>
           <ListItemText primary={firebase.auth().currentUser!.displayName} />
         </ListItem>
         <ListItem button onClick={handleLogoutClick} key="logout">
-          <ListItemIcon><MailIcon /></ListItemIcon>
+          <ListItemIcon><InboxIcon /></ListItemIcon>
           <ListItemText primary="Logout" />
         </ListItem>
       </List>
@@ -125,7 +126,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
               <LabelImportantIcon />
           </ListItemIcon>
           <ListItemText
-            primary='all labels'
+            primary='all shops'
           />
         </ListItem>
         {allLabels.map((label) => (
@@ -142,13 +143,13 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
-          <ListItemText primary="Add label" />
+          <ListItemText primary="Add shop" />
         </ListItem>}
         {actTeam && <ListItem autoFocus button onClick={handleManageLabelClick}>
           <ListItemIcon>
             <WorkIcon />
           </ListItemIcon>
-          <ListItemText primary="Manage labels" />
+          <ListItemText primary="Manage shops" />
         </ListItem>}
       </List>
       

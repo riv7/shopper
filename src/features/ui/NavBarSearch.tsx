@@ -111,7 +111,7 @@ const NavBarSearch: FC<NavBarSearchProps> = ({ title, onChange, childComp }) => 
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
-              inputProps={{ 'aria-label': 'search', maxlength: 16 }}
+              inputProps={{ 'aria-label': 'search', maxlength: 12 }}
               onChange={onChange}
             />
           </div>

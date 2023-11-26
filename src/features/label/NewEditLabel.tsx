@@ -131,7 +131,7 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
                   </Grid>
                   <Grid item>
                     <Chip
-                      label = 'Switch color of label'
+                      label = 'Switch color of shop'
                       style = {{backgroundColor: `${color}`}}
                       onClick = {handleSwitchColor}
                     />

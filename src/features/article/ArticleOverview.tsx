@@ -57,7 +57,7 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   const [selectedLabel, setSelectedLabel] = React.useState<Label>();
   const [selectedArticleLabel, setSelectedArticleLabel] = React.useState<Article>();
   const label: Label | undefined = useSelector(labelById(labelId));
-  const labelFilterName = labelId === 'all' ? 'all' : label!.name
+  const labelFilterName = labelId === 'all' ? 'all shops' : label!.name
   const dispatch = useAppDispatch();
   const history = useHistory();
 
@@ -120,11 +120,11 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
                 <Divider variant="middle" />
               </Grid>
               <Grid item xs={3}>
-                <Button fullWidth color="secondary" startIcon={<ExpandLessIcon />} onClick={handleAddAll}>Add all</Button>
+                <Button fullWidth color="secondary" startIcon={<ExpandLessIcon />} onClick={handleAddAll}>Add</Button>
               </Grid>
               <Grid item xs={6}></Grid>
               <Grid item xs={3}>
-                <Button fullWidth color="secondary" startIcon={<ExpandMoreIcon />} onClick={handleClearAll}> Clear all</Button>
+                <Button fullWidth color="secondary" endIcon={<ExpandMoreIcon />} onClick={handleClearAll}>Clear</Button>
               </Grid>
             </Grid>
           </Grid>

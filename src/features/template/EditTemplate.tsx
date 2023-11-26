@@ -91,7 +91,7 @@ const EditTemplate: FC<RouteComponentProps<EditTemplateRouteProps>> = ({match}):
                             label="Change template name..."
                             variant="outlined"
                             fullWidth 
-                            inputProps={{ maxlength: 16 }}
+                            inputProps={{ maxlength: 12 }}
                             value={templateName}
                             onChange={event => {
                               setTemplateName(event.target.value);
