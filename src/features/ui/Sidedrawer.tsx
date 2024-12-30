@@ -8,10 +8,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import { Dispatch } from 'react';
 import { Card, CardHeader } from '@material-ui/core';
-import firebase from 'firebase';
 import { activeTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -22,7 +20,7 @@ import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import AddIcon from '@material-ui/icons/Add';
 import WorkIcon from '@material-ui/icons/Work';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-
+import { getAuth } from "firebase/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,7 +66,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   };
 
   const handleLogoutClick = () => {
-    firebase.auth().signOut();
+    getAuth().signOut();
   }
 
   const handleAddLabelClick = () => {
@@ -112,7 +110,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
       <List>
         <ListItem key="user">
           <ListItemIcon><AccountBoxIcon /></ListItemIcon>
-          <ListItemText primary={firebase.auth().currentUser!.displayName} />
+          <ListItemText primary={getAuth().currentUser!.displayName} />
         </ListItem>
         <ListItem button onClick={handleLogoutClick} key="logout">
           <ListItemIcon><InboxIcon /></ListItemIcon>

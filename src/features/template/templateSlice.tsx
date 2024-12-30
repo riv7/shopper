@@ -1,9 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, AppThunk, RootState } from "../../app/store";
-import firebase from 'firebase/app';
-import "firebase/database";
+import { update, remove, push, set, DataSnapshot, get, getDatabase, ref, onValue} from "firebase/database";
 import { showMessage } from "../message/messageSlice";
-import { Team } from "../team/teamSlice";
 
 // types
 export type Template = {
@@ -26,7 +24,7 @@ type TemplateState = {
 }
 
 // helper methods
-const convertTemplate = (template: firebase.database.DataSnapshot): Template => {
+const convertTemplate = (template: DataSnapshot): Template => {
     return {
         id: template.key != null ? template.key : '',
         name: template.val().name,
@@ -35,7 +33,7 @@ const convertTemplate = (template: firebase.database.DataSnapshot): Template => 
     };
 }
 
-const convertTemplates = (snapshot: firebase.database.DataSnapshot): Template[] => {
+const convertTemplates = (snapshot: DataSnapshot): Template[] => {
     const templates: Template[] = [];
     snapshot.forEach((template) => {
         templates.push(convertTemplate(template))
@@ -43,10 +41,13 @@ const convertTemplates = (snapshot: firebase.database.DataSnapshot): Template[] 
     return templates;
 };
 
+const getDb = () => getDatabase();
+
 // Thunks
 export const initTeamTemplateListener = (teamId: string): AppThunk<Promise<Template[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
 
-    firebase.database().ref(`templates/teams/${teamId}/templates`).on('value', (snapshot) => {
+    const templatesRef = ref(getDb(), `templates/teams/${teamId}/templates`);
+    onValue(templatesRef, (snapshot) => {
         const templates: Template[] = convertTemplates(snapshot);
 
          // Template message when data was not requested by user
@@ -69,7 +70,8 @@ export const initTeamTemplateListener = (teamId: string): AppThunk<Promise<Templ
 
 export const initGlobalTemplateListener = (): AppThunk<Promise<Template[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
 
-    firebase.database().ref(`templates/global/templates`).on('value', (snapshot) => {
+    const templatesRef = ref(getDb(), `templates/global/templates`);
+    onValue(templatesRef, (snapshot) => {
         const templates: Template[] = convertTemplates(snapshot);
 
          // Template message when data was not requested by user
@@ -94,9 +96,9 @@ export const addTemplate = createAsyncThunk<void, Template, {state: RootState, d
     async (template, thunkApi) => {
         // Create a new template reference with an auto-generated id
         const actTeam = thunkApi.getState().team.activeTeam!;
-        var templateListRef = firebase.database().ref(`templates/teams/${actTeam.id}/templates`);
-        var newTemplateRef = templateListRef.push();
-        newTemplateRef.set(template);
+        const templateListRef = ref(getDb(), `templates/teams/${actTeam.id}/templates`);
+        const newTemplateRef = push(templateListRef);
+        await set(newTemplateRef, template);
     }
 );
 
@@ -112,34 +114,34 @@ export const fetchTemplates = createAsyncThunk<Template[], string, {state: RootS
 export const deleteTemplate = createAsyncThunk<void, string, {state: RootState, dispatch: AppDispatch}>('templates/deleteTemplate',
     async (templateId, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
-        const templateRef = firebase.database().ref(`templates/teams/${actTeam.id}/templates/${templateId}`);
-        templateRef.remove();
+        const templateRef = ref(getDb(), `templates/teams/${actTeam.id}/templates/${templateId}`);
+        await remove(templateRef);
     }
 );
 
 export const deleteTemplatesOfTeam = (teamId: string): AppThunk<Promise<void>> => async (dispatch, getState) => {
-    const articleTeamRef = firebase.database().ref(`templates/teams/${teamId}`);
-    articleTeamRef.remove();
+    const articleTeamRef = ref(getDb(), `templates/teams/${teamId}`);
+    await remove(articleTeamRef);
     return Promise.resolve();
 }
 
 export const updateTemplate = createAsyncThunk<void, Template, {state: RootState, dispatch: AppDispatch}>('templates/editTemplates',
     async (template, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
-        const templateRef = firebase.database().ref(`templates/teams/${actTeam.id}/templates/${template.id}`);
-        templateRef.update(template)
+        const templateRef = ref(getDb(), `templates/teams/${actTeam.id}/templates/${template.id}`);
+        await update(templateRef, template)
     }
 );
 
 const fetchTeamTemplates = (teamId: string): AppThunk<Promise<Template[]>> => async (dispatch, getState) => {
-    const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`templates/teams/${teamId}/templates`).once('value');
-    const snapshot = await promise;
+    const templatesRef = ref(getDb(), `templates/teams/${teamId}/templates`);
+    const snapshot = await get(templatesRef);
     return Promise.resolve(convertTemplates(snapshot));
 }
 
 const fetchGlobalTemplates = (): AppThunk<Promise<Template[]>> => async (dispatch, getState) => {
-    const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`templates/global/templates`).once('value');
-    const snapshot = await promise;
+    const templatesRef = ref(getDb(), `templates/global/templates`);
+    const snapshot = await get(templatesRef);
     return Promise.resolve(convertTemplates(snapshot));
 }
 

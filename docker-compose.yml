@@ -1,6 +1,7 @@
 version: "2"
 services:
   shopper:
+    image: shopper:0.9
     container_name: shopper
     build:
       context: .

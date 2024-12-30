@@ -5,10 +5,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import firebase from 'firebase';
 import { activeTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import Sidedrawer from './Sidedrawer';
+import { getAuth } from "firebase/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +53,7 @@ const NavBarMenu: FC<NavBarMenuProps> = ({title}) => {
           </Typography>
           <div>
             <Typography className={classes.title}>
-              {firebase.auth().currentUser!.displayName +" | "+ teamName()}
+              {getAuth().currentUser!.displayName +" | "+ teamName()}
             </Typography>
           </div>
         </Toolbar>

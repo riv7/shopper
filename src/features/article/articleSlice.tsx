@@ -1,9 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, AppThunk, RootState } from "../../app/store";
-import firebase from 'firebase/app';
-import "firebase/database";
+import { DataSnapshot, ref, getDatabase, onValue, get, orderByValue, push, query, set, remove, update } from "firebase/database";
 import { showMessage } from "../message/messageSlice";
-import { labels } from "../label/labelSlice";
 
 // types
 export type Article = {
@@ -14,7 +12,6 @@ export type Article = {
     active: boolean,
     labelId: string
 }
-
 
 type ArticleState = {
     articles: Article[],
@@ -121,7 +118,7 @@ export const decreaseAmount = (amount: number, unit: string): number => {
     return amount;
 }
 
-const convertArticle = (article: firebase.database.DataSnapshot): Article => {
+const convertArticle = (article: DataSnapshot): Article => {
     return {
         id: article.key != null ? article.key : '',
         name: article.val().name,
@@ -132,7 +129,7 @@ const convertArticle = (article: firebase.database.DataSnapshot): Article => {
     };
 }
 
-const convertArticles = (snapshot: firebase.database.DataSnapshot): Article[] => {
+const convertArticles = (snapshot: DataSnapshot): Article[] => {
     const articles: Article[] = [];
     snapshot.forEach((article) => {
         articles.push(convertArticle(article))
@@ -140,16 +137,20 @@ const convertArticles = (snapshot: firebase.database.DataSnapshot): Article[] =>
     return articles;
 };
 
+const getDb = () => getDatabase();
+
 // Thunks
 export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>> => async (dispatch, getState) => new Promise((resolve) => {
 
     // const teamId: string = getState().team.activeTeam!.id
+    const articlesRef = ref(getDb(), `articles/teams/${teamId}/articles`);
 
-    firebase.database().ref(`articles/teams/${teamId}/articles`).on('value', (snapshot) => {
+    onValue(articlesRef, (snapshot) => {
+
         const articles: Article[] = convertArticles(snapshot);
 
-         // Article message when data was not requested by user
-         if (!getState().article.dataRequested) {
+        // Article message when data was not requested by user
+        if (!getState().article.dataRequested) {
             dispatch(showMessage({ status: "success", message: "hello from listener thunk" }))
         }
 
@@ -163,15 +164,38 @@ export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>
 
         // Resolve promise
         resolve(articles);
-        
-    })
+    });
+
+    // ref(getDatabase(), `articles/teams/${teamId}/articles`).on('value', (snapshot) => {
+    //     const articles: Article[] = convertArticles(snapshot);
+    //
+    //      // Article message when data was not requested by user
+    //      if (!getState().article.dataRequested) {
+    //         dispatch(showMessage({ status: "success", message: "hello from listener thunk" }))
+    //     }
+    //
+    //     // Update Articles in all cases but the intial load
+    //     if (getState().article.loaded) {
+    //         dispatch(pushArticles(articles));
+    //     }
+    //
+    //     // Reset data requested flag so that external data is recognized
+    //     dispatch(dataRequested(false))
+    //
+    //     // Resolve promise
+    //     resolve(articles);
+    //
+    // })
 });
 
 export const fetchArticles = createAsyncThunk<Article[], string, {state: RootState, dispatch: AppDispatch}>('article/fetchArticles',
     async (teamId) => {
         // const activeTeam: Team = thunkApi.getState().team.activeTeam!
-        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`articles/teams/${teamId}/articles`).orderByValue().once('value');
-        const snapshot = await promise;
+        const dbRef = ref(getDb(), `articles/teams/${teamId}/articles`);
+        const dbQuery = query(dbRef, orderByValue())
+        const snapshot = await get(dbQuery);
+        // const promise: Promise<DataSnapshot> = firebase.database().ref(`articles/teams/${teamId}/articles`).orderByValue().once('value');
+        // const snapshot = await promise;
         return convertArticles(snapshot);
     }
 );
@@ -180,9 +204,9 @@ export const addArticle = createAsyncThunk<void, Article, {state: RootState, dis
     async (article, thunkApi) => {
         // Create a new article reference with an auto-generated id
         const actTeam = thunkApi.getState().team.activeTeam!;
-        var articleListRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles`);
-        var newArticleRef = articleListRef.push();
-        newArticleRef.set(article);
+        const articleListRef = ref(getDb(), `articles/teams/${actTeam.id}/articles`);
+        const newArticleRef = push(articleListRef);
+        await set(newArticleRef, article);
     }
 );
 
@@ -195,8 +219,8 @@ export const updateArticle = createAsyncThunk<void, Article, {state: RootState, 
 export const deleteArticle = createAsyncThunk<void, string, {state: RootState, dispatch: AppDispatch}>('article/deleteArticle',
     async (articleId, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
-        const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${articleId}`);
-        articleRef.remove();
+        const articleRef = ref(getDb(), `articles/teams/${actTeam.id}/articles/${articleId}`);
+        await remove(articleRef);
     }
 );
 
@@ -205,7 +229,7 @@ export const clearArticles = createAsyncThunk<void, string, {state: RootState, d
         const articles: Article[] = thunkApi.getState().article.articles;
         const filteredArticleIds = articles
             .filter(article => (article.labelId === labelId || labelId === 'all'))
-            .filter(article => article.active === false)
+            .filter(article => !article.active)
             .map(article => article.id);
 
         await thunkApi.dispatch(deleteArticles(filteredArticleIds));
@@ -217,7 +241,7 @@ export const activateArticles = createAsyncThunk<void, string, {state: RootState
         const articles: Article[] = thunkApi.getState().article.articles;
         const filteredArticles = articles
             .filter(article => (article.labelId === labelId || labelId === 'all'))
-            .filter(article => article.active === false);
+            .filter(article => !article.active);
 
         for (var article of filteredArticles) {
             const copy = {...article}
@@ -240,8 +264,8 @@ export const nullifyLabels = (labelId: string): AppThunk<Promise<void>> => async
   
 const updateArticleOfTeam = (article: Article): AppThunk<Promise<void>> => async (dispatch, getState) => {
     const actTeam = getState().team.activeTeam!;
-    const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${article.id}`);
-    articleRef.update(article);
+    const articleRef = ref(getDb(), `articles/teams/${actTeam.id}/articles/${article.id}`);
+    await update(articleRef, article);
     return Promise.resolve();
 }
 
@@ -249,15 +273,15 @@ export const deleteArticles = (articleIds: string[]): AppThunk<Promise<void>> =>
     const actTeam = getState().team.activeTeam!;
     // TODO: To many remote calls?
     articleIds.forEach(articleId => {
-        const articleRef = firebase.database().ref(`articles/teams/${actTeam.id}/articles/${articleId}`);
-        articleRef.remove();
+        const articleRef = ref(getDb(), `articles/teams/${actTeam.id}/articles/${articleId}`);
+        remove(articleRef);
     })
     return Promise.resolve();
 }
 
 export const deleteArticlesOfTeam = (teamId: string): AppThunk<Promise<void>> => async () => {
-    const articleTeamRef = firebase.database().ref(`articles/teams/${teamId}`);
-    articleTeamRef.remove();
+    const articleTeamRef = ref(getDb(), `articles/teams/${teamId}`);
+    await remove(articleTeamRef);
     return Promise.resolve();
 }
 

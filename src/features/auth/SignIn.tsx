@@ -1,39 +1,30 @@
 // Import FirebaseAuth and firebase.
 import React, { useEffect, useState } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import firebase from 'firebase';
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged, signInWithRedirect, signInWithPopup, signOut } from "firebase/auth";
 import { useAppDispatch } from '../../app/store';
 import App from '../../App';
 import { activeTeam, activeTeamLoaded, fetchActiveTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
+import { GoogleAuthProvider } from "firebase/auth";
+
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBzwoKs5sVWtAV_Br8XIZU3U4tbIHhUAuc",
-    authDomain: "shopper-backend-c590c.firebaseapp.com",
-    databaseURL: "https://shopper-backend-c590c-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "shopper-backend-c590c",
-    storageBucket: "shopper-backend-c590c.appspot.com",
-    messagingSenderId: "172446679872",
-    appId: "1:172446679872:web:8bec7969c429f01e94f0a5"
+    apiKey: "AIzaSyDsqYogZ16MJVxqCU_9j_ZEPaH5VUWIPG0",
+    authDomain: "shopper-936b3.firebaseapp.com",
+    databaseURL: "https://shopper-936b3-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "shopper-936b3",
+    storageBucket: "shopper-936b3.firebasestorage.app",
+    messagingSenderId: "434908859123",
+    appId: "1:434908859123:web:033d7f9b87a88f52fc8586"
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-// Configure FirebaseUI.
-const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: 'redirect',
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID
-    ],
-    callbacks: {
-      // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: () => false,
-    },
-  };
-  
   function SignInScreen() {
 
     const [isSignedIn, setIsSignedIn] = useState(false);
@@ -43,8 +34,8 @@ const uiConfig = {
     const history = useHistory();
   
     useEffect(() => {
-      
-      const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
+
+      const unsubscribe = onAuthStateChanged(auth, user => {
         setIsSignedIn(!!user);
       });
 
@@ -55,23 +46,39 @@ const uiConfig = {
       };
       fetchAndInit();
       
-      return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
+      return () => unsubscribe(); // Make sure we un-register Firebase observers when the component unmounts.
     }, [dispatch, teamLoaded, isSignedIn]);
+
+      const handleGoogleSignIn = async () => {
+          const response = await signInWithPopup(auth, provider);
+          console.log(response);
+      };
+
+      const handleSignOut = () => {
+          signOut(auth)
+              .then(() => {
+                  setIsSignedIn(false);
+              })
+              .catch((error) => {
+                  console.error('Error signing out:', error);
+              });
+      };
   
 
     // Show login screen
     if (!isSignedIn) {
       return (
-        <div>
-          <h1>My App</h1>
-          <p>Please sign-in:</p>
-          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-        </div>
+          <div>
+              <h1>My App</h1>
+              <p>Please sign-in:</p>
+              <button onClick={handleGoogleSignIn}>Sign in with Google</button>
+              {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>*/}
+          </div>
       );
     }
 
-    // Show create or select team screen
-    if (teamLoaded && actTeam === undefined) {
+      // Show create or select team screen
+      if (teamLoaded && actTeam === undefined) {
       // history.push('team')
       
       return (

@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, AppThunk, RootState } from "../../app/store";
-import firebase from 'firebase/app';
-import "firebase/database";
+import { DataSnapshot, ref, getDatabase, onValue, get, orderByKey, push, query, set, remove, update } from "firebase/database";
 import { showMessage } from "../message/messageSlice";
-import { Article, deleteArticles, nullifyLabels } from "../article/articleSlice";
+import { nullifyLabels } from "../article/articleSlice";
 
 // types
 export type Label = {
@@ -26,7 +25,7 @@ type LabelState = {
 }
 
 // helper methods
-const convertLabel = (label: firebase.database.DataSnapshot): Label => {
+const convertLabel = (label: DataSnapshot): Label => {
     return {
         id: label.key != null ? label.key : '',
         name: label.val().name,
@@ -35,7 +34,7 @@ const convertLabel = (label: firebase.database.DataSnapshot): Label => {
     };
 }
 
-const convertLabels = (snapshot: firebase.database.DataSnapshot): Label[] => {
+const convertLabels = (snapshot: DataSnapshot): Label[] => {
     const labels: Label[] = [];
     snapshot.forEach((label) => {
         labels.push(convertLabel(label))
@@ -44,7 +43,7 @@ const convertLabels = (snapshot: firebase.database.DataSnapshot): Label[] => {
 }
 
 // TODO move to util
-const convertLabelIds = (articles: firebase.database.DataSnapshot): string[] => {
+const convertLabelIds = (articles: DataSnapshot): string[] => {
     const articleIds: string[] = [];
     articles.forEach((article) => {
         articleIds.push(article.key!);
@@ -52,10 +51,15 @@ const convertLabelIds = (articles: firebase.database.DataSnapshot): string[] => 
     return articleIds;
 }
 
+const getDb = () => getDatabase();
+
 // Thunks
 export const initLabelListener = (teamId: string): AppThunk<Promise<Label[]>> => async (dispatch, getState) => new Promise((resolve, reject) => {
 
-    firebase.database().ref(`labels/teams/${teamId}/labels`).orderByKey().on('value', (snapshot) => {
+    const labelsRef = ref(getDb(), `labels/teams/${teamId}/labels`);
+    const labelsQuery = query(labelsRef, orderByKey());
+    onValue(labelsQuery, (snapshot) => {
+
         const labels: Label[] = convertLabels(snapshot);
 
         // Article message when data was not requested by user
@@ -78,8 +82,9 @@ export const initLabelListener = (teamId: string): AppThunk<Promise<Label[]>> =>
 
 export const fetchLabels = createAsyncThunk<Label[], string, {state: RootState, dispatch: AppDispatch}>('label/fetchLabels',
     async (teamId, thunkApi) => {
-        const promise: Promise<firebase.database.DataSnapshot> = firebase.database().ref(`labels/teams/${teamId}/labels`).orderByKey().once('value');
-        const snapshot = (await promise);
+        const dbRef = ref(getDb(), `labels/teams/${teamId}/labels`);
+        const dbQuery = query(dbRef, orderByKey())
+        const snapshot = await get(dbQuery);
         return convertLabels(snapshot);
     }
 );
@@ -87,17 +92,17 @@ export const fetchLabels = createAsyncThunk<Label[], string, {state: RootState, 
 export const addLabel = createAsyncThunk<void, Label, {state: RootState, dispatch: AppDispatch}>('label/addLabel',
     async (label, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
-        var labelListRef = firebase.database().ref(`labels/teams/${actTeam.id}/labels`);
-        var newLabelRef = labelListRef.push();
-        newLabelRef.set(label);
+        const labelListRef = ref(getDb(), `labels/teams/${actTeam.id}/labels`);
+        const newLabelRef = push(labelListRef);
+        await set(newLabelRef, label);
     }
 );
 
 export const updateLabel = createAsyncThunk<void, Label, {state: RootState, dispatch: AppDispatch}>('label/editLabel',
     async (label, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
-        const labelRef = firebase.database().ref(`labels/teams/${actTeam.id}/labels/${label.id}`);
-        labelRef.update(label)
+        const labelRef = ref(getDb(), `labels/teams/${actTeam.id}/labels/${label.id}`);
+        await update(labelRef, label)
     }
 );
 
@@ -105,14 +110,14 @@ export const deleteLabel = createAsyncThunk<void, Label, {state: RootState, disp
      async (label, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
         await thunkApi.dispatch(nullifyLabels(label.id));
-        const labelRef = firebase.database().ref(`labels/teams/${actTeam.id}/labels/${label.id}`);
-        labelRef.remove();
+        const labelRef = ref(getDb(), `labels/teams/${actTeam.id}/labels/${label.id}`);
+        await remove(labelRef);
      }
  );
 
  export const deleteLabelsOfTeam = (teamId: string): AppThunk<Promise<void>> => async () => {
-    const labelTeamRef = firebase.database().ref(`labels/teams/${teamId}`);
-    labelTeamRef.remove();
+    const labelTeamRef = ref(getDb(), `labels/teams/${teamId}`);
+    await remove(labelTeamRef);
     return Promise.resolve();
 }
 
