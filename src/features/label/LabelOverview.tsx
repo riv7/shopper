@@ -37,7 +37,7 @@ const LabelOverview: FC = (): ReactElement => {
   return (
     <div>
       <NavBarBack 
-          title="Labels" />
+          title="Shops" />
       <Container>
         <div className={classes.root}>
           <Grid container spacing={3}>

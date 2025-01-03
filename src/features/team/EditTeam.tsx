@@ -8,7 +8,7 @@ type EditTeamRouteProps = {
   teamId: string;
 }
 
-const EditTeam: FC<RouteComponentProps<EditTeamRouteProps>>= ({match}): ReactElement => {
+const EditTeam: FC<RouteComponentProps<EditTeamRouteProps>> = ({match}): ReactElement => {
 
     const teamId: string = match.params.teamId;
     const team: Team | undefined = useSelector(teamById(teamId));

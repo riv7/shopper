@@ -94,7 +94,7 @@ const JoinTeam: FC = (): ReactElement => {
                                         fullWidth 
                                         value={teamId}
                                         onChange={event => setTeamId(event.target.value)}/>
-                                </Grid>docker-compose stopdocker-compose stop
+                                </Grid>
                                 <Grid item>
                                     <OutlinedInput 
                                         id="standard-basic" 

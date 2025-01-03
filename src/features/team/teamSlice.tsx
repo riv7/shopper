@@ -130,6 +130,9 @@ export const joinTeam = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('t
         if (team.id === '') {
             return team;
         }
+        if (team.password !== teamData.password) {
+            return emptyTeam();
+        }
         const userId: string = getAuth().currentUser!.uid
         const teamId: string = team.id;
         const teamUserTuple = {

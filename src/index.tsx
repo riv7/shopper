@@ -9,6 +9,7 @@ import SignInScreen from './features/auth/SignIn';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 
 import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
+import LoginPage from "./features/auth/LoginPage";
 
 const theme = createMuiTheme({
   palette: {
@@ -23,6 +24,7 @@ ReactDOM.render(
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <SignInScreen />
+          {/*<LoginPage />*/}
         </ThemeProvider>
       </BrowserRouter>
     </Provider>

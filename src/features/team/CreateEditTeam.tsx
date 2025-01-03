@@ -8,6 +8,7 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import InfoIcon from '@material-ui/icons/Info';
 import { showMessage } from "../message/messageSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -59,9 +60,10 @@ const CreateEditTeam: FC<CreateEditTeamProps> = ({title, team, thunkAction}): Re
         setShowPassword(!showPassword);
     }
 
-    const handleCopyClick = async () => {
-        copyToClipboard(teamId, teamPassword);
-        dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull" }));
+    const copyText = () =>  `You have been invited to use the shopper app. Please visit https://shopper.gulde.org on your PC or mobile phone.\n\nPaste the following credentials in the join team dialog.\nTeam ID: ${teamId} | Team PW: ${teamPassword}\n\nHappy shopping!`
+
+    const handleDispatchMessage = () => {
+        dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull.\nPlease send them to your shopping mate to join." }));
     }
 
     const displayMessage = () => dispatch(showMessage({status: "success", message: "Team saved"}));
@@ -141,15 +143,17 @@ const CreateEditTeam: FC<CreateEditTeamProps> = ({title, team, thunkAction}): Re
                                     <InfoBox />
                                 </Grid>
                                 <Grid item>
-                                    <Button 
-                                        fullWidth
-                                        variant="contained" 
-                                        color="primary" 
-                                        disabled={!teamPersistant}
-                                        onClick={handleCopyClick}
-                                        className={classes.button}>
-                                        Copy to clipboard
-                                    </Button>
+                                    <CopyToClipboard text={copyText()}>
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary"
+                                            disabled={!teamPersistant}
+                                            onClick={handleDispatchMessage}
+                                            className={classes.button}>
+                                            Copy to clipboard
+                                        </Button>
+                                    </CopyToClipboard>
                                 </Grid>
                             </Grid>
                         </Grid>

@@ -78,16 +78,10 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
     history.push(`edit/${team.id}`)
   }
 
-  const handleCopy = () => {
+  const copyText = (teamId: string, teamPassword: string) =>  `You have been invited to use the shopper app. Please visit https://shopper.gulde.org on your PC or mobile phone.\n\nPaste the following credentials in the join team dialog.\nTeam ID: ${teamId} | Team PW: ${teamPassword}\n\nHappy shopping!`
 
-    
-
-    <CopyToClipboard text={team.id}>
-             </CopyToClipboard>
-
-
-    //copyToClipboard(team.id, team.password);
-    dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull.\nPlease send them to your shopping mate to join." }));
+  const handleDispatchMessage = () => {
+     dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull.\nPlease send them to your shopping mate to join." }));
   }
 
   const handleSelect = () => {
@@ -135,15 +129,15 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                       </IconButton>
                       Edit
                     </MenuItem>
-                    <CopyToClipboard text={team.id}>
-                    <MenuItem>
-                      <IconButton
-                        aria-label="team-copy"
-                        color="inherit">
-                        <FileCopyIcon />
-                      </IconButton>
-                      Copy credentials
-                    </MenuItem>
+                    <CopyToClipboard text={copyText(team.id, team.password)}>
+                        <MenuItem onClick={handleDispatchMessage}>
+                          <IconButton
+                            aria-label="team-copy"
+                            color="inherit">
+                            <FileCopyIcon />
+                          </IconButton>
+                          Copy credentials
+                        </MenuItem>
                     </CopyToClipboard>
                     <MenuItem onClick={handleDelete}>
                       <IconButton

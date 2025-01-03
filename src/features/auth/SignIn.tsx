@@ -1,15 +1,16 @@
 // Import FirebaseAuth and firebase.
 import React, { useEffect, useState } from 'react';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signInWithRedirect, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInWithRedirect, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { useAppDispatch } from '../../app/store';
 import App from '../../App';
 import { activeTeam, activeTeamLoaded, fetchActiveTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
-import { GoogleAuthProvider } from "firebase/auth";
-
+import { GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
+import {Container} from "@material-ui/core";
+import GoogleButton from 'react-google-button'
+import Grid from "@material-ui/core/Grid";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDsqYogZ16MJVxqCU_9j_ZEPaH5VUWIPG0",
@@ -24,8 +25,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+const emailProvider = new EmailAuthProvider();
 
-  function SignInScreen() {
+function SignInScreen() {
 
     const [isSignedIn, setIsSignedIn] = useState(false);
     const dispatch = useAppDispatch();
@@ -49,12 +51,17 @@ const provider = new GoogleAuthProvider();
       return () => unsubscribe(); // Make sure we un-register Firebase observers when the component unmounts.
     }, [dispatch, teamLoaded, isSignedIn]);
 
-      const handleGoogleSignIn = async () => {
+    const handleGoogleSignIn = async () => {
           const response = await signInWithPopup(auth, provider);
           console.log(response);
-      };
+    };
 
-      const handleSignOut = () => {
+      // const handleEmailSignIn = async () => {
+      //     const response = await signInWithEmailAndPassword(auth, email, password);
+      //     console.log(response);
+      // };
+
+    const handleSignOut = () => {
           signOut(auth)
               .then(() => {
                   setIsSignedIn(false);
@@ -62,34 +69,38 @@ const provider = new GoogleAuthProvider();
               .catch((error) => {
                   console.error('Error signing out:', error);
               });
-      };
+    };
   
 
     // Show login screen
     if (!isSignedIn) {
       return (
-          <div>
-              <h1>My App</h1>
-              <p>Please sign-in:</p>
-              <button onClick={handleGoogleSignIn}>Sign in with Google</button>
-              {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>*/}
-          </div>
+          <Container>
+              <Grid
+                  container
+                  justifyContent="center">
+                  <Grid item>
+                      <h1>Welcome to Shopper</h1>
+                      <p>Please sign-in:</p>
+                      <GoogleButton onClick={handleGoogleSignIn}/>
+                  </Grid>
+
+              </Grid>
+          </Container>
       );
     }
 
-      // Show create or select team screen
-      if (teamLoaded && actTeam === undefined) {
-      // history.push('team')
-      
-      return (
-        <App/>
-      );
-    }
+    // Show create or select team screen
+     if (teamLoaded && actTeam === undefined) {
+        return (
+            <App/>
+        );
+     }
 
-    // Show home screen
-    return (
+     // Show home screen
+     return (
         <App/>
-    );
+     );
   }
   
   export default SignInScreen;
