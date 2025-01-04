@@ -1,0 +1,22 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    tags:
+      - '*' # Match all tags
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: |
+          docker build -t wgulde78/shopper:$GITHUB_REF_NAME .
+          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Push Docker Image
+        run: docker push wgulde78/shopper:$GITHUB_REF_NAME
