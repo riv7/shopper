@@ -64,7 +64,7 @@ export const initLabelListener = (teamId: string): AppThunk<Promise<Label[]>> =>
 
         // Article message when data was not requested by user
         if (!getState().label.dataRequested) {
-            dispatch(showMessage({ status: "success", message: "hello from listener thunk" }))
+            dispatch(showMessage({ status: "success", message: "Shop added by shopping mate" }))
         }
 
         // Update Articles in all cases but the intial load

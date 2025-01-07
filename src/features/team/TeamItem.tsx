@@ -78,7 +78,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
     history.push(`edit/${team.id}`)
   }
 
-  const copyText = (teamId: string, teamPassword: string) =>  `You have been invited to use the shopper app. Please visit https://shopper.gulde.org on your PC or mobile phone.\n\nPaste the following credentials in the join team dialog.\nTeam ID: ${teamId} | Team PW: ${teamPassword}\n\nHappy shopping!`
+  const copyText = (teamId: string, teamPassword: string) =>  `You have been invited to use the shopper app. Please visit https://shopper.zapto.org/team/join on your PC or mobile phone.\n\nPaste the following credentials in the join team dialog.\n\nTeam ID: ${teamId} | Team PW: ${teamPassword}\n\nHappy shopping!`
 
   const handleDispatchMessage = () => {
      dispatch(showMessage({ status: "success", message: "Copy to clipboard successfull.\nPlease send them to your shopping mate to join." }));

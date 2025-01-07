@@ -52,7 +52,7 @@ export const initTeamTemplateListener = (teamId: string): AppThunk<Promise<Templ
 
          // Template message when data was not requested by user
          if (!getState().template.dataRequested) {
-            dispatch(showMessage({ status: "success", message: "hello from listener thunk" }))
+            dispatch(showMessage({ status: "success", message: "Template added by shopping mate" }))
         }
 
         // Update Templates in all cases but the intial load
@@ -76,7 +76,7 @@ export const initGlobalTemplateListener = (): AppThunk<Promise<Template[]>> => a
 
          // Template message when data was not requested by user
          if (!getState().template.dataRequested) {
-            dispatch(showMessage({ status: "success", message: "hello from listener thunk" }))
+            dispatch(showMessage({ status: "success", message: "Template added by shopping mate" }))
         }
 
         // Update Templates in all cases but the intial load
