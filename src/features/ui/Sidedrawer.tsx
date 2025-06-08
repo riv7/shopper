@@ -5,6 +5,7 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
+import { alpha } from '@mui/material/styles';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
@@ -33,6 +34,15 @@ const StyledFullList = styled('div')(({ theme }) => ({
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: theme.palette.secondary.dark
+}));
+
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    borderRadius: '4px',
+    transition: 'background-color 0.3s ease'
+  }
 }));
 
 type SidedrawerProps = {
@@ -107,51 +117,51 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
           <ListItemIcon><AccountBoxIcon /></ListItemIcon>
           <ListItemText primary={getAuth().currentUser!.displayName} />
         </ListItem>
-        <ListItem onClick={handleLogoutClick} key="logout">
+        <StyledListItem onClick={handleLogoutClick} key="logout">
           <ListItemIcon><InboxIcon /></ListItemIcon>
           <ListItemText primary="Logout" />
-        </ListItem>
+        </StyledListItem>
       </List>
       <Divider />
       <List>
-        <ListItem autoFocus onClick={() => handleSelectLabel('all')}>
+        <StyledListItem autoFocus onClick={() => handleSelectLabel('all')}>
           <ListItemIcon>
               <LabelImportantIcon />
           </ListItemIcon>
           <ListItemText
             primary='all shops'
           />
-        </ListItem>
+        </StyledListItem>
         {allLabels.map((label) => (
-          <ListItem autoFocus onClick={() => handleSelectLabel(label.id)}>
+          <StyledListItem autoFocus onClick={() => handleSelectLabel(label.id)}>
             <ListItemIcon style = {{color: `${label.color}`}}>
                 <LabelImportantIcon />
             </ListItemIcon>
             <ListItemText
               primary={label.name}
             />
-          </ListItem>
+          </StyledListItem>
         ))}
-        {actTeam && <ListItem autoFocus onClick={handleAddLabelClick}>
+        {actTeam && <StyledListItem autoFocus onClick={handleAddLabelClick}>
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
           <ListItemText primary="Add shop" />
-        </ListItem>}
-        {actTeam && <ListItem autoFocus onClick={handleManageLabelClick}>
+        </StyledListItem>}
+        {actTeam && <StyledListItem autoFocus onClick={handleManageLabelClick}>
           <ListItemIcon>
             <WorkIcon />
           </ListItemIcon>
           <ListItemText primary="Manage shops" />
-        </ListItem>}
+        </StyledListItem>}
       </List>
       
       <Divider />
       <List>
-        <ListItem onClick={handleTeamClick} key="team">
+        <StyledListItem onClick={handleTeamClick} key="team">
           <ListItemIcon><GroupIcon /></ListItemIcon>
           <ListItemText primary={"Change team"} />
-        </ListItem>
+        </StyledListItem>
       </List>
     </StyledList>
   );
