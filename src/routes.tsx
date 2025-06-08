@@ -1,5 +1,5 @@
 import { FC, ReactElement } from "react";
-import {Redirect, Route, Switch} from 'react-router-dom';
+import { Route, Routes as RouterRoutes, Navigate } from 'react-router-dom';
 import ArticleOverview from "./features/article/ArticleOverview";
 import ConfirmTeam from "./features/team/ConfirmTeam";
 import SelectOrCreateTeam from "./features/team/SelectOrCreateTeam";
@@ -19,27 +19,24 @@ import LabelOverview from "./features/label/LabelOverview";
 const Routes: FC = (): ReactElement => {
     
     return (
-        <Switch>
-            <Route exact path="/">
-                <Redirect to="/articles/labels/all" />
-            </Route>
-            <Route exact path="/articles/labels/:labelId" component={ArticleOverview} />
-            <Route exact path="/articles/editArticle/:articleId" component={EditArticle} />
-            <Route exact path="/label" component={LabelPopup} />
-            <Route exact path="/label/manage" component={LabelOverview} />
-            <Route exact path="/label/add" component={NewLabel} />
-            <Route exact path="/label/editLabel/:labelId" component={EditLabel} />
-            <Route exact path="/team" component={SelectOrCreateTeam} />
-            <Route exact path="/team/select" component={SelectTeam2} />
-            <Route exact path="/team/select2" component={TeamOverview} />
-            <Route exact path="/team/create" component={CreateTeam} />
-            <Route exact path="/team/edit/:teamId" component={EditTeam} />
-            <Route exact path="/team/join" component={JoinTeam} />
-            <Route exact path="/team/confirm" component={ConfirmTeam} />
-            <Route exact path="/templates/:labelId" component={TemplateOverview} />
-            <Route exact path="/templates/editTemplate/:templateId" component={EditTemplate} />
-
-        </Switch>
+        <RouterRoutes>
+            <Route path="/" element={<Navigate to="/articles/labels/all" replace />} />
+            <Route path="/articles/labels/:labelId" element={<ArticleOverview />} />
+            <Route path="/articles/editArticle/:articleId" element={<EditArticle />} />
+            {/* LabelPopup requires props and is used within other components */}
+            <Route path="/label/manage" element={<LabelOverview />} />
+            <Route path="/label/add" element={<NewLabel />} />
+            <Route path="/label/editLabel/:labelId" element={<EditLabel />} />
+            <Route path="/team" element={<SelectOrCreateTeam />} />
+            <Route path="/team/select" element={<SelectTeam2 />} />
+            <Route path="/team/select2" element={<TeamOverview />} />
+            <Route path="/team/create" element={<CreateTeam />} />
+            <Route path="/team/edit/:teamId" element={<EditTeam />} />
+            <Route path="/team/join" element={<JoinTeam />} />
+            <Route path="/team/confirm" element={<ConfirmTeam />} />
+            <Route path="/templates/:labelId" element={<TemplateOverview />} />
+            <Route path="/templates/editTemplate/:templateId" element={<EditTemplate />} />
+        </RouterRoutes>
     )
 }
 

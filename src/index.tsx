@@ -1,23 +1,23 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import store from './app/store'
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
 import SignInScreen from './features/auth/SignIn';
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
-
-import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import LoginPage from "./features/auth/LoginPage";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    type: 'dark'
+    mode: 'dark'
   }
 });
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
@@ -28,8 +28,7 @@ ReactDOM.render(
         </ThemeProvider>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 
 

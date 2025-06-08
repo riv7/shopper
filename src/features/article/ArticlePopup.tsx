@@ -37,7 +37,7 @@ type ArticlePopupProps = {
   onClose: (article: Article | null) => void;
 }
 
-const LabelPopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
+const ArticlePopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
 
   const classes = useStyles();
   const [articleName, setArticleName] = useState(article === undefined ? '' : article.name);
@@ -53,7 +53,7 @@ const LabelPopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
 
 
 
-//const LabelPopup: FC<ArticlePopupProps> = ({selectedLabel, open, onClose}) => {
+//const ArticlePopup: FC<ArticlePopupProps> = ({selectedLabel, open, onClose}) => {
 
  // const allLabels: Label[] = useSelector(labels);
 
@@ -174,4 +174,4 @@ const LabelPopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
   );
 }
 
-export default LabelPopup;
+export default ArticlePopup;
