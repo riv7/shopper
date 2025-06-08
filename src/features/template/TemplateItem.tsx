@@ -135,71 +135,63 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
 
   return (
     <Root>
-        <Grid container spacing={3}>
-            <Grid sx={{ width: '8.33%' }}>
-                <CardActions>
-                  <IconButton 
-                    aria-label="addIcon" 
-                    onClick={handleAddClick}
-                    sx={(theme) => ({ 
-                      color: presentArticle !== undefined ? 
-                        alpha(theme.palette.common.white, 0.25) : 
-                        alpha(theme.palette.common.white, 0.75) 
-                    })}>
-                      <AddCircleOutlineIcon />
-                   </IconButton>
-                </CardActions>
+        <Grid container spacing={0} alignItems="center">
+            <Grid sx={{ width: '48px', display: 'flex', justifyContent: 'center' }}>
+              <IconButton 
+                aria-label="addIcon" 
+                onClick={handleAddClick}
+                sx={(theme) => ({ 
+                  color: presentArticle !== undefined ? 
+                    alpha(theme.palette.common.white, 0.25) : 
+                    alpha(theme.palette.common.white, 0.75) 
+                })}>
+                <AddCircleOutlineIcon />
+              </IconButton>
             </Grid>
-            <Grid sx={{ width: '41.67%' }}>
-                <CardContent>
-                    {presentArticle !== undefined ? 
-                      <StyledTypographyLight variant="h5">
-                        {template.name}
-                      </StyledTypographyLight> :
-                      <StyledTypography variant="h5">
-                        {template.name}
-                      </StyledTypography>
-                    }
-                </CardContent>
+            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {presentArticle !== undefined ? 
+                <StyledTypographyLight variant="h6">
+                  {template.name}
+                </StyledTypographyLight> :
+                <StyledTypography variant="h6">
+                  {template.name}
+                </StyledTypography>
+              }
             </Grid>
-            <Grid sx={{ width: '33.33%' }}>
-                <CardContent>
-                  <AmountOrSelect />
-                </CardContent>
+            <Grid sx={{ mx: 2 }}>
+              <AmountOrSelect />
             </Grid>
-            <Grid sx={{ width: '16.67%' }}>
-                <MenuButtonContainer>
-                  <IconButton 
-                     aria-label="shop menu"
-                     aria-controls="simple"
-                     aria-haspopup="true"
-                     onClick={handleClick}>
-                    <MenuIcon />
+            <Grid sx={{ pr: 1 }}>
+              <IconButton 
+                aria-label="shop menu"
+                aria-controls="simple"
+                aria-haspopup="true"
+                onClick={handleClick}>
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}>
+                <MenuItem onClick={handleEdit}>
+                  <IconButton
+                    aria-label="shop-edit"
+                    color="inherit" >
+                    <EditIcon />
                   </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}>
-                    <MenuItem onClick={handleEdit}>
-                      <IconButton
-                        aria-label="shop-edit"
-                        color="inherit" >
-                        <EditIcon />
-                      </IconButton>
-                      Edit
-                    </MenuItem>
-                    <MenuItem onClick={handleDelete}>
-                      <IconButton
-                        aria-label="shop-delete"
-                        color="inherit">
-                        <DeleteIcon />
-                      </IconButton>
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </MenuButtonContainer>
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={handleDelete}>
+                  <IconButton
+                    aria-label="shop-delete"
+                    color="inherit">
+                    <DeleteIcon />
+                  </IconButton>
+                  Delete
+                </MenuItem>
+              </Menu>
             </Grid>
         </Grid>
     </Root>

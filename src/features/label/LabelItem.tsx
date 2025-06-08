@@ -63,56 +63,50 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
 
   return (
     <Card>
-        <Grid container spacing={3}>
-            <Grid sx={{ width: '8.33%' }}>
-                <CardActions>
-                  <IconButton 
-                  aria-label="label"
-                  style = {{color: `${label.color}`}} >
-                      <LabelImportantIcon />
-                   </IconButton>
-                </CardActions>
+        <Grid container spacing={0} alignItems="center">
+            <Grid sx={{ width: '48px', display: 'flex', justifyContent: 'center' }}>
+              <IconButton 
+                aria-label="label"
+                style = {{color: `${label.color}`}} >
+                <LabelImportantIcon />
+              </IconButton>
             </Grid>
-            <Grid sx={{ width: '75%' }}>
-                <CardContent>
-                    <Typography variant="h5">
-                    {label.name}
-                    </Typography>
-                </CardContent>
+            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <Typography variant="h6">
+                {label.name}
+              </Typography>
             </Grid>
-            <Grid sx={{ width: '16.67%' }}>
-                <MenuButtonContainer>
-                  <IconButton 
-                     aria-label="label menu"
-                     aria-controls="simple"
-                     aria-haspopup="true"
-                     onClick={handleClick}>
-                    <MenuIcon />
+            <Grid sx={{ pr: 1 }}>
+              <IconButton 
+                aria-label="label menu"
+                aria-controls="simple"
+                aria-haspopup="true"
+                onClick={handleClick}>
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}>
+                <MenuItem onClick={handleEdit}>
+                  <IconButton
+                    aria-label="label-edit"
+                    color="inherit">
+                    <EditIcon />
                   </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}>
-                    <MenuItem onClick={handleEdit}>
-                      <IconButton
-                        aria-label="label-edit"
-                        color="inherit">
-                        <EditIcon />
-                      </IconButton>
-                      Edit
-                    </MenuItem>
-                    <MenuItem onClick={handleDelete}>
-                      <IconButton
-                        aria-label="label-delete"
-                        color="inherit">
-                        <DeleteIcon />
-                      </IconButton>
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </MenuButtonContainer>
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={handleDelete}>
+                  <IconButton
+                    aria-label="label-delete"
+                    color="inherit">
+                    <DeleteIcon />
+                  </IconButton>
+                  Delete
+                </MenuItem>
+              </Menu>
             </Grid>
         </Grid>
     </Card>

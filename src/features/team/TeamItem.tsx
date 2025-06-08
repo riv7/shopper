@@ -89,69 +89,63 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
 
   return (
     <Card>
-        <Grid container spacing={3}>
-            <Grid sx={{ width: '8.33%' }}>
-                <CardActions>
-                  <IconButton aria-label="team" onClick={handleSelect}>
-                      {isActiveTeam ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
-                   </IconButton>
-                </CardActions>
+        <Grid container spacing={0} alignItems="center">
+            <Grid sx={{ width: '48px', display: 'flex', justifyContent: 'center' }}>
+              <IconButton aria-label="team" onClick={handleSelect}>
+                {isActiveTeam ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
+              </IconButton>
             </Grid>
-            <Grid sx={{ width: '75%' }}>
-                <CardContent>
-                    {isActiveTeam ? 
-                      <StyledTypographyLight variant="h5">
-                        {team.name + " (active)"}
-                      </StyledTypographyLight> : 
-                      <StyledTypography variant="h5">
-                        {team.name}
-                      </StyledTypography>
-                    }
-                </CardContent>
+            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {isActiveTeam ? 
+                <StyledTypographyLight variant="h6">
+                  {team.name + " (active)"}
+                </StyledTypographyLight> : 
+                <StyledTypography variant="h6">
+                  {team.name}
+                </StyledTypography>
+              }
             </Grid>
-            <Grid sx={{ width: '16.67%' }}>
-                <MenuButtonContainer>
-                  <IconButton 
-                     aria-label="team select"
-                     aria-controls="simple"
-                     aria-haspopup="true"
-                     onClick={handleClick}>
-                    <MenuIcon />
+            <Grid sx={{ pr: 1 }}>
+              <IconButton 
+                aria-label="team select"
+                aria-controls="simple"
+                aria-haspopup="true"
+                onClick={handleClick}>
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}>
+                <MenuItem onClick={handleEdit}>
+                  <IconButton
+                    aria-label="team-edit"
+                    color="inherit">
+                    <EditIcon />
                   </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}>
-                    <MenuItem onClick={handleEdit}>
+                  Edit
+                </MenuItem>
+                <CopyToClipboard text={copyText(team.id, team.password)}>
+                    <MenuItem onClick={handleDispatchMessage}>
                       <IconButton
-                        aria-label="team-edit"
+                        aria-label="team-copy"
                         color="inherit">
-                        <EditIcon />
+                        <FileCopyIcon />
                       </IconButton>
-                      Edit
+                      Copy credentials
                     </MenuItem>
-                    <CopyToClipboard text={copyText(team.id, team.password)}>
-                        <MenuItem onClick={handleDispatchMessage}>
-                          <IconButton
-                            aria-label="team-copy"
-                            color="inherit">
-                            <FileCopyIcon />
-                          </IconButton>
-                          Copy credentials
-                        </MenuItem>
-                    </CopyToClipboard>
-                    <MenuItem onClick={handleDelete}>
-                      <IconButton
-                        aria-label="team-delete"
-                        color="inherit">
-                        <DeleteIcon />
-                      </IconButton>
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </MenuButtonContainer>
+                </CopyToClipboard>
+                <MenuItem onClick={handleDelete}>
+                  <IconButton
+                    aria-label="team-delete"
+                    color="inherit">
+                    <DeleteIcon />
+                  </IconButton>
+                  Delete
+                </MenuItem>
+              </Menu>
             </Grid>
         </Grid>
     </Card>
