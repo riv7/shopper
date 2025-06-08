@@ -100,49 +100,46 @@ const ArticleItem: FC<ArticleItemProps> = ({ article, onLabelSelection }): React
   return (
     <div>
       <Card>
-        <Grid container spacing={1} >
-          <Grid sx={{ width: '8.33%' }}>
-            <CardActions>
-              <IconButton 
-                sx={(theme) => ({ 
-                  color: article.active === false ? 
-                    alpha(theme.palette.common.white, 0.25) : 
-                    alpha(theme.palette.common.white, 0.75) 
-                })} 
-                aria-label="resolve" 
-                onClick={handleResolvedClick}>
-                <RadioButtonUncheckedIcon />
-              </IconButton>
-            </CardActions>
+        <Grid container spacing={0} alignItems="center">
+          <Grid sx={{ width: '48px', display: 'flex', justifyContent: 'center' }}>
+            <IconButton 
+              sx={(theme) => ({ 
+                color: article.active === false ? 
+                  alpha(theme.palette.common.white, 0.25) : 
+                  alpha(theme.palette.common.white, 0.75) 
+              })} 
+              aria-label="resolve" 
+              onClick={handleResolvedClick}>
+              <RadioButtonUncheckedIcon />
+            </IconButton>
           </Grid>
-          <Grid sx={{ width: '41.67%' }}>
-            <CardContent>
-              {article.active === false ? (
-                <TextBoxLight variant="h5">
-                  {article.name}
-                </TextBoxLight>
-              ) : (
-                <TextBox variant="h5">
-                  {article.name}
-                </TextBox>
-              )}
-            </CardContent>
+          <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {article.active === false ? (
+              <TextBoxLight variant="h6">
+                {article.name}
+              </TextBoxLight>
+            ) : (
+              <TextBox variant="h6">
+                {article.name}
+              </TextBox>
+            )}
           </Grid>
-          <Grid sx={{ width: '25%' }}>
-            <CardContent>
-              <Button onClick={event => handleAmountSelect(event)}>{amountText}</Button>
-            </CardContent>
+          <Grid sx={{ mx: 2 }}>
+            <Button 
+              size="small" 
+              variant="text" 
+              onClick={event => handleAmountSelect(event)}
+            >
+              {amountText}
+            </Button>
           </Grid>
-          <Grid sx={{ width: '25%' }}>
-            <Box display="flex" justifyContent="flex-end">
-              <CardContent>
-                <Chip
-                  label={label === undefined ? "Shop..." : label.name.length < 6 ? label.name : label.name.substring(0,5)+'..'}
-                  sx={{ backgroundColor: `${label === undefined ? '#a9a9a9' : label.color}` }}
-                  onClick={handleClickChip}
-                  onDelete={handleDeleteChip} />
-              </CardContent>
-            </Box>
+          <Grid sx={{ pr: 1 }}>
+            <Chip
+              size="small"
+              label={label === undefined ? "Shop..." : label.name.length < 6 ? label.name : label.name.substring(0,5)+'..'}
+              sx={{ backgroundColor: `${label === undefined ? '#a9a9a9' : label.color}` }}
+              onClick={handleClickChip}
+              onDelete={handleDeleteChip} />
           </Grid>
         </Grid>
         <ArticlePopover article={article} 
