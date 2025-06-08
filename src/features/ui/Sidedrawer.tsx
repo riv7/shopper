@@ -60,7 +60,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   }, [actTeam, dispatch])
 
   const handleTeamClick = () => {
-    navigate('../../team/select2');
+    navigate('/team/select2');
   };
 
   const handleLogoutClick = () => {
@@ -68,15 +68,15 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   }
 
   const handleAddLabelClick = () => {
-    navigate('../../label/add');
+    navigate('/label/add');
   }
 
   const handleManageLabelClick = () => {
-    navigate(`../../label/manage`);
+    navigate(`/label/manage`);
   }
 
   const handleSelectLabel = (labelId: string) => {
-    navigate(`${labelId}`)
+    navigate(`/articles/labels/${labelId}`)
   }
 
   const toggleDrawer = (open: boolean) => (

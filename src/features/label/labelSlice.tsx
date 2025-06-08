@@ -63,18 +63,23 @@ export const initLabelListener = (teamId: string): AppThunk<Promise<Label[]>> =>
 
         const labels: Label[] = convertLabels(snapshot);
 
+        // Get label state
+        const labelState = getState().label;
+        
         // Article message when data was not requested by user
-        if (!getState().label.dataRequested) {
+        if (labelState && !labelState.dataRequested) {
             dispatch(showMessage({ status: "success", message: "Shop added by shopping mate" }))
         }
 
         // Update Articles in all cases but the intial load
-        if (getState().label.loaded) {
+        if (labelState && labelState.loaded) {
             dispatch(pushLabels(labels));
         }
 
         // Reset data requested flag so that external data is recognized
-        dispatch(dataRequested(false))
+        if (labelState) {
+            dispatch(dataRequested(false))
+        }
 
         // Resolve promise
         resolve(labels);

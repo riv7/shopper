@@ -104,10 +104,11 @@ const ArticleItem: FC<ArticleItemProps> = ({ article, onLabelSelection }): React
           <Grid sx={{ width: '8.33%' }}>
             <CardActions>
               <IconButton 
-                sx={{ color: article.active === false ? 
-                  alpha('common.white', 0.25) : 
-                  alpha('common.white', 0.75) 
-                }} 
+                sx={(theme) => ({ 
+                  color: article.active === false ? 
+                    alpha(theme.palette.common.white, 0.25) : 
+                    alpha(theme.palette.common.white, 0.75) 
+                })} 
                 aria-label="resolve" 
                 onClick={handleResolvedClick}>
                 <RadioButtonUncheckedIcon />

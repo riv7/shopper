@@ -149,18 +149,23 @@ export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>
 
         const articles: Article[] = convertArticles(snapshot);
 
+        // Get article state
+        const articleState = getState().article;
+        
         // Article message when data was not requested by user
-        if (!getState().article.dataRequested) {
+        if (articleState && !articleState.dataRequested) {
             dispatch(showMessage({ status: "success", message: "Article added by shopping mate" }))
         }
 
         // Update Articles in all cases but the intial load
-        if (getState().article.loaded) {
+        if (articleState && articleState.loaded) {
             dispatch(pushArticles(articles));
         }
 
         // Reset data requested flag so that external data is recognized
-        dispatch(dataRequested(false))
+        if (articleState) {
+            dispatch(dataRequested(false))
+        }
 
         // Resolve promise
         resolve(articles);
@@ -169,18 +174,23 @@ export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>
     // ref(getDatabase(), `articles/teams/${teamId}/articles`).on('value', (snapshot) => {
     //     const articles: Article[] = convertArticles(snapshot);
     //
+    //      // Get article state
+    //      const articleState = getState().article;
+    //
     //      // Article message when data was not requested by user
-    //      if (!getState().article.dataRequested) {
+    //      if (articleState && !articleState.dataRequested) {
     //         dispatch(showMessage({ status: "success", message: "hello from listener thunk" }))
     //     }
     //
     //     // Update Articles in all cases but the intial load
-    //     if (getState().article.loaded) {
+    //     if (articleState && articleState.loaded) {
     //         dispatch(pushArticles(articles));
     //     }
     //
     //     // Reset data requested flag so that external data is recognized
-    //     dispatch(dataRequested(false))
+    //     if (articleState) {
+    //         dispatch(dataRequested(false))
+    //     }
     //
     //     // Resolve promise
     //     resolve(articles);

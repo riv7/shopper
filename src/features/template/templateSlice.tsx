@@ -51,18 +51,23 @@ export const initTeamTemplateListener = (teamId: string): AppThunk<Promise<Templ
     onValue(templatesRef, (snapshot) => {
         const templates: Template[] = convertTemplates(snapshot);
 
-         // Template message when data was not requested by user
-         if (!getState().template.dataRequested) {
+        // Get template state
+        const templateState = getState().template;
+        
+        // Template message when data was not requested by user
+        if (templateState && !templateState.dataRequested) {
             dispatch(showMessage({ status: "success", message: "Template added by shopping mate" }))
         }
 
         // Update Templates in all cases but the intial load
-        if (getState().template.loaded) {
+        if (templateState && templateState.loaded) {
             dispatch(pushTeamTemplates(templates));
         }
 
         // Reset data requested flag so that external data is recognized
-        dispatch(dataRequested(false))
+        if (templateState) {
+            dispatch(dataRequested(false))
+        }
 
         // Resolve promise
         resolve(templates);
@@ -75,18 +80,23 @@ export const initGlobalTemplateListener = (): AppThunk<Promise<Template[]>> => a
     onValue(templatesRef, (snapshot) => {
         const templates: Template[] = convertTemplates(snapshot);
 
-         // Template message when data was not requested by user
-         if (!getState().template.dataRequested) {
+        // Get template state
+        const templateState = getState().template;
+        
+        // Template message when data was not requested by user
+        if (templateState && !templateState.dataRequested) {
             dispatch(showMessage({ status: "success", message: "Template added by shopping mate" }))
         }
 
         // Update Templates in all cases but the intial load
-        if (getState().template.loaded) {
+        if (templateState && templateState.loaded) {
             dispatch(pushGlobalTemplates(templates));
         }
 
         // Reset data requested flag so that external data is recognized
-        dispatch(dataRequested(false))
+        if (templateState) {
+            dispatch(dataRequested(false))
+        }
 
         // Resolve promise
         resolve(templates);

@@ -141,10 +141,11 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
                   <IconButton 
                     aria-label="addIcon" 
                     onClick={handleAddClick}
-                    sx={{ color: presentArticle !== undefined ? 
-                      alpha('common.white', 0.25) : 
-                      alpha('common.white', 0.75) 
-                    }}>
+                    sx={(theme) => ({ 
+                      color: presentArticle !== undefined ? 
+                        alpha(theme.palette.common.white, 0.25) : 
+                        alpha(theme.palette.common.white, 0.75) 
+                    })}>
                       <AddCircleOutlineIcon />
                    </IconButton>
                 </CardActions>
