@@ -1,28 +1,26 @@
 import React, { FC } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import { styled } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import { activeTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import Sidedrawer from './Sidedrawer';
 import { getAuth } from "firebase/auth";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  }),
-);
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+}));
+
+const MenuButton = styled(IconButton)(({ theme }) => ({
+  marginRight: theme.spacing(2),
+}));
+
+const Title = styled(Typography)(({ theme }) => ({
+  flexGrow: 1,
+}));
 
 type NavBarMenuProps = {
   title: string
@@ -30,7 +28,6 @@ type NavBarMenuProps = {
 
 const NavBarMenu: FC<NavBarMenuProps> = ({title}) => {
 
-  const classes = useStyles();
   const actTeam: Team | undefined = useSelector(activeTeam);
   const drawerOpenState = React.useState(false);
 
@@ -41,24 +38,24 @@ const NavBarMenu: FC<NavBarMenuProps> = ({title}) => {
   const teamName = () => actTeam ? actTeam.name : ''
 
   return (
-    <div className={classes.root}>
+    <Root>
       <Sidedrawer drawerOpenState={drawerOpenState} />
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} onClick={handleSidedrawerClick} color="inherit" aria-label="menu">
+          <MenuButton edge="start" onClick={handleSidedrawerClick} color="inherit" aria-label="menu">
             <MenuIcon/>
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          </MenuButton>
+          <Title variant="h6">
             {title}
-          </Typography>
+          </Title>
           <div>
-            <Typography className={classes.title}>
+            <Title>
               {getAuth().currentUser!.displayName +" | "+ teamName()}
-            </Typography>
+            </Title>
           </div>
         </Toolbar>
       </AppBar>
-    </div>
+    </Root>
   );
 }
 

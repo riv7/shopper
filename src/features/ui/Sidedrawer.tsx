@@ -1,40 +1,38 @@
 import React, { FC, SetStateAction, useEffect } from 'react';
 import clsx from 'clsx';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import { styled, Theme } from '@mui/material/styles';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { Dispatch } from 'react';
-import { Card, CardHeader } from '@material-ui/core';
+import { Card, CardHeader } from '@mui/material';
 import { activeTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import GroupIcon from '@material-ui/icons/Group';
+import { useNavigate } from 'react-router-dom';
+import GroupIcon from '@mui/icons-material/Group';
 import { fetchLabels, initLabelListener, Label, labels } from '../label/labelSlice';
 import { useAppDispatch } from '../../app/store';
-import LabelImportantIcon from '@material-ui/icons/LabelImportant';
-import AddIcon from '@material-ui/icons/Add';
-import WorkIcon from '@material-ui/icons/Work';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import LabelImportantIcon from '@mui/icons-material/LabelImportant';
+import AddIcon from '@mui/icons-material/Add';
+import WorkIcon from '@mui/icons-material/Work';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { getAuth } from "firebase/auth";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    list: {
-      width: 250,
-    },
-    fullList: {
-      width: 'auto',
-    },
-    cardBackground: {
-      background: theme.palette.secondary.dark
-    }
-  }),
-);
+const StyledList = styled('div')(({ theme }) => ({
+  width: 250,
+}));
+
+const StyledFullList = styled('div')(({ theme }) => ({
+  width: 'auto',
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  background: theme.palette.secondary.dark
+}));
 
 type SidedrawerProps = {
   drawerOpenState: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -42,8 +40,7 @@ type SidedrawerProps = {
 
 const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
 
-  const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = drawerOpenState;
   const actTeam: Team | undefined = useSelector(activeTeam);
   const allLabels: Label[] = useSelector(labels);
@@ -62,7 +59,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   }, [actTeam, dispatch])
 
   const handleTeamClick = () => {
-    history.push('../../team/select2');
+    navigate('../../team/select2');
   };
 
   const handleLogoutClick = () => {
@@ -70,15 +67,15 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   }
 
   const handleAddLabelClick = () => {
-    history.push('../../label/add');
+    navigate('../../label/add');
   }
 
   const handleManageLabelClick = () => {
-    history.push(`../../label/manage`);
+    navigate(`../../label/manage`);
   }
 
   const handleSelectLabel = (labelId: string) => {
-    history.push(`${labelId}`)
+    navigate(`${labelId}`)
   }
 
   const toggleDrawer = (open: boolean) => (
@@ -96,30 +93,27 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   };
 
   const list = () => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: false,
-      })}
+    <StyledList
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <Card className={classes.cardBackground}>
+      <StyledCard>
         <CardHeader title="shopper"/>
-      </Card>
+      </StyledCard>
       <List>
         <ListItem key="user">
           <ListItemIcon><AccountBoxIcon /></ListItemIcon>
           <ListItemText primary={getAuth().currentUser!.displayName} />
         </ListItem>
-        <ListItem button onClick={handleLogoutClick} key="logout">
+        <ListItem onClick={handleLogoutClick} key="logout">
           <ListItemIcon><InboxIcon /></ListItemIcon>
           <ListItemText primary="Logout" />
         </ListItem>
       </List>
       <Divider />
       <List>
-        <ListItem autoFocus button onClick={() => handleSelectLabel('all')}>
+        <ListItem autoFocus onClick={() => handleSelectLabel('all')}>
           <ListItemIcon>
               <LabelImportantIcon />
           </ListItemIcon>
@@ -128,7 +122,7 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
           />
         </ListItem>
         {allLabels.map((label) => (
-          <ListItem autoFocus button onClick={() => handleSelectLabel(label.id)}>
+          <ListItem autoFocus onClick={() => handleSelectLabel(label.id)}>
             <ListItemIcon style = {{color: `${label.color}`}}>
                 <LabelImportantIcon />
             </ListItemIcon>
@@ -137,13 +131,13 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
             />
           </ListItem>
         ))}
-        {actTeam && <ListItem autoFocus button onClick={handleAddLabelClick}>
+        {actTeam && <ListItem autoFocus onClick={handleAddLabelClick}>
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
           <ListItemText primary="Add shop" />
         </ListItem>}
-        {actTeam && <ListItem autoFocus button onClick={handleManageLabelClick}>
+        {actTeam && <ListItem autoFocus onClick={handleManageLabelClick}>
           <ListItemIcon>
             <WorkIcon />
           </ListItemIcon>
@@ -153,12 +147,12 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
       
       <Divider />
       <List>
-        <ListItem button onClick={handleTeamClick} key="team">
+        <ListItem onClick={handleTeamClick} key="team">
           <ListItemIcon><GroupIcon /></ListItemIcon>
           <ListItemText primary={"Change team"} />
         </ListItem>
       </List>
-    </div>
+    </StyledList>
   );
 
   return (
