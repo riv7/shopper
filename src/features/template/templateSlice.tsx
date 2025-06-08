@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import { update, remove, push, set, DataSnapshot, get, getDatabase, ref, onValue} from "firebase/database";
 import { showMessage } from "../message/messageSlice";
+import { executeThunk } from "../../app/thunkUtils";
 
 // types
 export type Template = {
@@ -104,8 +105,17 @@ export const addTemplate = createAsyncThunk<void, Template, {state: RootState, d
 
 export const fetchTemplates = createAsyncThunk<Template[], string, {state: RootState, dispatch: AppDispatch}>('templates/fetchTemplates',
     async (teamId, thunkApi) => {
-        const teamTemplates: Template[] = await thunkApi.dispatch(fetchTeamTemplates(teamId));
-        const globalTemplates: Template[] = await thunkApi.dispatch(fetchGlobalTemplates());
+        // Get team templates directly
+        const templatesRef = ref(getDb(), `templates/teams/${teamId}/templates`);
+        const snapshot = await get(templatesRef);
+        const teamTemplates = convertTemplates(snapshot);
+        
+        // Get global templates directly
+        const globalTemplatesRef = ref(getDb(), `templates/global/templates`);
+        const globalSnapshot = await get(globalTemplatesRef);
+        const globalTemplates = convertTemplates(globalSnapshot);
+        
+        // Combine templates
         teamTemplates.push(...globalTemplates);
         return teamTemplates;
     }

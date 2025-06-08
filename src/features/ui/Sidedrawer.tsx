@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
 import { fetchLabels, initLabelListener, Label, labels } from '../label/labelSlice';
 import { useAppDispatch } from '../../app/store';
+import { executeThunk } from '../../app/thunkUtils';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import AddIcon from '@mui/icons-material/Add';
 import WorkIcon from '@mui/icons-material/Work';
@@ -47,12 +48,12 @@ const Sidedrawer:FC<SidedrawerProps> = ({drawerOpenState}) =>  {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
       if (actTeam) {
-        await dispatch(initLabelListener(actTeam!.id));
-        await dispatch(fetchLabels(actTeam!.id));
+        // Use executeThunk instead of dispatch
+        await executeThunk(initLabelListener(actTeam!.id), dispatch, () => ({}));
+        await executeThunk(fetchLabels(actTeam!.id), dispatch, () => ({}));
       }
     }
     fetchAndInit();    

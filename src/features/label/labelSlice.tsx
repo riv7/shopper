@@ -3,6 +3,7 @@ import { AppDispatch, AppThunk, RootState } from "../../app/store";
 import { DataSnapshot, ref, getDatabase, onValue, get, orderByKey, push, query, set, remove, update } from "firebase/database";
 import { showMessage } from "../message/messageSlice";
 import { nullifyLabels } from "../article/articleSlice";
+import { executeThunk } from "../../app/thunkUtils";
 
 // types
 export type Label = {
@@ -109,7 +110,10 @@ export const updateLabel = createAsyncThunk<void, Label, {state: RootState, disp
 export const deleteLabel = createAsyncThunk<void, Label, {state: RootState, dispatch: AppDispatch}>('label/deleteLabel',
      async (label, thunkApi) => {
         const actTeam = thunkApi.getState().team.activeTeam!;
-        await thunkApi.dispatch(nullifyLabels(label.id));
+        
+        // Use executeThunk instead of dispatch
+        await executeThunk(nullifyLabels(label.id), thunkApi.dispatch, thunkApi.getState);
+        
         const labelRef = ref(getDb(), `labels/teams/${actTeam.id}/labels/${label.id}`);
         await remove(labelRef);
      }

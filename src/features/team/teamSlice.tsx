@@ -6,6 +6,7 @@ import {showMessage} from "../message/messageSlice";
 import {deleteTemplatesOfTeam} from "../template/templateSlice";
 import {deleteArticlesOfTeam} from "../article/articleSlice";
 import {deleteLabelsOfTeam} from "../label/labelSlice";
+import {executeThunk} from "../../app/thunkUtils";
 
 // types
 export type Team = {
@@ -108,65 +109,127 @@ export const fetchActiveTeam = createAsyncThunk<Team | undefined, void, {dispatc
 
 export const addTeam = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('team/addTeam',
     async (teamData, thunkApi) => {
-
         const userId: string = getAuth().currentUser!.uid
-        const teamId: string = await thunkApi.dispatch(createTeam(teamData));
+        
+        // Create team directly without dispatching
+        const teamListRef = ref(getDb(), 'teams');
+        const newTeamRef = push(teamListRef);
+        await set(newTeamRef, {
+            name: teamData.name,
+            password: teamData.password,
+            owner: userId
+        });
+        const teamId = newTeamRef.key!;
+        
         const teamUserTuple = {
             teamId: teamId,
             userId: userId
         }
-        await thunkApi.dispatch(addUserToTeam(teamUserTuple))
-        await thunkApi.dispatch(addTeamToUser(teamUserTuple));
-        await thunkApi.dispatch(setActiveTeam(teamUserTuple));
-        await thunkApi.dispatch(setUserName(userId));
-        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(teamId));
-        return persistentTeam;
+        
+        // Use executeThunk instead of dispatch
+        await executeThunk(addUserToTeam(teamUserTuple), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(addTeamToUser(teamUserTuple), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(setActiveTeam(teamUserTuple), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(setUserName(userId), thunkApi.dispatch, thunkApi.getState);
+        
+        // Fetch the team directly
+        const teamRef = ref(getDb(), `teams/${teamId}`);
+        const snapshot = await get(teamRef);
+        if (!snapshot.exists()) {
+            return emptyTeam();            
+        } 
+        const ownerId = snapshot.val().owner;
+        const userRef = ref(getDb(), `users/${ownerId}`);
+        const userSnapshot = await get(userRef);
+        const user = convertUser(userSnapshot);
+        
+        return convertTeam(snapshot, user.name);
     }
 )
 
 export const joinTeam = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('team/joinTeam',
     async (teamData, thunkApi) => {
-        const team: Team = await thunkApi.dispatch(fetchTeam(teamData.id));
+        // Fetch team directly
+        const teamRef = ref(getDb(), `teams/${teamData.id}`);
+        const snapshot = await get(teamRef);
+        
+        if (!snapshot.exists()) {
+            return emptyTeam();
+        }
+        
+        const ownerId = snapshot.val().owner;
+        const userRef = ref(getDb(), `users/${ownerId}`);
+        const userSnapshot = await get(userRef);
+        const user = convertUser(userSnapshot);
+        const team = convertTeam(snapshot, user.name);
+        
         if (team.id === '') {
             return team;
         }
         if (team.password !== teamData.password) {
             return emptyTeam();
         }
+        
         const userId: string = getAuth().currentUser!.uid
         const teamId: string = team.id;
         const teamUserTuple = {
             teamId: teamId,
             userId: userId
         }
-        await thunkApi.dispatch(addUserToTeam(teamUserTuple))
-        await thunkApi.dispatch(addTeamToUser(teamUserTuple));
-        await thunkApi.dispatch(setActiveTeam(teamUserTuple));
-        await thunkApi.dispatch(setUserName(userId));
-        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(teamId));
-        return persistentTeam;
+        
+        // Use executeThunk instead of dispatch
+        await executeThunk(addUserToTeam(teamUserTuple), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(addTeamToUser(teamUserTuple), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(setActiveTeam(teamUserTuple), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(setUserName(userId), thunkApi.dispatch, thunkApi.getState);
+        
+        return team;
     }
 )
 
 export const updateTeam = createAsyncThunk<Team, Team, {state: RootState, dispatch: AppDispatch}>('team/updateTeam',
     async (team, thunkApi) => {
         const teamRef = ref(getDb(), `teams/${team.id}`);
-        update(teamRef, team)
-        //await thunkApi.dispatch(fetchTeams())
-        //return team;
-
-        const persistentTeam: Team = await thunkApi.dispatch(fetchTeam(team.id));
-        return persistentTeam;
+        await update(teamRef, team);
+        
+        // Fetch the team directly
+        const snapshot = await get(teamRef);
+        if (!snapshot.exists()) {
+            return emptyTeam();            
+        } 
+        const ownerId = snapshot.val().owner;
+        const userRef = ref(getDb(), `users/${ownerId}`);
+        const userSnapshot = await get(userRef);
+        const user = convertUser(userSnapshot);
+        
+        return convertTeam(snapshot, user.name);
     }
 );
 
 
 export const fetchTeams = createAsyncThunk<Team[], void, {dispatch: AppDispatch}>('team/fetchTeams',
     async (_, thunkApi) => {
-        const teamIds: string[] = await thunkApi.dispatch(fetchTeamIdsOfUser());
-        const teams: Team[] = await Promise.all(teamIds.map((teamId) => {
-            return thunkApi.dispatch(fetchTeam(teamId));
-        }));
+        // Get team IDs directly
+        const userId: string = getAuth().currentUser!.uid
+        const teamsRef = ref(getDb(), `users/${userId}/teams`);
+        const snapshot = await get(teamsRef);
+        const teamIds = convertIds(snapshot);
+        
+        // Fetch each team directly
+        const teams: Team[] = [];
+        for (const teamId of teamIds) {
+            const teamRef = ref(getDb(), `teams/${teamId}`);
+            const teamSnapshot = await get(teamRef);
+            if (!teamSnapshot.exists()) {
+                continue;
+            }
+            const ownerId = teamSnapshot.val().owner;
+            const userRef = ref(getDb(), `users/${ownerId}`);
+            const userSnapshot = await get(userRef);
+            const user = convertUser(userSnapshot);
+            teams.push(convertTeam(teamSnapshot, user.name));
+        }
+        
         return teams;
     }
 )
@@ -178,11 +241,25 @@ export const removeTeam = createAsyncThunk<void, Team, {dispatch: AppDispatch}>(
             await thunkApi.dispatch(showMessage({ status: "error", message: "Only team owners are allowed to remove a team" }));
             return Promise.resolve();
         }
-        await thunkApi.dispatch(deleteTemplatesOfTeam(team.id));
-        await thunkApi.dispatch(deleteLabelsOfTeam(team.id));
-        await thunkApi.dispatch(deleteArticlesOfTeam(team.id));
-        const userIds: string[] = await thunkApi.dispatch(fetchUserIdsOfTeam(team.id));
-        await thunkApi.dispatch(removeTeamFromUsers(userIds, team.id));
+        
+        // Use executeThunk for template, label, and article deletion
+        await executeThunk(deleteTemplatesOfTeam(team.id), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(deleteLabelsOfTeam(team.id), thunkApi.dispatch, thunkApi.getState);
+        await executeThunk(deleteArticlesOfTeam(team.id), thunkApi.dispatch, thunkApi.getState);
+        
+        // Get user IDs directly
+        const usersRef = ref(getDb(), `teams/${team.id}/users`);
+        const snapshot = await get(usersRef);
+        const userIds = convertIds(snapshot);
+        
+        // Remove team from users directly
+        userIds.forEach(userId => {
+            const userTeamRef = ref(getDb(), `users/${userId}/teams`);
+            const databaseReference = child(userTeamRef, team.id);
+            remove(databaseReference);
+        });
+        
+        // Remove the team
         const teamRef = ref(getDb(), `teams/${team.id}`);
         return remove(teamRef);
     }
@@ -190,13 +267,16 @@ export const removeTeam = createAsyncThunk<void, Team, {dispatch: AppDispatch}>(
 
 export const setTeamActive = createAsyncThunk<Team, Team, {dispatch: AppDispatch}>('team/setActiveTeam',
     async (teamData, thunkApi) => {
-
         const userId: string = getAuth().currentUser!.uid
         const teamUserTuple = {
             teamId: teamData.id,
             userId: userId
         }
-        await thunkApi.dispatch(setActiveTeam(teamUserTuple));
+        
+        // Update active team directly
+        const userRef = ref(getDb(), `users/${userId}`);
+        await update(userRef, {activeTeam: teamData.id});
+        
         return teamData;
     }
 )
