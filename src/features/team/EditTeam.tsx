@@ -1,16 +1,16 @@
 import React, { FC, ReactElement } from 'react';
 import { useSelector } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import CreateEditTeam from './CreateEditTeam';
 import { Team, teamById, updateTeam } from './teamSlice';
 
-type EditTeamRouteProps = {
+type EditTeamRouteParams = {
   teamId: string;
 }
 
-const EditTeam: FC<RouteComponentProps<EditTeamRouteProps>> = ({match}): ReactElement => {
+const EditTeam: FC = (): ReactElement => {
 
-    const teamId: string = match.params.teamId;
+    const { teamId = '' } = useParams<EditTeamRouteParams>();
     const team: Team | undefined = useSelector(teamById(teamId));
 
     return (

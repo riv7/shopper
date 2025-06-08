@@ -12,7 +12,7 @@ import { Menu, MenuItem } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { addTemplate, deleteTemplate, Template } from './templateSlice';
 import { addArticle, Article } from '../article/articleSlice';
 import { showMessage } from '../message/messageSlice';
@@ -59,7 +59,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
 
   const classes = useStyles();
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const unitState = useState("piece");
   const [selectedUnit] = unitState;
@@ -85,7 +85,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
 
   const handleEdit = () => {
     if (template.global === false) {
-      history.push(`editTemplate/${template.id}`);
+      navigate(`editTemplate/${template.id}`);
     } else {
       dispatch(showMessage({ status: "error", message: "Only user created templates can be edited" }));
     }
@@ -109,7 +109,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
       dispatch(addArticle(article));
     }
 
-    history.goBack();
+    navigate(-1);
   }
 
   const AmountOrSelect: FC = () => {
@@ -192,5 +192,3 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
 }
 
 export default TemplateItem;
-
-

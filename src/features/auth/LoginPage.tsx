@@ -7,7 +7,7 @@ import { useAppDispatch } from '../../app/store';
 import App from '../../App';
 import { activeTeam, activeTeamLoaded, fetchActiveTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
 import * as firebaseui from 'firebaseui'
 
@@ -32,7 +32,7 @@ function LoginPage() {
     const dispatch = useAppDispatch();
     const actTeam: Team | undefined = useSelector(activeTeam);
     const teamLoaded: boolean = useSelector(activeTeamLoaded)
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -111,7 +111,7 @@ function LoginPage() {
 
     // Show create or select team screen
     if (teamLoaded && actTeam === undefined) {
-        // history.push('team')
+        // navigate('team')
 
         return (
             <App/>

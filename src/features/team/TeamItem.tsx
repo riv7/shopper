@@ -11,7 +11,7 @@ import { Menu, MenuItem } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { activeTeam, copyToClipboard, removeTeam, setTeamActive, Team } from './teamSlice';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
@@ -54,7 +54,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
 
   const classes = useStyles();
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const actTeam: Team | undefined = useSelector(activeTeam);
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -75,7 +75,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   }
 
   const handleEdit = () => {
-    history.push(`edit/${team.id}`)
+    navigate(`edit/${team.id}`)
   }
 
   const copyText = (teamId: string, teamPassword: string) =>  `You have been invited to use the shopper app. Please visit https://shopper.zapto.org/team/join on your PC or mobile phone.\n\nPaste the following credentials in the join team dialog.\n\nTeam ID: ${teamId} | Team PW: ${teamPassword}\n\nHappy shopping!`
@@ -156,5 +156,3 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
 }
 
 export default TeamItem;
-
-

@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
 import { Container, Fab, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -72,7 +72,7 @@ const TeamOverview: FC = (): ReactElement => {
   const teams: Team[] = useSelector(teamsOfUser);
   const actTeam:  Team | undefined = useSelector(activeTeam);
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [addSelected, setAddSelected] = useState(false);
   
 
@@ -94,11 +94,11 @@ const TeamOverview: FC = (): ReactElement => {
   }
 
   const handleCreateClick = () => {
-    history.push('create');
+    navigate('create');
   }
 
   const handleJoinClick = () => {
-    history.push('join');
+    navigate('join');
   }
   
   return (

@@ -1,5 +1,4 @@
 import React, { FC, ReactElement } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import CreateEditTeam from './CreateEditTeam';
 import { addTeam } from './teamSlice';
 

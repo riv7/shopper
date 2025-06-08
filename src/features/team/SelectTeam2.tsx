@@ -9,7 +9,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import {activeTeam, fetchTeams, setTeamActive, Team, teamsOfUser, teamsOfUserLoaded} from './teamSlice';
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/store";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,7 +48,7 @@ const SelectTeam2: FC = (): ReactElement => {
     const teams: Team[] = useSelector(teamsOfUser);
     const actTeam:  Team | undefined = useSelector(activeTeam);
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -84,7 +84,7 @@ const SelectTeam2: FC = (): ReactElement => {
 
     const handleTeamSelect = (index: number) => {
         dispatch(setTeamActive(teams[index]))
-        history.push('/');
+        navigate('/');
     }
 
     const currentlyOn = (team: Team) => team.name === actTeam?.name ? " (x)" : "   "

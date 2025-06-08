@@ -1,17 +1,17 @@
 import React, { FC, ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { Label, labelById, updateLabel } from './labelSlice';
-import { RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import NewEditLabel from './NewEditLabel';
 
-type EditLabelRouteProps = {
+type EditLabelRouteParams = {
   labelId: string;
 }
 
-const EditLabel: FC<RouteComponentProps<EditLabelRouteProps>> = ({match}): ReactElement => {
+const EditLabel: FC = (): ReactElement => {
 
-    const labelId: string = match.params.labelId;
-    const label: Label | undefined = useSelector(labelById(labelId));
+    const { labelId } = useParams<EditLabelRouteParams>();
+    const label: Label | undefined = useSelector(labelById(labelId || ''));
 
     return (
       <NewEditLabel

@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBarBack from '../ui/NavBarBack';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Article, articleById, updateArticle } from './articleSlice';
 import SelectUnit from '../ui/SelectUnit';
 
@@ -20,17 +20,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type EditArticleRouteProps = {
+type EditArticleRouteParams = {
   articleId: string;
 }
 
-const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): ReactElement => {
+const EditArticle: FC = (): ReactElement => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
-    const articleId: string = match.params.articleId;
+    const { articleId = '' } = useParams<EditArticleRouteParams>();
     const article: Article | undefined = useSelector(articleById(articleId));
-    const history = useHistory();
+    const navigate = useNavigate();
     const [articleName, setArticleName] = useState(article === undefined ? '' : article.name);
     const [articleAmount, setArticleAmount] = useState(article === undefined ? 0 : article.amount);
     const unitState = useState(article === undefined ? '' : article.unit);
@@ -48,7 +48,7 @@ const EditArticle: FC<RouteComponentProps<EditArticleRouteProps>> = ({match}): R
         labelId: article!.labelId
       }
       dispatch(updateArticle(changedArticle));
-      history.goBack();
+      navigate(-1);
     }
 
     const SaveButton: FC = () =>

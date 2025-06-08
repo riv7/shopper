@@ -6,7 +6,6 @@ import { useAppDispatch } from '../../app/store';
 import App from '../../App';
 import { activeTeam, activeTeamLoaded, fetchActiveTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
-import { useHistory } from "react-router-dom";
 import { GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
 import {Container} from "@material-ui/core";
 import GoogleButton from 'react-google-button'
@@ -33,7 +32,6 @@ function SignInScreen() {
     const dispatch = useAppDispatch();
     const actTeam: Team | undefined = useSelector(activeTeam);
     const teamLoaded: boolean = useSelector(activeTeamLoaded)
-    const history = useHistory();
   
     useEffect(() => {
 
@@ -41,12 +39,9 @@ function SignInScreen() {
         setIsSignedIn(!!user);
       });
 
-      const fetchAndInit = async() => {
-        if (!teamLoaded && isSignedIn) {
-          await dispatch(fetchActiveTeam());
-        }
-      };
-      fetchAndInit();
+      if (!teamLoaded && isSignedIn) {
+        dispatch(fetchActiveTeam());
+      }
       
       return () => unsubscribe(); // Make sure we un-register Firebase observers when the component unmounts.
     }, [dispatch, teamLoaded, isSignedIn]);

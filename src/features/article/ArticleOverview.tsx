@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
 import { fetchArticles, Article, articles, initArticleListener, activateArticles, clearArticles, updateArticle } from './articleSlice';
-import { RouteComponentProps, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
 import { Button, Card, CardContent, Container, Divider, Fab, Typography } from '@material-ui/core';
@@ -43,23 +43,23 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type ArticleRouteProps = {
+type ArticleRouteParams = {
   labelId: string;
 }
 
-const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): ReactElement => {
+const ArticleOverview: FC = (): ReactElement => {
  
   const classes = useStyles();
   const allArticles: Article[] = useSelector(articles);
-  const labelId: string = match.params.labelId;
+  const { labelId = 'all' } = useParams<ArticleRouteParams>();
   const actTeam: Team | undefined = useSelector(activeTeam);
   const [labelSelectionOpened, setLabelSelectionOpened] = useState(false);
   const [selectedLabel, setSelectedLabel] = React.useState<Label>();
   const [selectedArticleLabel, setSelectedArticleLabel] = React.useState<Article>();
   const label: Label | undefined = useSelector(labelById(labelId));
-  const labelFilterName = labelId === 'all' ? 'all shops' : label!.name
+  const labelFilterName = labelId === 'all' ? 'all shops' : label?.name || ''
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch async data only when data is not yet loaded
@@ -73,11 +73,11 @@ const ArticleOverview: FC<RouteComponentProps<ArticleRouteProps>> = ({match}): R
   }, [actTeam, dispatch])
 
   const handleAddClick = () => {
-    history.push(`/templates/${labelId}`);
+    navigate(`/templates/${labelId}`);
   }
 
   const handleAddLabelClick = () => {
-    history.push('../../label/add');
+    navigate('../../label/add');
   }
 
   const handleAddAll = () => {

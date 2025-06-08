@@ -1,7 +1,7 @@
 import { Button, Container, createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 import React, { FC, ReactElement } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NavBarBack from "../ui/NavBarBack";
 
 const useStyles = makeStyles(() =>
@@ -27,14 +27,14 @@ const useStyles = makeStyles(() =>
 const SelectOrCreateTeam: FC = (): ReactElement => {
 
     const classes = useStyles();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleCreateClick = () => {
-        history.replace('team/create')
+        navigate('team/create', { replace: true })
     }
     
     const handleSelectClick = () => {
-        history.push('team/select')
+        navigate('team/select')
     }
 
     return (

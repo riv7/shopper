@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,10 +81,10 @@ type NavBarSearchProps = {
 
 const NavBarSearch: FC<NavBarSearchProps> = ({ title, onChange, childComp }) => {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleBackClick = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   return (

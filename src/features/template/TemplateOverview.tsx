@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  useSelector } from 'react-redux';
-import { RouteComponentProps } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
 import { Container } from '@material-ui/core';
 import { activeTeam, Team } from '../team/teamSlice';
@@ -33,17 +33,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type TemplateOverviewRouteProps = {
+type TemplateOverviewRouteParams = {
   labelId: string;
 }
 
-const TemplateOverview: FC<RouteComponentProps<TemplateOverviewRouteProps>> = ({match}): ReactElement => {
+const TemplateOverview: FC = (): ReactElement => {
  
   const classes = useStyles();
   const allTemplates: Template[] = useSelector(selectTemplates);
   const allArticles: Article[] = useSelector(articles);
   const actTeam: Team | undefined = useSelector(activeTeam);
-  const labelId = match.params.labelId;
+  const { labelId = 'all' } = useParams<TemplateOverviewRouteParams>();
   const dispatch = useAppDispatch();
   const [filterText, setFilterText] = useState('');
 

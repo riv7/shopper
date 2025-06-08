@@ -10,7 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { deleteLabel, Label } from './labelSlice';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import { useDispatch } from 'react-redux';
@@ -43,7 +43,7 @@ type LabelItemProps = {
 const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
 
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -61,7 +61,7 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
   }
 
   const handleEdit = () => {
-    history.push(`editLabel/${label.id}`)
+    navigate(`editLabel/${label.id}`)
   }
 
   return (

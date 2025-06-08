@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBarBack from '../ui/NavBarBack';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Template, templateById, updateTemplate } from './templateSlice';
 import SelectUnit from '../ui/SelectUnit';
 
@@ -20,19 +20,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type EditTemplateRouteProps = {
+type EditTemplateRouteParams = {
   templateId: string;
 }
 
-const EditTemplate: FC<RouteComponentProps<EditTemplateRouteProps>> = ({match}): ReactElement => {
+const EditTemplate: FC = (): ReactElement => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const templateId: string = match.params.templateId;
+    const { templateId = '' } = useParams<EditTemplateRouteParams>();
     const template: Template | undefined = useSelector(templateById(templateId));
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const [templateName, setTemplateName] = useState(template === undefined ? '' : template.name);
     const unitState = useState(template === undefined ? '' : template.unit);
     const [selectedUnit] = unitState;
@@ -47,7 +47,7 @@ const EditTemplate: FC<RouteComponentProps<EditTemplateRouteProps>> = ({match}):
           global: false
         }
         dispatch(updateTemplate(changedTemplate));
-        history.goBack();
+        navigate(-1);
     }
 
     const SaveButton: FC = () =>

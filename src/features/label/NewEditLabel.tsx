@@ -5,7 +5,7 @@ import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBarBack from '../ui/NavBarBack';
 import { Team, activeTeam } from '../team/teamSlice';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppAsyncThunk } from '../../app/store';
 import { Label } from './labelSlice';
 import { CirclePicker } from 'react-color';
@@ -60,7 +60,7 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
     const classes = useStyles();
     const dispatch = useDispatch();
     const actTeam: Team | undefined = useSelector(activeTeam);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [labelName, setLabelName] = useState(label === undefined ? '' : label.name);
     const [nameChanged, setNameChanged] = useState(false);
     const [colorChanged, setColorChanged] = useState(false);
@@ -75,7 +75,7 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
           teamId: actTeam!.id
         }
         dispatch(thunkAction(changedLabel));
-        history.goBack();
+        navigate(-1);
     }
 
     const handleChangeComplete = (color: ColorResult) => {

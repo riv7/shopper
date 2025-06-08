@@ -11,7 +11,7 @@ import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox'
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import EditIcon from '@material-ui/icons/Edit';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,7 +36,7 @@ type ArticlePopoverProps = {
 const ArticlePopover: FC<ArticlePopoverProps> = ({article, open, onClose, anchorEl, setAnchorEl}) => {
 
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   // const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,7 +65,7 @@ const ArticlePopover: FC<ArticlePopoverProps> = ({article, open, onClose, anchor
   };
 
   const handleEdit = () => {
-    history.push(`../editArticle/${article.id}`);
+    navigate(`../editArticle/${article.id}`);
   }
 
   const id = open ? 'simple-popover' : undefined;
