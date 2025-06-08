@@ -52,7 +52,7 @@ export const increaseAmount = (amount: number, unit: string): number => {
     } else if (unit === "l") {
         if (amount < 10) {
         amount = amount+1;
-        } else if (amount < 0) {
+        } else if (amount < 50) {
         amount = amount+5;
         } else {
         amount = amount+10;
@@ -93,7 +93,7 @@ export const decreaseAmount = (amount: number, unit: string): number => {
     } else if (unit === "l") {
         if (amount <= 10) {
         amount = amount-1;
-        } else if (amount <= 0) {
+        } else if (amount <= 50) {
         amount = amount-5;
         } else {
         amount = amount-10;
@@ -212,7 +212,9 @@ export const addArticle = createAsyncThunk<void, Article, {state: RootState, dis
 
 export const updateArticle = createAsyncThunk<void, Article, {state: RootState, dispatch: AppDispatch}>('article/updateArticle',
     async (article, thunkApi) => {
-        thunkApi.dispatch(updateArticleOfTeam(article));
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        const articleRef = ref(getDb(), `articles/teams/${actTeam.id}/articles/${article.id}`);
+        await update(articleRef, article);
     }
 );
 
@@ -232,7 +234,12 @@ export const clearArticles = createAsyncThunk<void, string, {state: RootState, d
             .filter(article => !article.active)
             .map(article => article.id);
 
-        await thunkApi.dispatch(deleteArticles(filteredArticleIds));
+        const actTeam = thunkApi.getState().team.activeTeam!;
+        // Delete each article
+        for (const articleId of filteredArticleIds) {
+            const articleRef = ref(getDb(), `articles/teams/${actTeam.id}/articles/${articleId}`);
+            await remove(articleRef);
+        }
     }
 )
 
@@ -243,10 +250,12 @@ export const activateArticles = createAsyncThunk<void, string, {state: RootState
             .filter(article => (article.labelId === labelId || labelId === 'all'))
             .filter(article => !article.active);
 
+        const actTeam = thunkApi.getState().team.activeTeam!;
         for (var article of filteredArticles) {
             const copy = {...article}
             copy.active = true;
-            await thunkApi.dispatch(updateArticleOfTeam(copy));
+            const articleRef = ref(getDb(), `articles/teams/${actTeam.id}/articles/${copy.id}`);
+            await update(articleRef, copy);
         }
     }
 );
