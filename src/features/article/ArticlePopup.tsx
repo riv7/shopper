@@ -1,35 +1,35 @@
 import React, { FC, useState } from 'react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import { Button, CardActions, CardContent, Chip, Container, createStyles, Grid, IconButton, ListItemIcon, ListItemText, makeStyles, TextField, Theme } from '@material-ui/core';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import { Button, CardActions, CardContent, Chip, Container, Grid, IconButton, ListItemIcon, ListItemText, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import InfoIcon from '@material-ui/icons/Info';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import InfoIcon from '@mui/icons-material/Info';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import SelectUnit from '../ui/SelectUnit';
 import { Article } from './articleSlice';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: '50px'
-    },
-    textInput: {
-      marginLeft: '5px'
-    },
-    increaseButton: {
-      justifyContent: 'right'
-    },
-    decreaseButton: {
-      justifyContent: 'left'
-    },
-  })
-);
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  marginTop: '50px'
+}));
+
+const TextInput = styled(TextField)(({ theme }) => ({
+  marginLeft: '5px'
+}));
+
+const IncreaseButton = styled(CardActions)({
+  justifyContent: 'right'
+});
+
+const DecreaseButton = styled(CardActions)({
+  justifyContent: 'left'
+});
 
 type ArticlePopupProps = {
   article: Article
@@ -38,8 +38,6 @@ type ArticlePopupProps = {
 }
 
 const ArticlePopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
-
-  const classes = useStyles();
   const [articleName, setArticleName] = useState(article === undefined ? '' : article.name);
   const [articleAmount, setArticleAmount] = useState(article === undefined ? 0 : article.amount);
   const valueChangedState = useState(false);
@@ -49,20 +47,11 @@ const ArticlePopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
 
   const amountText = article.amount;
 
-
-
-
-
-//const ArticlePopup: FC<ArticlePopupProps> = ({selectedLabel, open, onClose}) => {
-
- // const allLabels: Label[] = useSelector(labels);
-
   const handleDeleteChip = () => {
     console.info('You clicked the delete icon.');
   };
 
   const handleClose = () => {
-
     var changedArticle = null;
     if (valueChanged === true) {
       changedArticle = {
@@ -76,13 +65,7 @@ const ArticlePopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
     }
 
     onClose(changedArticle);
-    // onClose(selectedValue);
   };
-
-  // const handleLabelClick = (label: Label) => {
-  //   onClose(label);
-  // };
-
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
@@ -90,47 +73,42 @@ const ArticlePopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
 
       <Container>
           <form>
-            <div className={classes.root}>
+            <Root>
               <Grid
                 container
-                justify="center"
-                // alignItems="flex-start"
+                justifyContent="center"
                 spacing={0}
-                // style={{ minHeight: '100vh' }}
                 direction="row">
 
                 <Grid
                   container
-                  justify="center"
+                  justifyContent="center"
                   direction="column"
                   spacing={3}>
-                  <Grid item xs={12} md={12}>
-            <Grid container spacing={1}>
-              <Grid item xs={2}>
-                <CardActions className={classes.decreaseButton}>
-                  <IconButton aria-label="decreaseAmount" >
-                  {/* <IconButton aria-label="decreaseAmount" onClick={handleDecreaseClick}> */}
-                    <IndeterminateCheckBoxIcon />
-                  </IconButton>
-                </CardActions>
-              </Grid>
-              <Grid item xs={8}>
-                <CardContent>
-                  <Button>{amountText}</Button>
-                  {/* <Button onClick={handleAmountSelect}>{amountText}</Button> */}
-                </CardContent>
-              </Grid>
-              <Grid item xs={2}>
-                <CardActions className={classes.increaseButton}>
-                  {/* <IconButton aria-label="increaseAmount" onClick={handleIncreaseClick}> */}
-                  <IconButton aria-label="increaseAmount">
-                    <AddBoxIcon />
-                  </IconButton>
-                </CardActions>
-              </Grid>
-            </Grid>
-          </Grid>
-                  <Grid item>
+                  <Grid sx={{ width: '100%' }}>
+                    <Grid container spacing={1}>
+                      <Grid sx={{ width: '16.67%' }}>
+                        <DecreaseButton>
+                          <IconButton aria-label="decreaseAmount">
+                            <IndeterminateCheckBoxIcon />
+                          </IconButton>
+                        </DecreaseButton>
+                      </Grid>
+                      <Grid sx={{ width: '66.67%' }}>
+                        <CardContent>
+                          <Button>{amountText}</Button>
+                        </CardContent>
+                      </Grid>
+                      <Grid sx={{ width: '16.67%' }}>
+                        <IncreaseButton>
+                          <IconButton aria-label="increaseAmount">
+                            <AddBoxIcon />
+                          </IconButton>
+                        </IncreaseButton>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid>
                     <TextField 
                       id="article-name" 
                       label="Change article name..."
@@ -141,12 +119,12 @@ const ArticlePopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
                         setArticleName(event.target.value);
                         setValueChanged(true)}}/>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Grid
                       container
-                      justify="space-between"
+                      justifyContent="space-between"
                       spacing={1}>
-                        <Grid item xs={8}>
+                        <Grid sx={{ width: '66.67%' }}>
                           <TextField 
                             id="article-amount" 
                             label="Enter article amount ..."
@@ -157,19 +135,16 @@ const ArticlePopup: FC<ArticlePopupProps> = ({article, open, onClose}) => {
                               setArticleAmount(Number(event.target.value));
                               setValueChanged(true)}}/>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid sx={{ width: '33.33%' }}>
                           <SelectUnit unitState={unitState} valueChangedState={valueChangedState} />
                         </Grid>
                       </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </div>
+            </Root>
           </form>
         </Container>
-
-      
-
     </Dialog>
   );
 }

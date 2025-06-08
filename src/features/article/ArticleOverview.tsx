@@ -1,55 +1,52 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import {  useSelector } from 'react-redux';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import { useSelector } from 'react-redux';
 import { fetchArticles, Article, articles, initArticleListener, activateArticles, clearArticles, updateArticle } from './articleSlice';
 import { useParams, useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
-import { Button, Card, CardContent, Container, Divider, Fab, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Button, Card, CardContent, Container, Divider, Fab, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { activeTeam, Team } from '../team/teamSlice';
 import ArticleItem from './ArticleItem';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LabelPopup from '../label/LabelPopup';
 import { Label, labelById } from '../label/labelSlice';
 import NavBarMenu from '../ui/NavBarMenu';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: '25px'
-    },
-    aricleDiv: {
-      flexGrow: 1,
-      marginTop: '25px',
-      marginBottom: '25px'
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-    fab : {
-      margin: 0,
-      top: 'auto',
-      right: 20,
-      bottom: 20,
-      left: 'auto',
-      position: 'fixed',
-    }
-  }),
-);
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  marginTop: '25px'
+}));
+
+const ArticleDiv = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  marginTop: '25px',
+  marginBottom: '25px'
+}));
+
+const StyledPaper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+const AddFab = styled(Fab)(({ theme }) => ({
+  margin: 0,
+  top: 'auto',
+  right: 20,
+  bottom: 20,
+  left: 'auto',
+  position: 'fixed',
+}));
 
 type ArticleRouteParams = {
   labelId: string;
 }
 
 const ArticleOverview: FC = (): ReactElement => {
- 
-  const classes = useStyles();
   const allArticles: Article[] = useSelector(articles);
   const { labelId = 'all' } = useParams<ArticleRouteParams>();
   const actTeam: Team | undefined = useSelector(activeTeam);
@@ -65,8 +62,8 @@ const ArticleOverview: FC = (): ReactElement => {
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
       if (actTeam) {
-        await dispatch(initArticleListener(actTeam!.id));
-        await dispatch(fetchArticles(actTeam!.id));
+        await dispatch(initArticleListener(actTeam!.id) as any);
+        await dispatch(fetchArticles(actTeam!.id) as any);
       }
     }
     fetchAndInit();    
@@ -81,11 +78,11 @@ const ArticleOverview: FC = (): ReactElement => {
   }
 
   const handleAddAll = () => {
-    dispatch(activateArticles(labelId));
+    dispatch(activateArticles(labelId) as any);
   }
 
   const handleClearAll = () => {
-    dispatch(clearArticles(labelId));
+    dispatch(clearArticles(labelId) as any);
   }
 
   const handleLabelSelectionClose = (label: Label) => {
@@ -95,7 +92,7 @@ const ArticleOverview: FC = (): ReactElement => {
       ...selectedArticleLabel!,
       labelId: label === undefined ? '' : label.id
     }
-    dispatch(updateArticle(update));
+    dispatch(updateArticle(update) as any);
   }
 
   const handleArticleLabelSelection = (article: Article) => {
@@ -111,19 +108,19 @@ const ArticleOverview: FC = (): ReactElement => {
       return <Grid />
     } else {
       return (
-        <Grid container spacing={5} className={classes.aricleDiv}>
-          <Grid item xs={12} key="div1">
+        <Grid container spacing={5} sx={{ mt: 3, mb: 3 }}>
+          <Grid sx={{ width: '100%' }} key="div1">
             <Grid container
-              justify="space-between"
+              justifyContent="space-between"
               spacing={1}>
-              <Grid item xs={12}>
+              <Grid sx={{ width: '100%' }}>
                 <Divider variant="middle" />
               </Grid>
-              <Grid item xs={3}>
+              <Grid sx={{ width: '25%' }}>
                 <Button fullWidth color="secondary" startIcon={<ExpandLessIcon />} onClick={handleAddAll}>Add</Button>
               </Grid>
-              <Grid item xs={6}></Grid>
-              <Grid item xs={3}>
+              <Grid sx={{ width: '50%' }}></Grid>
+              <Grid sx={{ width: '25%' }}>
                 <Button fullWidth color="secondary" endIcon={<ExpandMoreIcon />} onClick={handleClearAll}>Clear</Button>
               </Grid>
             </Grid>
@@ -137,43 +134,43 @@ const ArticleOverview: FC = (): ReactElement => {
     <div>
       <NavBarMenu title={`${labelFilterName}`}/>
       <Container>
-        <div className={classes.root}>
+        <Root>
           <Grid container spacing={3}>
             {actTeam === undefined &&
-              <Card className={classes.root}>
+              <Card sx={{ flexGrow: 1 }}>
                 <CardContent>
                   <Typography>Please create or select a team</Typography>
                 </CardContent>
               </Card>
             }
             {allArticles.length === 0 &&
-              <Card className={classes.root}>
+              <Card sx={{ flexGrow: 1 }}>
                 <CardContent>
                   <Typography>Please add articles</Typography>
                 </CardContent>
               </Card>
             }
             {filteredArticles(true).map(article => 
-              <Grid item xs={12} key={article.id}>
+              <Grid sx={{ width: '100%' }} key={article.id}>
                 <ArticleItem article={article} onLabelSelection={handleArticleLabelSelection} />
               </Grid>
             )}
             <ArticleDivider />
             {filteredArticles(false).map(article => 
-              <Grid item xs={12} key={article.id}>
+              <Grid sx={{ width: '100%' }} key={article.id}>
                 <ArticleItem article={article} onLabelSelection={handleArticleLabelSelection} />
               </Grid>
             )}
           </Grid>
-          {actTeam && <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
+          {actTeam && <AddFab color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
-          </Fab>}
+          </AddFab>}
           <LabelPopup 
             selectedLabel={selectedLabel!}
             open={labelSelectionOpened}
             onClose={handleLabelSelectionClose}
             onAddLabel={handleAddLabelClick} />
-        </div>
+        </Root>
       </Container>
     </div>
   );

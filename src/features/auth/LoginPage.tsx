@@ -66,7 +66,7 @@ function LoginPage() {
 
         const fetchAndInit = async() => {
             if (!teamLoaded && isSignedIn) {
-                await dispatch(fetchActiveTeam());
+                await dispatch(fetchActiveTeam() as any);
             }
         };
         fetchAndInit();

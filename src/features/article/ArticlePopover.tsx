@@ -1,29 +1,25 @@
 import React, { FC } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import { styled } from '@mui/material/styles';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { Article, decreaseAmount, increaseAmount, updateArticle } from './articleSlice';
 import { SetStateAction } from 'react';
 import { Dispatch } from 'react';
-import { Card, CardActions, Grid, IconButton } from '@material-ui/core';
-import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import EditIcon from '@material-ui/icons/Edit';
+import { Card, CardActions, Grid, IconButton } from '@mui/material';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  padding: theme.spacing(2),
+}));
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    typography: {
-      padding: theme.spacing(2),
-    },
-    icon: {
-      padding: 2,
-    },
-  }),
-);
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  padding: 2,
+}));
 
 type ArticlePopoverProps = {
   article: Article
@@ -34,8 +30,6 @@ type ArticlePopoverProps = {
 }
 
 const ArticlePopover: FC<ArticlePopoverProps> = ({article, open, onClose, anchorEl, setAnchorEl}) => {
-
-  const classes = useStyles();
   const navigate = useNavigate();
   // const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -88,7 +82,7 @@ const ArticlePopover: FC<ArticlePopoverProps> = ({article, open, onClose, anchor
       >
         <Card>
           <Grid container spacing={0}>
-            <Grid item>
+            <Grid>
             {/* <Typography>Hello</Typography> */}
               <CardActions>
                 <IconButton aria-label="decreaseAmount" onClick={handleDecreaseClick}>
@@ -96,25 +90,23 @@ const ArticlePopover: FC<ArticlePopoverProps> = ({article, open, onClose, anchor
                 </IconButton>
               </CardActions>
             </Grid>
-            <Grid item>
+            <Grid>
               {/* <Typography>Hello</Typography> */}
-              <CardActions >
+              <CardActions>
                 <IconButton aria-label="increaseAmount" onClick={handleIncreaseClick}>
                   <AddBoxIcon />
                 </IconButton>
               </CardActions>
             </Grid>
-            <Grid item>
+            <Grid>
             {/* <Typography>Hello</Typography> */}
-
               <CardActions>
-              <IconButton
+                <IconButton
                   onClick={handleEdit}
-                      // className={classes.icon}
-                        aria-label="team-edit"
-                        color="inherit">
-                        <EditIcon />
-                      </IconButton>
+                  aria-label="team-edit"
+                  color="inherit">
+                  <EditIcon />
+                </IconButton>
                 {/* <Button variant="contained" color="secondary"></Button> */}
               </CardActions>
             </Grid>

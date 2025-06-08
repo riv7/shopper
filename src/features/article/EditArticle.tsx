@@ -1,6 +1,7 @@
-import { Container, createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import IconButton from '@material-ui/core/IconButton';
+import { Container, Grid, TextField } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBarBack from '../ui/NavBarBack';
@@ -8,25 +9,20 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Article, articleById, updateArticle } from './articleSlice';
 import SelectUnit from '../ui/SelectUnit';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: '50px'
-    },
-    textInput: {
-      marginLeft: '5px'
-    }
-  })
-);
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  marginTop: '50px'
+}));
+
+const TextInput = styled(TextField)(({ theme }) => ({
+  marginLeft: '5px'
+}));
 
 type EditArticleRouteParams = {
   articleId: string;
 }
 
 const EditArticle: FC = (): ReactElement => {
-
-    const classes = useStyles();
     const dispatch = useDispatch();
     const { articleId = '' } = useParams<EditArticleRouteParams>();
     const article: Article | undefined = useSelector(articleById(articleId));
@@ -47,7 +43,7 @@ const EditArticle: FC = (): ReactElement => {
         active: article!.active,
         labelId: article!.labelId
       }
-      dispatch(updateArticle(changedArticle));
+      dispatch(updateArticle(changedArticle) as any);
       navigate(-1);
     }
 
@@ -67,10 +63,10 @@ const EditArticle: FC = (): ReactElement => {
           childComp={<SaveButton/>} />
         <Container>
           <form>
-            <div className={classes.root}>
+            <Root>
               <Grid
                 container
-                justify="center"
+                justifyContent="center"
                 alignItems="flex-start"
                 spacing={0}
                 style={{ minHeight: '100vh' }}
@@ -78,10 +74,10 @@ const EditArticle: FC = (): ReactElement => {
 
                 <Grid
                   container
-                  justify="center"
+                  justifyContent="center"
                   direction="column"
                   spacing={3}>
-                  <Grid item>
+                  <Grid>
                     <TextField 
                       id="article-name" 
                       label="Change article name..."
@@ -92,12 +88,12 @@ const EditArticle: FC = (): ReactElement => {
                         setArticleName(event.target.value);
                         setValueChanged(true)}}/>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Grid
                       container
-                      justify="space-between"
+                      justifyContent="space-between"
                       spacing={1}>
-                        <Grid item xs={8}>
+                        <Grid sx={{ width: '66.67%' }}>
                           <TextField 
                             id="article-amount" 
                             label="Enter article amount ..."
@@ -108,14 +104,14 @@ const EditArticle: FC = (): ReactElement => {
                               setArticleAmount(Number(event.target.value));
                               setValueChanged(true)}}/>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid sx={{ width: '33.33%' }}>
                           <SelectUnit unitState={unitState} valueChangedState={valueChangedState} />
                         </Grid>
                       </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </div>
+            </Root>
           </form>
         </Container>
       </div>

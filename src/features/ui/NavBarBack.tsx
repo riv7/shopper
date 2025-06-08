@@ -1,25 +1,23 @@
 import React, { FC, ReactNode } from 'react';
-import { alpha, createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { styled, alpha } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  }),
-);
+const Root = styled('div')({
+  flexGrow: 1,
+});
+
+const MenuButton = styled(IconButton)(({ theme }) => ({
+  marginRight: theme.spacing(2),
+}));
+
+const Title = styled(Typography)({
+  flexGrow: 1,
+});
 
 type NavBarBackProps = {
   title: string,
@@ -27,7 +25,6 @@ type NavBarBackProps = {
 }
 
 const NavBarBack: FC<NavBarBackProps> = ({title, childComp}) => {
-  const classes = useStyles();
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -35,23 +32,23 @@ const NavBarBack: FC<NavBarBackProps> = ({title, childComp}) => {
   }
 
   return (
-    <div className={classes.root}>
+    <Root>
       <AppBar position="static">
         <Toolbar>
-          <IconButton 
+          <MenuButton 
             edge="start" 
-            className={classes.menuButton}
-            color="inherit" aria-label="back"
+            color="inherit" 
+            aria-label="back"
             onClick={handleBackClick}>
               <ArrowBackIosIcon/>
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          </MenuButton>
+          <Title variant="h6">
             {title}
-          </Typography>
+          </Title>
           {childComp}
         </Toolbar>
       </AppBar>
-    </div>
+    </Root>
   );
 }
 

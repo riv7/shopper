@@ -1,58 +1,57 @@
 import React, { FC, ReactElement } from 'react';
-import { makeStyles, createStyles, Theme, alpha } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Menu, MenuItem } from '@material-ui/core';
+import { styled, alpha } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Menu, MenuItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { activeTeam, copyToClipboard, removeTeam, setTeamActive, Team } from './teamSlice';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { showMessage } from '../message/messageSlice';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
+const Root = styled('div')({
+  display: "flex",
+});
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-    },
-    menuButton: {
-      justifyContent:'right'
-    },
-    increaseButton: {
-      justifyContent:'right'
-    },
-    decreaseButton: {
-      justifyContent:'left'
-    },
-    title: {
-      flexGrow: 1,
-    },
-    typography: {
-      color: alpha(theme.palette.common.white, 0.75)
-    },
-    typographyLight: {
-      color: alpha(theme.palette.secondary.main, 0.75)
-    },
-  }),
-);
+const MenuButtonContainer = styled(CardActions)({
+  justifyContent: 'right'
+});
+
+const IncreaseButtonContainer = styled(CardActions)({
+  justifyContent: 'right'
+});
+
+const DecreaseButtonContainer = styled(CardActions)({
+  justifyContent: 'left'
+});
+
+const Title = styled(Typography)({
+  flexGrow: 1,
+});
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  color: alpha(theme.palette.common.white, 0.75)
+}));
+
+const StyledTypographyLight = styled(Typography)(({ theme }) => ({
+  color: alpha(theme.palette.secondary.main, 0.75)
+}));
 
 type TeamItemProps = {
     team: Team
 }
 
 const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
-
-  const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const actTeam: Team | undefined = useSelector(activeTeam);
@@ -60,7 +59,6 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const isActiveTeam = actTeam && team.id === actTeam.id;
-  const typoClass = isActiveTeam ? classes.typographyLight : classes.typography;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -92,22 +90,27 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   return (
     <Card>
         <Grid container spacing={3}>
-            <Grid item xs={1}>
+            <Grid sx={{ width: '8.33%' }}>
                 <CardActions>
                   <IconButton aria-label="team" onClick={handleSelect}>
                       {isActiveTeam ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
                    </IconButton>
                 </CardActions>
             </Grid>
-            <Grid item xs={9}>
+            <Grid sx={{ width: '75%' }}>
                 <CardContent>
-                    <Typography className={typoClass} variant="h5" component="h2">
-                    {isActiveTeam ? team.name + " (active)" : team.name}
-                    </Typography>
+                    {isActiveTeam ? 
+                      <StyledTypographyLight variant="h5">
+                        {team.name + " (active)"}
+                      </StyledTypographyLight> : 
+                      <StyledTypography variant="h5">
+                        {team.name}
+                      </StyledTypography>
+                    }
                 </CardContent>
             </Grid>
-            <Grid item xs={2}>
-                <CardActions className={classes.menuButton}>
+            <Grid sx={{ width: '16.67%' }}>
+                <MenuButtonContainer>
                   <IconButton 
                      aria-label="team select"
                      aria-controls="simple"
@@ -148,7 +151,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                       Delete
                     </MenuItem>
                   </Menu>
-                </CardActions>
+                </MenuButtonContainer>
             </Grid>
         </Grid>
     </Card>

@@ -1,6 +1,7 @@
-import { Chip, Container, createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import IconButton from '@material-ui/core/IconButton';
+import { Chip, Container, Grid, TextField } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import React, { FC, ReactElement, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBarBack from '../ui/NavBarBack';
@@ -11,18 +12,14 @@ import { Label } from './labelSlice';
 import { CirclePicker } from 'react-color';
 import { Color, ColorResult } from 'react-color';
 
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  marginTop: '50px'
+}));
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: '50px'
-    },
-    textInput: {
-      marginLeft: '5px'
-    }
-  })
-);
+const TextInput = styled(TextField)(({ theme }) => ({
+  marginLeft: '5px'
+}));
 
 type NewEditLabelProps = {
   title: string;
@@ -57,7 +54,6 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
       return label === undefined ? colors[Math.floor(Math.random()*colors.length)] : label.color;
     }
 
-    const classes = useStyles();
     const dispatch = useDispatch();
     const actTeam: Team | undefined = useSelector(activeTeam);
     const navigate = useNavigate();
@@ -104,10 +100,10 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
           childComp={<SaveButton/>} />
         <Container>
           <form>
-            <div className={classes.root}>
+            <Root>
               <Grid
                 container
-                justify="center"
+                justifyContent="center"
                 alignItems="flex-start"
                 spacing={0}
                 style={{ minHeight: '100vh' }}
@@ -115,10 +111,10 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
 
                 <Grid
                   container
-                  justify="center"
+                  justifyContent="center"
                   direction="column"
                   spacing={3}>
-                  <Grid item>
+                  <Grid>
                     <TextField 
                       id="label-name" 
                       label={header}
@@ -129,14 +125,14 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
                         setLabelName(event.target.value);
                         setNameChanged(true)}}/>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Chip
                       label = 'Switch color of shop'
                       style = {{backgroundColor: `${color}`}}
                       onClick = {handleSwitchColor}
                     />
                   </Grid>
-                  {switchColor && <Grid item >
+                  {switchColor && <Grid>
                     <CirclePicker 
                       color={color}
                       onChangeComplete={handleChangeComplete}
@@ -145,7 +141,7 @@ const NewEditLabel: FC<NewEditLabelProps> = ({title, header, label, thunkAction}
                   }
                 </Grid>
               </Grid>
-            </div>
+            </Root>
           </form>
         </Container>
       </div>

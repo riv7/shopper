@@ -1,87 +1,86 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import {  useSelector } from 'react-redux';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
-import { Container, Fab, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Container, Fab, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import NavBarMenu from '../ui/NavBarMenu';
 import { activeTeam, fetchTeams, Team, teamsOfUser, teamsOfUserLoaded } from '../team/teamSlice';
 import TeamItem from './TeamItem';
 import NavBarBack from '../ui/NavBarBack';
-import NavigationIcon from '@material-ui/icons/Navigation';
+import NavigationIcon from '@mui/icons-material/Navigation';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: '25px'
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-    fab : {
-      margin: 0,
-      top: 'auto',
-      right: 20,
-      bottom: 20,
-      left: 'auto',
-      position: 'fixed',
-    },
-    fabInfo : {
-      margin: 0,
-      top: 'auto',
-      right: 20,
-      bottom: 90,
-      left: 'auto',
-      position: 'fixed',
-    },
-    fabJoin : {
-      margin: 0,
-      top: 'auto',
-      right: 20,
-      bottom: 90,
-      left: 'auto',
-      position: 'fixed'
-    },
-    fabCreate : {
-      margin: 0,
-      top: 'auto',
-      right: 20,
-      bottom: 140,
-      left: 'auto',
-      position: 'fixed',
-    },
-    extendedIcon: {
-      marginRight: theme.spacing(1),
-    },
-    extendedIcon2: {
-      marginRight: theme.spacing(3),
-    },
-  }),
-);
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  marginTop: '25px'
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+const AddFab = styled(Fab)(({ theme }) => ({
+  margin: 0,
+  top: 'auto',
+  right: 20,
+  bottom: 20,
+  left: 'auto',
+  position: 'fixed',
+}));
+
+const InfoTypography = styled(Typography)(({ theme }) => ({
+  margin: 0,
+  top: 'auto',
+  right: 20,
+  bottom: 90,
+  left: 'auto',
+  position: 'fixed',
+}));
+
+const JoinFab = styled(Fab)(({ theme }) => ({
+  margin: 0,
+  top: 'auto',
+  right: 20,
+  bottom: 90,
+  left: 'auto',
+  position: 'fixed',
+}));
+
+const CreateFab = styled(Fab)(({ theme }) => ({
+  margin: 0,
+  top: 'auto',
+  right: 20,
+  bottom: 140,
+  left: 'auto',
+  position: 'fixed',
+}));
+
+const ExtendedIcon = styled('span')(({ theme }) => ({
+  marginRight: theme.spacing(1),
+}));
+
+const ExtendedIcon2 = styled('span')(({ theme }) => ({
+  marginRight: theme.spacing(3),
+}));
 
 const TeamOverview: FC = (): ReactElement => {
- 
-  const classes = useStyles();
   const teamsLoaded: boolean = useSelector(teamsOfUserLoaded);
   const teams: Team[] = useSelector(teamsOfUser);
-  const actTeam:  Team | undefined = useSelector(activeTeam);
+  const actTeam: Team | undefined = useSelector(activeTeam);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [addSelected, setAddSelected] = useState(false);
   
-
   useEffect(() => {
-
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
         if (!teamsLoaded) {
-            await dispatch(fetchTeams())
+            await dispatch(fetchTeams() as any)
         }
     }
 
@@ -105,45 +104,43 @@ const TeamOverview: FC = (): ReactElement => {
     <div>
       <NavBarBack title="My shopping teams" />
       <Container>
-        <div className={classes.root}>
+        <Root>
           <Grid container spacing={3}>
             {teams && teams
               .map(team => 
-                <Grid item xs={12} key={team.id}>
+                <Grid sx={{ width: '100%' }} key={team.id}>
                   <TeamItem team={team} />
                 </Grid>
               )}
           </Grid>
-          <Fab className={classes.fab} color="secondary" aria-label="add" onClick={() => handleAddClick()}>
+          <AddFab color="secondary" aria-label="add" onClick={() => handleAddClick()}>
             <AddIcon />
-          </Fab>
+          </AddFab>
           {!addSelected && 
-          <Typography variant="h6" className={classes.fabInfo}>
+          <InfoTypography variant="h6">
             Create/Join
-          </Typography>}
-          {addSelected && <Fab
+          </InfoTypography>}
+          {addSelected && <CreateFab
             variant="extended"
             size="medium"
             color="primary"
             aria-label="add"
-            className={classes.fabCreate}
             onClick={() => handleCreateClick()}
           >
-            <NavigationIcon className={classes.extendedIcon} />
+            <NavigationIcon sx={{ mr: 1 }} />
             Create
-          </Fab>}
-          {addSelected && <Fab
+          </CreateFab>}
+          {addSelected && <JoinFab
             variant="extended"
             size="medium"
             color="primary"
             aria-label="add"
-            className={classes.fabJoin}
             onClick={() => handleJoinClick()}
           >
-            <NavigationIcon className={classes.extendedIcon2} />
+            <NavigationIcon sx={{ mr: 3 }} />
             Join
-          </Fab>}
-        </div>
+          </JoinFab>}
+        </Root>
       </Container>
     </div>
   );

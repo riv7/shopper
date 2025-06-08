@@ -1,47 +1,44 @@
 import React, { FC, ReactElement } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { styled } from '@mui/material/styles';
+import { Snackbar } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { display, hideMessage, severity, message } from './messageSlice';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    snackbar: {
-      [theme.breakpoints.down('xs')]: {
-        bottom: 90,
-      },
-    },
-  }),
-);
+const StyledSnackbar = styled(Snackbar)(({ theme }) => ({
+  [theme.breakpoints.down('xs')]: {
+    bottom: 90,
+  },
+}));
 
 const Messagebar: FC = (): ReactElement => {
-  
-  const classes = useStyles();
   const showMessage = useSelector(display);
-  const messageSeverity = useSelector(severity)
-  const messageText = useSelector(message)
+  const messageSeverity = useSelector(severity);
+  const messageText = useSelector(message);
   const dispatch = useDispatch();
 
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose = (event: React.SyntheticEvent<any, Event> | Event, reason: string) => {
     if (reason === 'clickaway') {
       return;
     }
     dispatch(hideMessage());
   };
 
+  const handleAlertClose = (event: React.SyntheticEvent<Element, Event>) => {
+    dispatch(hideMessage());
+  };
+
   return (
-    <Snackbar
+    <StyledSnackbar
       open={showMessage}
       autoHideDuration={6000}
-      onClose={handleClose}
-      className={classes.snackbar}>
+      onClose={handleClose}>
 
-      <Alert onClose={handleClose} severity={messageSeverity}>
+      <Alert onClose={handleAlertClose} severity={messageSeverity}>
         {messageText}
       </Alert>
 
-    </Snackbar>
+    </StyledSnackbar>
   );
 }
 

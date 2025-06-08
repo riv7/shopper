@@ -1,45 +1,41 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import {  useSelector } from 'react-redux';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import { useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from '../../app/store';
-import { Container } from '@material-ui/core';
+import { Container } from '@mui/material';
 import { activeTeam, Team } from '../team/teamSlice';
 import { Template, selectTemplates, initTeamTemplateListener, initGlobalTemplateListener, fetchTemplates } from './templateSlice';
 import TemplateItem from './TemplateItem';
 import NavBarSearch from '../ui/NavBarSearch';
 import { Article, articles } from '../article/articleSlice';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: '25px'
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-    fab : {
-      margin: 0,
-      top: 'auto',
-      right: 20,
-      bottom: 20,
-      left: 'auto',
-      position: 'fixed',
-    }
-  }),
-);
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  marginTop: '25px'
+}));
+
+const StyledPaper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+const AddFab = styled('div')(({ theme }) => ({
+  margin: 0,
+  top: 'auto',
+  right: 20,
+  bottom: 20,
+  left: 'auto',
+  position: 'fixed',
+}));
 
 type TemplateOverviewRouteParams = {
   labelId: string;
 }
 
 const TemplateOverview: FC = (): ReactElement => {
- 
-  const classes = useStyles();
   const allTemplates: Template[] = useSelector(selectTemplates);
   const allArticles: Article[] = useSelector(articles);
   const actTeam: Team | undefined = useSelector(activeTeam);
@@ -48,13 +44,12 @@ const TemplateOverview: FC = (): ReactElement => {
   const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
-
     // Fetch async data only when data is not yet loaded
     const fetchAndInit = async () => {
       if (actTeam) {
-        await dispatch(initGlobalTemplateListener());
-        await dispatch(initTeamTemplateListener(actTeam!.id));
-        await dispatch(fetchTemplates(actTeam!.id));
+        await dispatch(initGlobalTemplateListener() as any);
+        await dispatch(initTeamTemplateListener(actTeam!.id) as any);
+        await dispatch(fetchTemplates(actTeam!.id) as any);
       }
     }
     fetchAndInit();    
@@ -83,7 +78,7 @@ const TemplateOverview: FC = (): ReactElement => {
       const tmpl = emptyTemplate(filterText);
       return (
         <Grid container spacing={3}>
-          <Grid item xs={12} key={"new"}>
+          <Grid sx={{ width: '100%' }} key={"new"}>
             <TemplateItem 
               template={tmpl}
               labelId={labelId}
@@ -96,7 +91,7 @@ const TemplateOverview: FC = (): ReactElement => {
         <Grid container spacing={3}>
           {filteredTemplates
             .map(template => 
-              <Grid item xs={12} key={template.id}>
+              <Grid sx={{ width: '100%' }} key={template.id}>
                 <TemplateItem 
                   template={template}
                   labelId={labelId}
@@ -115,9 +110,9 @@ const TemplateOverview: FC = (): ReactElement => {
         title="Add articles" 
         onChange={searchChange} />
       <Container>
-        <div className={classes.root}>
+        <Root>
           <FilteredTemplates />
-        </div>
+        </Root>
       </Container>
     </div>
   );

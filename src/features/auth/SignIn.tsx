@@ -7,9 +7,9 @@ import App from '../../App';
 import { activeTeam, activeTeamLoaded, fetchActiveTeam, Team } from '../team/teamSlice';
 import { useSelector } from 'react-redux';
 import { GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
-import {Container} from "@material-ui/core";
+import { Container } from "@mui/material";
 import GoogleButton from 'react-google-button'
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDsqYogZ16MJVxqCU_9j_ZEPaH5VUWIPG0",
@@ -39,9 +39,13 @@ function SignInScreen() {
         setIsSignedIn(!!user);
       });
 
-      if (!teamLoaded && isSignedIn) {
-        dispatch(fetchActiveTeam());
-      }
+      const fetchTeam = async () => {
+        if (!teamLoaded && isSignedIn) {
+          await dispatch(fetchActiveTeam() as any);
+        }
+      };
+      
+      fetchTeam();
       
       return () => unsubscribe(); // Make sure we un-register Firebase observers when the component unmounts.
     }, [dispatch, teamLoaded, isSignedIn]);
@@ -74,7 +78,7 @@ function SignInScreen() {
               <Grid
                   container
                   justifyContent="center">
-                  <Grid item>
+                  <Grid>
                       <h1>Welcome to Shopper</h1>
                       <p>Please sign-in:</p>
                       <GoogleButton onClick={handleGoogleSignIn}/>

@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import { Avatar, Chip, ListItemAvatar, ListItemIcon, ListItemText } from '@material-ui/core';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import { Avatar, Chip, ListItemAvatar, ListItemIcon, ListItemText } from '@mui/material';
 import { Label, labels } from './labelSlice';
 import { useSelector } from 'react-redux';
-import InfoIcon from '@material-ui/icons/Info';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import InfoIcon from '@mui/icons-material/Info';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 
 type LabelPopupProps = {
@@ -41,26 +41,18 @@ const LabelPopup: FC<LabelPopupProps> = ({selectedLabel, open, onClose, onAddLab
       <DialogTitle id="simple-dialog-title">Choose or add label</DialogTitle>
       <List>
         {allLabels.map((label) => (
-          <ListItem>
-      
+          <ListItem key={label.id}>
             <Chip
-                //   icon={icon}
                 label={label.name}
-                style = {{backgroundColor: `${label.color}`}}
+                sx={{ backgroundColor: `${label.color}` }}
                 onClick={() => handleLabelClick(label)} />
           </ListItem>
         ))}
-        <ListItem autoFocus button onClick={handleAddLabelClick}>
+        <ListItem autoFocus onClick={handleAddLabelClick}>
           <ListItemIcon>
             <AddCircleOutlineIcon />
           </ListItemIcon>
           <ListItemText primary="Add new label" />
-          {/*<ListItemAvatar>
-            <Avatar>
-              <AddCircleOutlineIcon />
-            </Avatar>
-          </ListItemAvatar>
-        <ListItemText primary="Add new label" />*/}
         </ListItem>
       </List>
 

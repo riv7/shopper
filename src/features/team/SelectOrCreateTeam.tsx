@@ -1,85 +1,72 @@
-import { Button, Container, createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
+import { Button, Container, Grid } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React, { FC, ReactElement } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NavBarBack from "../ui/NavBarBack";
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        // root: {
-        //   '& > *': {
-        //     margin: theme.spacing(1),
-        //   },
-        // },
-        root: {
-            flexGrow: 1,
-            marginTop: '50px'
-        },
-        button: {
-            // margin: theme.spacing(2),
-            // padding: theme.spacing(2),
-            textAlign: 'center',
-            //color: theme.palette.text.secondary,
-        },
-    }),
-);
+const Root = styled('div')(() => ({
+  flexGrow: 1,
+  marginTop: '50px'
+}));
+
+const StyledButton = styled(Button)(() => ({
+  textAlign: 'center',
+}));
 
 const SelectOrCreateTeam: FC = (): ReactElement => {
+  const navigate = useNavigate();
 
-    const classes = useStyles();
-    const navigate = useNavigate();
+  const handleCreateClick = () => {
+    navigate('team/create', { replace: true });
+  }
+  
+  const handleSelectClick = () => {
+    navigate('team/select');
+  }
 
-    const handleCreateClick = () => {
-        navigate('team/create', { replace: true })
-    }
-    
-    const handleSelectClick = () => {
-        navigate('team/select')
-    }
-
-    return (
-        <div>
-            <NavBarBack title="Select or create team" />
-            <Container>
-                <div className={classes.root}>
-                    <Grid
-                        container
-                        justify="center"
-                        alignItems="flex-start"
-                        spacing={0}
-                        style={{ minHeight: '100vh' }}
-                        direction="row">
-                        <Grid item>
-                            <Grid
-                                container
-                                justify="center"
-                                direction="column"
-                                spacing={3}>
-                                <Grid item>
-                                    <Button 
-                                        variant="contained" 
-                                        color="secondary" 
-                                        onClick={handleSelectClick}
-                                        className={classes.button}>
-                                        Select team
-                                    </Button>
-                                </Grid>
-                                <Grid item>
-                                    <Button 
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={handleCreateClick}
-                                        className={classes.button}>
-                                        Create team
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </div>
-            </Container>
-        </div>
-    );
+  return (
+    <div>
+      <NavBarBack title="Select or create team" />
+      <Container>
+        <Root>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="flex-start"
+            spacing={0}
+            style={{ minHeight: '100vh' }}
+            direction="row">
+            <Grid>
+              <Grid
+                container
+                justifyContent="center"
+                direction="column"
+                spacing={3}>
+                <Grid>
+                  <Button 
+                    variant="contained" 
+                    color="secondary" 
+                    onClick={handleSelectClick}
+                    sx={{ textAlign: 'center' }}>
+                    Select team
+                  </Button>
+                </Grid>
+                <Grid>
+                  <Button 
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleCreateClick}
+                    sx={{ textAlign: 'center' }}>
+                    Create team
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Root>
+      </Container>
+    </div>
+  );
 }
 
 export default SelectOrCreateTeam;

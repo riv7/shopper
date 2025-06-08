@@ -1,48 +1,45 @@
 import React, { FC, ReactElement } from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Menu, MenuItem } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Menu, MenuItem } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { deleteLabel, Label } from './labelSlice';
-import LabelImportantIcon from '@material-ui/icons/LabelImportant';
+import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import { useDispatch } from 'react-redux';
 
+const Root = styled('div')({
+  display: "flex",
+});
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      display: "flex",
-    },
-    menuButton: {
-      justifyContent:'right'
-    },
-    increaseButton: {
-      justifyContent:'right'
-    },
-    decreaseButton: {
-      justifyContent:'left'
-    },
-    title: {
-      flexGrow: 1,
-    },
-  }),
-);
+const MenuButtonContainer = styled(CardActions)({
+  justifyContent: 'right'
+});
+
+const IncreaseButtonContainer = styled(CardActions)({
+  justifyContent: 'right'
+});
+
+const DecreaseButtonContainer = styled(CardActions)({
+  justifyContent: 'left'
+});
+
+const Title = styled(Typography)({
+  flexGrow: 1,
+});
 
 type LabelItemProps = {
     label: Label
 }
 
 const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
-
-  const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
@@ -67,7 +64,7 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
   return (
     <Card>
         <Grid container spacing={3}>
-            <Grid item xs={1}>
+            <Grid sx={{ width: '8.33%' }}>
                 <CardActions>
                   <IconButton 
                   aria-label="label"
@@ -76,15 +73,15 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
                    </IconButton>
                 </CardActions>
             </Grid>
-            <Grid item xs={9}>
+            <Grid sx={{ width: '75%' }}>
                 <CardContent>
-                    <Typography variant="h5" component="h2">
+                    <Typography variant="h5">
                     {label.name}
                     </Typography>
                 </CardContent>
             </Grid>
-            <Grid item xs={2}>
-                <CardActions className={classes.menuButton}>
+            <Grid sx={{ width: '16.67%' }}>
+                <MenuButtonContainer>
                   <IconButton 
                      aria-label="label menu"
                      aria-controls="simple"
@@ -115,7 +112,7 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
                       Delete
                     </MenuItem>
                   </Menu>
-                </CardActions>
+                </MenuButtonContainer>
             </Grid>
         </Grid>
     </Card>

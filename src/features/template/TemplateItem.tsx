@@ -1,17 +1,17 @@
 import React, { FC, ReactElement, useState } from 'react';
-import { makeStyles, createStyles, Theme, alpha } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Menu, MenuItem } from '@material-ui/core';
+import { styled, alpha } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Menu, MenuItem } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { addTemplate, deleteTemplate, Template } from './templateSlice';
 import { addArticle, Article } from '../article/articleSlice';
@@ -19,35 +19,38 @@ import { showMessage } from '../message/messageSlice';
 import SelectUnit from '../ui/SelectUnit';
 import { labelById } from '../label/labelSlice';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex"
-    },
-    menuButton: {
-      justifyContent:'right'
-    },
-    increaseButton: {
-      justifyContent:'right'
-    },
-    decreaseButton: {
-      justifyContent:'left'
-    },
-    typography: {
-      color: alpha(theme.palette.common.white, 0.75)
-    },
-    typographyLight: {
-      color: alpha(theme.palette.common.white, 0.25)
-    },
-    title: {
-      flexGrow: 1,
-    },
-    formControl: {
-      backgroundColor: alpha(theme.palette.common.white, 0.1),
-      margin: theme.spacing(1),
-    }
-  })
-);
+const Root = styled(Card)(({ theme }) => ({
+  display: "flex"
+}));
+
+const MenuButtonContainer = styled(CardActions)({
+  justifyContent: 'right'
+});
+
+const IncreaseButtonContainer = styled(CardActions)({
+  justifyContent: 'right'
+});
+
+const DecreaseButtonContainer = styled(CardActions)({
+  justifyContent: 'left'
+});
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  color: alpha(theme.palette.common.white, 0.75)
+}));
+
+const StyledTypographyLight = styled(Typography)(({ theme }) => ({
+  color: alpha(theme.palette.common.white, 0.25)
+}));
+
+const Title = styled(Typography)({
+  flexGrow: 1,
+});
+
+const StyledFormControl = styled('div')(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.common.white, 0.1),
+  margin: theme.spacing(1),
+}));
 
 type TemplateItemProps = {
     template: Template,
@@ -56,14 +59,11 @@ type TemplateItemProps = {
 }
 
 const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}): ReactElement => {
-
-  const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const unitState = useState("piece");
   const [selectedUnit] = unitState;
-  const typoClass = presentArticle !== undefined ? classes.typographyLight : classes.typography;
   const amountText = (article: Article) => article.unit === '' ? article.amount : article.amount+' '+article.unit;
   const amountInArticles = presentArticle !== undefined ?  amountText(presentArticle) : '';
 
@@ -92,7 +92,6 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
   }
 
   const handleAddClick = () => {
-
     if (template.id === '') {
       dispatch(addTemplate(template));
     }
@@ -123,37 +122,52 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
       )
     } else {
       return (
-        <Typography className={typoClass} variant="h6" >
-          {amountInArticles}
-        </Typography>
+        presentArticle !== undefined ? 
+          <StyledTypographyLight variant="h6">
+            {amountInArticles}
+          </StyledTypographyLight> :
+          <StyledTypography variant="h6">
+            {amountInArticles}
+          </StyledTypography>
       )
     }
   }
 
   return (
-    <Card className={classes.root}>
+    <Root>
         <Grid container spacing={3}>
-            <Grid item xs={1}>
+            <Grid sx={{ width: '8.33%' }}>
                 <CardActions>
-                  <IconButton className={typoClass} aria-label="addIcon" onClick={handleAddClick}>
+                  <IconButton 
+                    aria-label="addIcon" 
+                    onClick={handleAddClick}
+                    sx={{ color: presentArticle !== undefined ? 
+                      alpha('common.white', 0.25) : 
+                      alpha('common.white', 0.75) 
+                    }}>
                       <AddCircleOutlineIcon />
                    </IconButton>
                 </CardActions>
             </Grid>
-            <Grid item xs={5}>
+            <Grid sx={{ width: '41.67%' }}>
                 <CardContent>
-                    <Typography className={typoClass} variant="h5" component="h2" >
-                    {template.name}
-                    </Typography>
+                    {presentArticle !== undefined ? 
+                      <StyledTypographyLight variant="h5">
+                        {template.name}
+                      </StyledTypographyLight> :
+                      <StyledTypography variant="h5">
+                        {template.name}
+                      </StyledTypography>
+                    }
                 </CardContent>
             </Grid>
-            <Grid item xs={4}>
+            <Grid sx={{ width: '33.33%' }}>
                 <CardContent>
                   <AmountOrSelect />
                 </CardContent>
             </Grid>
-            <Grid item xs={2}>
-                <CardActions className={classes.menuButton}>
+            <Grid sx={{ width: '16.67%' }}>
+                <MenuButtonContainer>
                   <IconButton 
                      aria-label="shop menu"
                      aria-controls="simple"
@@ -184,10 +198,10 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
                       Delete
                     </MenuItem>
                   </Menu>
-                </CardActions>
+                </MenuButtonContainer>
             </Grid>
         </Grid>
-    </Card>
+    </Root>
   );
 }
 

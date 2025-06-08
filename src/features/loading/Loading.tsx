@@ -1,22 +1,16 @@
 import React, { FC, ReactElement } from 'react';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadingState, resetToIdle } from './loadingSlice';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
-    },
-  }),
-);
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  color: '#fff',
+}));
 
 const LoadingIndicator: FC = (): ReactElement => {
-
-  const classes = useStyles();
   const loadingStatus = useSelector(loadingState);
   const dispatch = useDispatch();
 
@@ -28,9 +22,9 @@ const LoadingIndicator: FC = (): ReactElement => {
 
   return (
     <div>
-      <Backdrop className={classes.backdrop} open={showLoadingIndicator} onClick={handleClose}>
+      <StyledBackdrop open={showLoadingIndicator} onClick={handleClose}>
         <CircularProgress color="inherit" />
-      </Backdrop>
+      </StyledBackdrop>
     </div>
   );
 }
