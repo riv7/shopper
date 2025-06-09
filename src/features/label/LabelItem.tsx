@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -34,6 +34,12 @@ const DecreaseButtonContainer = styled(CardActions)({
 const Title = styled(Typography)({
   flexGrow: 1,
 });
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  color: alpha(theme.palette.common.white, 0.75),
+  fontSize: '1.1rem',
+  maxWidth: "19ch"
+}));
 
 type LabelItemProps = {
     label: Label
@@ -71,10 +77,10 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
                 <LabelImportantIcon />
               </IconButton>
             </Grid>
-            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              <Typography variant="h6" sx={{ fontSize: '0.9rem' }}>
+            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal', wordWrap: 'break-word' }}>
+              <StyledTypography variant="h6">
                 {label.name}
-              </Typography>
+              </StyledTypography>
             </Grid>
             <Grid sx={{ pr: 1 }}>
               <IconButton 

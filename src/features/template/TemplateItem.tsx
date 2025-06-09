@@ -37,12 +37,14 @@ const DecreaseButtonContainer = styled(CardActions)({
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.75),
-  fontSize: "0.9rem" // Reduced from default 1.25rem
+  fontSize: '1.1rem',
+  maxWidth: "19ch"
 }));
 
 const StyledTypographyLight = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.25),
-  fontSize: "0.9rem" // Reduced from default 1.25rem
+  fontSize: '1.1rem',
+  maxWidth: "19ch"
 }));
 
 const Title = styled(Typography)({
@@ -68,7 +70,7 @@ const TemplateItem: FC<TemplateItemProps> = memo(({template, labelId, presentArt
   const [selectedUnit] = unitState;
   // Memoize expensive calculations
   const amountText = useCallback((article: Article) => 
-    article.unit === '' ? article.amount : article.amount+' '+article.unit,
+    article.unit === '' ? article.amount : article.amount,
     []
   );
   
@@ -154,7 +156,7 @@ const TemplateItem: FC<TemplateItemProps> = memo(({template, labelId, presentArt
                 <AddCircleOutlineIcon />
               </IconButton>
             </Grid>
-            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal', wordWrap: 'break-word' }}>
               {presentArticle !== undefined ? 
                 <StyledTypographyLight variant="h6">
                   {template.name}

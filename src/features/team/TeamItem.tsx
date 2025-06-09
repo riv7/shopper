@@ -41,12 +41,14 @@ const Title = styled(Typography)({
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.75),
-  fontSize: '0.9rem'
+  fontSize: '1.1rem',
+  maxWidth: "19ch"
 }));
 
 const StyledTypographyLight = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.secondary.main, 0.75),
-  fontSize: '0.9rem'
+  fontSize: '1.1rem',
+  maxWidth: "19ch"
 }));
 
 type TeamItemProps = {
@@ -97,7 +99,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
                 {isActiveTeam ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
               </IconButton>
             </Grid>
-            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal', wordWrap: 'break-word' }}>
               {isActiveTeam ? 
                 <StyledTypographyLight variant="h6">
                   {team.name + " (active)"}

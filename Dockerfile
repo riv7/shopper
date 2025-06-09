@@ -1,8 +1,8 @@
 # build environment
-FROM node:14-alpine as build
+FROM node:22-alpine as build
 WORKDIR /app
 COPY . .
-RUN npm update && npm install && npm run build
+RUN npm install --legacy-peer-deps && npm run build
 
 # production environment
 FROM nginx:stable-alpine

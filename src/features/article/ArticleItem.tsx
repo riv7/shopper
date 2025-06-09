@@ -40,14 +40,14 @@ const Title = styled(Typography)({
 
 const TextBox = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.75),
-  maxWidth: "23ch",
-  fontSize: "0.9rem", // Reduced from default 1.25rem
+  maxWidth: "19ch",
+  fontSize: "1.1rem", // Reduced from default 1.25rem
 }));
 
 const TextBoxLight = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.25),
-  maxWidth: "23ch",
-  fontSize: "0.9rem", // Reduced from default 1.25rem
+  maxWidth: "19ch",
+  fontSize: "1.1rem", // Reduced from default 1.25rem
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -115,7 +115,7 @@ const ArticleItem: FC<ArticleItemProps> = ({ article, onLabelSelection }): React
               <RadioButtonUncheckedIcon />
             </IconButton>
           </Grid>
-          <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal', wordWrap: 'break-word' }}>
             {article.active === false ? (
               <TextBoxLight variant="h6">
                 {article.name}
