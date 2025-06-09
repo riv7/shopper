@@ -6,7 +6,7 @@ import { fetchArticles, Article, articles, initArticleListener, activateArticles
 import { useParams, useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from '../../app/store';
-import { Button, Card, CardContent, Container, Divider, Fab, Typography } from '@mui/material';
+import { Button, Card, CardContent, Container, Divider, Fab, Typography, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { activeTeam, Team } from '../team/teamSlice';
 import ArticleItem from './ArticleItem';
@@ -108,24 +108,24 @@ const ArticleOverview: FC = (): ReactElement => {
       return <Grid />
     } else {
       return (
-        <Grid container spacing={5} sx={{ mt: 3, mb: 3 }}>
-          <Grid sx={{ width: '100%' }} key="div1">
-            <Grid container
-              justifyContent="space-between"
-              spacing={1}>
-              <Grid sx={{ width: '100%' }}>
-                <Divider variant="middle" />
-              </Grid>
-              <Grid sx={{ width: '25%' }}>
-                <Button fullWidth color="secondary" startIcon={<ExpandLessIcon />} onClick={handleAddAll}>Add</Button>
-              </Grid>
-              <Grid sx={{ width: '50%' }}></Grid>
-              <Grid sx={{ width: '25%' }}>
-                <Button fullWidth color="secondary" endIcon={<ExpandMoreIcon />} onClick={handleClearAll}>Clear</Button>
+        <Box sx={{ width: '100%', position: 'relative', overflow: 'visible' }}>
+          <Divider sx={{ mb: 3 }} />
+          <Grid container spacing={3}>
+            <Grid sx={{ width: '100%' }} key="div1">
+              <Grid container
+                justifyContent="space-between"
+                spacing={1}>
+                <Grid sx={{ width: '25%' }}>
+                  <Button fullWidth color="secondary" startIcon={<ExpandLessIcon />} onClick={handleAddAll} sx={{ justifyContent: 'flex-start', pl: 2 }}>Add</Button>
+                </Grid>
+                <Grid sx={{ width: '50%' }}></Grid>
+                <Grid sx={{ width: '25%' }}>
+                  <Button fullWidth color="secondary" startIcon={<ExpandMoreIcon />} onClick={handleClearAll} sx={{ justifyContent: 'flex-start', pl: 2 }}>Clear</Button>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </Box>
       );
     }
   }
