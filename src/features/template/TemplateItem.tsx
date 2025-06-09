@@ -19,9 +19,9 @@ import { showMessage } from '../message/messageSlice';
 import SelectUnit from '../ui/SelectUnit';
 import { labelById } from '../label/labelSlice';
 
-const Root = styled(Card)(({ theme }) => ({
-  display: "flex"
-}));
+const Root = styled('div')({
+  paddingTop: "2px"
+});
 
 const MenuButtonContainer = styled(CardActions)({
   justifyContent: 'right'
@@ -36,11 +36,13 @@ const DecreaseButtonContainer = styled(CardActions)({
 });
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  color: alpha(theme.palette.common.white, 0.75)
+  color: alpha(theme.palette.common.white, 0.75),
+  fontSize: "0.9rem" // Reduced from default 1.25rem
 }));
 
 const StyledTypographyLight = styled(Typography)(({ theme }) => ({
-  color: alpha(theme.palette.common.white, 0.25)
+  color: alpha(theme.palette.common.white, 0.25),
+  fontSize: "0.9rem" // Reduced from default 1.25rem
 }));
 
 const Title = styled(Typography)({
@@ -135,6 +137,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
 
   return (
     <Root>
+      <Card>
         <Grid container spacing={0} alignItems="center">
             <Grid sx={{ width: '48px', display: 'flex', justifyContent: 'center' }}>
               <IconButton 
@@ -194,6 +197,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
               </Menu>
             </Grid>
         </Grid>
+      </Card>
     </Root>
   );
 }

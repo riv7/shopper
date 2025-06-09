@@ -41,11 +41,13 @@ const Title = styled(Typography)({
 const TextBox = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.75),
   maxWidth: "20ch",
+  fontSize: "0.9rem", // Reduced from default 1.25rem
 }));
 
 const TextBoxLight = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.25),
   maxWidth: "20ch",
+  fontSize: "0.9rem", // Reduced from default 1.25rem
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
