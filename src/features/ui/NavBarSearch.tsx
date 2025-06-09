@@ -27,6 +27,10 @@ const MenuButton = styled(IconButton)(({ theme }) => ({
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
   display: 'none',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  minWidth: '120px', // Ensure enough width for "add articles"
   [theme.breakpoints.up('sm')]: {
     display: 'block',
   },
