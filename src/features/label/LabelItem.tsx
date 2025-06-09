@@ -58,7 +58,7 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
   }
 
   const handleEdit = () => {
-    navigate(`editLabel/${label.id}`)
+    navigate(`/label/editLabel/${label.id}`)
   }
 
   return (

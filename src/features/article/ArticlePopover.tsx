@@ -59,7 +59,7 @@ const ArticlePopover: FC<ArticlePopoverProps> = ({article, open, onClose, anchor
   };
 
   const handleEdit = () => {
-    navigate(`../editArticle/${article.id}`);
+    navigate(`/articles/editArticle/${article.id}`);
   }
 
   const id = open ? 'simple-popover' : undefined;

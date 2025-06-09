@@ -79,21 +79,21 @@ const EditTemplate: FC = (): ReactElement => {
                   <Grid>
                     <Grid
                       container
-                      justifyContent="space-between"
-                      spacing={1}>
-                        <Grid sx={{ width: '66.67%' }}>
+                      direction="column"
+                      spacing={2}>
+                        <Grid sx={{ width: '100%', mb: 2 }}>
                           <TextField 
                             id="template-name" 
                             label="Change template name..."
                             variant="outlined"
                             fullWidth 
-                            inputProps={{ maxLength: 12 }}
+                            inputProps={{ maxLength: 23 }}
                             value={templateName}
                             onChange={event => {
                               setTemplateName(event.target.value);
                               setValueChanged(true)}}/>
                         </Grid>
-                        <Grid sx={{ width: '33.33%' }}>
+                        <Grid sx={{ width: '100%' }}>
                           <SelectUnit unitState={unitState} valueChangedState={valueChangedState} />
                         </Grid>
                       </Grid>

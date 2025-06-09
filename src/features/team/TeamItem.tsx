@@ -75,7 +75,7 @@ const TeamItem: FC<TeamItemProps> = ({team}): ReactElement => {
   }
 
   const handleEdit = () => {
-    navigate(`edit/${team.id}`)
+    navigate(`/team/edit/${team.id}`)
   }
 
   const copyText = (teamId: string, teamPassword: string) =>  `You have been invited to use the shopper app. Please visit https://shopper.zapto.org/team/join on your PC or mobile phone.\n\nPaste the following credentials in the join team dialog.\n\nTeam ID: ${teamId} | Team PW: ${teamPassword}\n\nHappy shopping!`

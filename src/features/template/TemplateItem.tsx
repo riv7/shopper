@@ -87,7 +87,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
 
   const handleEdit = () => {
     if (template.global === false) {
-      navigate(`editTemplate/${template.id}`);
+      navigate(`/templates/editTemplate/${template.id}`);
     } else {
       dispatch(showMessage({ status: "error", message: "Only user created templates can be edited" }));
     }
