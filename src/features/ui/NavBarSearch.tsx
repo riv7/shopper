@@ -68,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '20ch',
+      width: '23ch',
     },
   },
 }));
@@ -106,7 +106,7 @@ const NavBarSearch: FC<NavBarSearchProps> = ({ title, onChange, childComp }) => 
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ 'aria-label': 'search', maxLength: 12 }}
+              inputProps={{ 'aria-label': 'search', maxLength: 23 }}
               onChange={onChange}
             />
           </Search>

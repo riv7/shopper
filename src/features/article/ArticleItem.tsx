@@ -40,13 +40,13 @@ const Title = styled(Typography)({
 
 const TextBox = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.75),
-  maxWidth: "20ch",
+  maxWidth: "23ch",
   fontSize: "0.9rem", // Reduced from default 1.25rem
 }));
 
 const TextBoxLight = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.common.white, 0.25),
-  maxWidth: "20ch",
+  maxWidth: "23ch",
   fontSize: "0.9rem", // Reduced from default 1.25rem
 }));
 
@@ -138,10 +138,9 @@ const ArticleItem: FC<ArticleItemProps> = ({ article, onLabelSelection }): React
           <Grid sx={{ pr: 1 }}>
             <Chip
               size="small"
-              label={label === undefined ? "Shop..." : label.name.length < 6 ? label.name : label.name.substring(0,5)+'..'}
+              label={label === undefined ? "S" : label.name.length < 2 ? label.name : label.name.substring(0,1)}
               sx={{ backgroundColor: `${label === undefined ? '#a9a9a9' : label.color}` }}
-              onClick={handleClickChip}
-              onDelete={handleDeleteChip} />
+              onClick={handleClickChip} />
           </Grid>
         </Grid>
         <ArticlePopover article={article} 
