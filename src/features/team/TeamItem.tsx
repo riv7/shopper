@@ -40,11 +40,13 @@ const Title = styled(Typography)({
 });
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-  color: alpha(theme.palette.common.white, 0.75)
+  color: alpha(theme.palette.common.white, 0.75),
+  fontSize: '0.9rem'
 }));
 
 const StyledTypographyLight = styled(Typography)(({ theme }) => ({
-  color: alpha(theme.palette.secondary.main, 0.75)
+  color: alpha(theme.palette.secondary.main, 0.75),
+  fontSize: '0.9rem'
 }));
 
 type TeamItemProps = {

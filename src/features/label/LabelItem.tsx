@@ -72,7 +72,7 @@ const LabelItem: FC<LabelItemProps> = ({label}): ReactElement => {
               </IconButton>
             </Grid>
             <Grid sx={{ flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              <Typography variant="h6">
+              <Typography variant="h6" sx={{ fontSize: '0.9rem' }}>
                 {label.name}
               </Typography>
             </Grid>
