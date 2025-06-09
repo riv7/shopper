@@ -153,9 +153,9 @@ export const initArticleListener = (teamId: string): AppThunk<Promise<Article[]>
         const articleState = getState().article;
         
         // Article message when data was not requested by user
-        if (articleState && !articleState.dataRequested) {
-            dispatch(showMessage({ status: "success", message: "Article added by shopping mate" }))
-        }
+        // if (articleState && !articleState.dataRequested) {
+        //     dispatch(showMessage({ status: "success", message: "Article added by shopping mate" }))
+        // }
 
         // Update Articles in all cases but the intial load
         if (articleState && articleState.loaded) {
