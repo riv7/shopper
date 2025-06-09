@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useState, memo, useCallback, useMemo } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -60,14 +60,22 @@ type TemplateItemProps = {
     presentArticle: Article | undefined
 }
 
-const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}): ReactElement => {
+const TemplateItem: FC<TemplateItemProps> = memo(({template, labelId, presentArticle}): ReactElement => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const unitState = useState("piece");
   const [selectedUnit] = unitState;
-  const amountText = (article: Article) => article.unit === '' ? article.amount : article.amount+' '+article.unit;
-  const amountInArticles = presentArticle !== undefined ?  amountText(presentArticle) : '';
+  // Memoize expensive calculations
+  const amountText = useCallback((article: Article) => 
+    article.unit === '' ? article.amount : article.amount+' '+article.unit,
+    []
+  );
+  
+  const amountInArticles = useMemo(() => 
+    presentArticle !== undefined ? amountText(presentArticle) : '',
+    [presentArticle, amountText]
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -113,27 +121,22 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
     navigate(-1);
   }
 
-  const AmountOrSelect: FC = () => {
+  // Render the amount or select component directly with memoization
+  const renderAmountOrSelect = useMemo(() => {
     if (template.id === '') {
-      return (
-        <SelectUnit unitState={unitState} />
-      )
+      return <SelectUnit unitState={unitState} />;
     } else if (presentArticle === undefined) {
-      return (
-        <Typography></Typography>
-      )
+      return <Typography></Typography>;
     } else {
-      return (
-        presentArticle !== undefined ? 
-          <StyledTypographyLight variant="h6">
-            {amountInArticles}
-          </StyledTypographyLight> :
-          <StyledTypography variant="h6">
-            {amountInArticles}
-          </StyledTypography>
-      )
+      return presentArticle !== undefined ? 
+        <StyledTypographyLight variant="h6">
+          {amountInArticles}
+        </StyledTypographyLight> :
+        <StyledTypography variant="h6">
+          {amountInArticles}
+        </StyledTypography>;
     }
-  }
+  }, [template.id, presentArticle, unitState, amountInArticles]);
 
   return (
     <Root>
@@ -162,7 +165,7 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
               }
             </Grid>
             <Grid sx={{ mx: 2 }}>
-              <AmountOrSelect />
+              {renderAmountOrSelect}
             </Grid>
             <Grid sx={{ pr: 1 }}>
               <IconButton 
@@ -200,6 +203,6 @@ const TemplateItem: FC<TemplateItemProps> = ({template, labelId, presentArticle}
       </Card>
     </Root>
   );
-}
+});
 
 export default TemplateItem;
